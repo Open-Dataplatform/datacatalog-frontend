@@ -1,0 +1,3 @@
+<div class="card-list" [@listAnimation]="dataCards && dataCards.length">
+  <app-data-card *ngFor="let card of dataCards" [card]="card" ></app-data-card>
+</div>

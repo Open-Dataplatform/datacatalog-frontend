@@ -1,0 +1,49 @@
+<div class="data-field__container" *ngFor="let dataField of dataFields; index as i">
+  <div class="data-field__header-container">
+    <h4 class="data-field__header">{{dataField.name}}</h4>
+  </div>
+  <table class='table table-striped' aria-labelledby="tableLabel">
+    <tbody>
+    <tr>
+      <td class="data-field__table-name">
+        {{'dataSteward.meta.metadata.name' | translate}}
+      </td>
+      <td class="data-field__table-description">
+        {{dataField.name}}
+      </td>
+    </tr>
+    <tr *ngIf="dataField.description">
+      <td class="data-field__table-name">
+        {{'dataSteward.meta.metadata.description' | translate}}
+      </td>
+      <td class="data-field__table-description">
+        {{dataField.description}}
+      </td>
+    </tr>
+    <tr *ngIf="dataField.type">
+      <td class="data-field__table-name">
+        {{'dataSteward.meta.metadata.type' | translate}}
+      </td>
+      <td class="data-field__table-description">
+        {{dataField.type}}
+      </td>
+    </tr>
+    <tr *ngIf="dataField.format">
+      <td class="data-field__table-name">
+        {{'dataSteward.meta.metadata.format' | translate}}
+      </td>
+      <td class="data-field__table-description">
+        {{dataField.format}}
+      </td>
+    </tr>
+    <tr *ngIf="dataField.validation">
+      <td class="data-field__table-name">
+        {{'dataSteward.meta.metadata.validation' | translate}}
+      </td>
+      <td class="data-field__table-description">
+        {{dataField.validation}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

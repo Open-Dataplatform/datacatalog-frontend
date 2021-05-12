@@ -1,0 +1,49 @@
+@import '../variables';
+
+:host {
+  display: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.simple-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  overflow: auto;
+  z-index: 1000;
+
+  .simple-modal-body {
+    padding: 2rem 2rem 4rem;
+    background: #fff;
+    margin: 100px auto;
+    border-radius: @borderRadius;
+    position: relative;
+    max-width: 50rem;
+
+    .simple-modal-close {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+    }
+  }
+}
+
+.simple-modal-background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  background-color: #000;
+  opacity: 0.75;
+
+  z-index: 900;
+}
+
+.simple-modal-open {
+  overflow: hidden;
+}

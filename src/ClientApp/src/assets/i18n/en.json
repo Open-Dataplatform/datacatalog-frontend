@@ -1,0 +1,235 @@
+{
+  "404Page": {
+    "404": "404",
+    "pageNotFound": "Page not found"
+  },
+  "search": {
+    "searchPlaceholder": "Search"
+  },
+  "header": {
+    "hi": "Hi,",
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "tryAgain": "Login error, try again"
+  },
+  "details": {
+    "about": "About",
+    "description": "Description",
+    "relations": "Relations",
+    "dataFields": {
+      "heading": "Data fields",
+      "name": "Name",
+      "type": "Type",
+      "description": "Description"
+    },
+    "transformation": "Transformation",
+    "sourceData": "This data is source data",
+    "side": {
+      "about": "About",
+      "contact": "contact",
+      "owner": "owner",
+      "security": "security",
+      "slaDescription": "sla",
+      "slaLink": "sla link",
+      "resolution": "resolution",
+      "frequency": "frequency",
+      "version": "version",
+      "id": "Id",
+      "status": {
+        "title": "status",
+        "draft": "draft",
+        "published": "published",
+        "archived": "archived"
+      },
+      "request": {
+        "requested": "Data requested",
+        "request": "Request data"
+      }
+    },
+    "dataaccess": {
+      "title": "Data access",
+      "information": "This is a description of how data in this dataset can be accessed.",
+      "detailed": {
+        "information": "The dataset data is available through RESTful APIs. A Postmand collection is supplied to illustrate how these RESTful API calls work. To understand what postman is, please read the",
+        "documentationlink": "documentation"
+      },
+      "postman": {
+        "download": "You will need Postman, get it",
+        "downloadlink": "here",
+        "environment": "Get the postman",
+        "environmentlink": "environment",
+        "collection": "Get the postman",
+        "collectionlink": "collection",
+        "apikey": "You will need an API key to access the data. The API key is inserted as a value for the http header 'x-api-key' in the Postman collection. An API key can be retrieved by contacting",
+        "apikeylink": "Janus"
+      }
+    }
+  },
+  "dataCard": {
+    "public": "Public",
+    "Internal": "Internal",
+    "confidential": "Confidential",
+    "strictlyConfidential": "Strictly confidential",
+    "draft": "Draft",
+    "published": "Published",
+    "archived": "Archived"
+  },
+  "categories": {
+    "displaying": "Displaying",
+    "resultsFor": "results for \"{{term}}\"",
+    "empty": {
+      "noResult": "No result was found try refining your search",
+      "suggestions": "Suggestions",
+      "list": {
+        "spelling": "Make sure your spelling is correct",
+        "searchTerms": "Try different search terms",
+        "generalTerms": "Make your search use more general search terms"
+      }
+    }
+  },
+  "dataSteward": {
+    "noData": "No data, please fill out missing fields",
+    "tabs": {
+      "dataSet": "Dataset",
+      "metadata": "Metadata",
+      "about": "About"
+    },
+    "save": "Save",
+    "next": "Next",
+    "dataSet": {
+      "name": {
+        "heading": "Name",
+        "dataSet": "Name the dataset *"
+      },
+      "owner": {
+        "heading": "Owner",
+        "information": "Input owner information"
+      },
+      "dataSetId": {
+        "heading": "Dataset Id",
+        "enterId": "Enter dataset Id"
+      },
+      "status": {
+        "heading": "Dataset status",
+        "setStatus": "Set status"
+      },
+      "refinement": {
+        "heading": "Refinement level",
+        "enterRefinement": "Select the refinement level of the data *"
+      },
+      "hierarchy": {
+        "heading": "Hierarchy",
+        "selectHierarchy": "Hierarchy *",
+        "selectChildHierarchy": "Select a hierarchy *"
+      },
+      "location": {
+        "heading": "Location",
+        "description": "Input a custom location path if the generated one is not sufficient"
+      },
+      "generatedLocation": {
+        "label": "Generated Location",
+        "description": "Input name and hierarchy to see the generated location"
+      },
+      "id": {
+        "heading": "Id"
+      },
+      "dataSetConnection": {
+        "heading": "Source",
+        "setDataPlaceholder": "Select the data source *"
+      }
+    },
+    "meta": {
+      "category": {
+        "heading": "Category",
+        "addToCategory": "Add to category *"
+      },
+      "description": {
+        "heading": "Description",
+        "describe": "Describe the dataset"
+      },
+      "dataFlow": {
+        "heading": "Source dataset(s)",
+        "connect": "Select the dataset(s) from which this originates"
+      },
+      "transformation": {
+        "heading": "Transformation",
+        "sourceDataSetsPlaceholder": "Select source datasets",
+        "transformationPlaceholder": "Select a transformation",
+        "selectTransformation": "Select a transformation from a list of transformations",
+        "addNew": "Add a new transformation with the selected source datasets",
+        "describeShort": "Give the transformations a short description",
+        "describe": "Describe the transformations"
+      },
+      "metadata": {
+        "heading": "Fields",
+        "addField": "Add Field",
+        "name": "name",
+        "namePlaceholder": "Enter the fieldname",
+        "description": "description",
+        "descriptionPlaceholder": "Enter a description of the data in this field",
+        "type": "type",
+        "typePlaceholder": "Enter the data type",
+        "format": "format",
+        "formatPlaceholder": "Enter the format the data is in",
+        "validation": "validation",
+        "validationPlaceholder": "validation",
+        "confidentiality": "confidentiality",
+        "confidentialityPlaceholder": "Select confidentiality level"
+      },
+      "metadataVersion": {
+        "heading": "Version"
+      },
+      "changeLog": {
+        "heading": "Changelog",
+        "noChangesYet": "No changes have been made yet",
+        "change": "Updated information in the dataset"
+      }
+    },
+    "about": {
+      "contact": {
+        "heading": "Contact",
+        "whoToContact": "Select who to contact about this dataset *",
+        "contactInfo": "Add contact information *"
+      },
+      "confidentiality": {
+        "heading": "Confidentiality",
+        "securityLevel": "Select confidentiality level"
+      },
+      "quality": {
+        "heading": "Quality",
+        "qualityLevel": "Select quality level"
+      },
+      "resolution": {
+        "heading": "Resolution",
+        "resolution": "Enter resolution code",
+        "description": "Describe resolution"
+      },
+      "updateFrequency": {
+        "heading": "Update frequency",
+        "frequency": "Enter frequency",
+        "description": "Describe frequency"
+      },
+      "sla": {
+        "heading": "SLA - Service Level Agreement",
+        "describe": "Describe the SLA for this dataset, if any"
+      },
+      "slaLink": {
+        "heading": "SLA link",
+        "addSlaLink": "Add a link to an external SLA"
+      },
+      "creationDate": {
+        "heading": "Creation date"
+      }
+    }
+  },
+  "abbreviation": "master information management internal register",
+  "energinet": "ENERGINET",
+  "dataplatform": "DataPlatform",
+  "favoriteDocuments": "Power to X Project (PXP)",
+  "error": {
+    "tryAgain": "Reload page and try again",
+    "occured": "Error occured"
+  }
+}

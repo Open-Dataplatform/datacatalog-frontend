@@ -1,0 +1,127 @@
+@import './../../shared/variables';
+
+.login__wrapper {
+  display: flex;
+  margin: 10%;
+  background-color: white;
+  box-shadow: 0 2rem 4rem rgba(@primaryColor, 0.4);
+  height: 50vh;
+
+  .container {
+    padding: 2rem;
+
+  }
+
+  .login-input {
+    padding: 4rem;
+    width: 39%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    position: relative;
+
+    border-bottom-left-radius: @borderRadius;
+    border-top-left-radius: @borderRadius;
+
+    h1 {
+      font-size: 2rem;
+      color: @grey;
+      margin-bottom: 2rem;
+    }
+
+    .login-input__input-container {
+      display: flex;
+      flex-direction: column;
+
+      .input {
+        border-radius: @borderRadius;
+        border: 1px solid @lightGreyInterface;
+        padding: 1rem 2rem;
+        width: 100%;
+        outline: none;
+        transition: all 0.3s ease-in-out, height 0s;
+        margin-bottom: 1rem;
+
+        &::placeholder {
+          color: @grey;
+        }
+
+        &:focus {
+          border-color: @primaryColor;
+          box-shadow: @inputShadow;
+        }
+      }
+    }
+
+    .login__login-button {
+      width: 100%;
+      background-color: @primaryColor;
+      color: @white;
+      padding: 1rem;
+      border-radius: @borderRadius;
+    }
+  }
+
+  .login-content {
+    width: 61%;
+    background-color: @primaryColor;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    color: @white;
+    position: relative;
+
+    border-bottom-right-radius: @borderRadius;
+    border-top-right-radius: @borderRadius;
+
+    .login__logo {
+      position: absolute;
+      font-size: 4.2rem;
+      line-height: 0.5;
+      padding-left: 0.3rem;
+      top: 18rem;
+      left: 3rem;
+      pointer-events: none;
+    }
+
+    .login__product {
+      position: absolute;
+      font-size: 8.2rem;
+      line-height: 1;
+      top: 20rem;
+      left: 4rem;
+      pointer-events: none;
+
+    }
+
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .login__wrapper {
+    flex-direction: column-reverse;
+
+    .login-input {
+      padding: 2rem;
+      width: 100%;
+    }
+
+    .login-content {
+      width: 100%;
+      .login__logo {
+        font-size: 2rem;
+        top: 8rem;
+        left: 3rem;
+      }
+
+      .login__product {
+        font-size: 3rem;
+        top: 10rem;
+        left: 3rem;
+      }
+    }
+  }
+}

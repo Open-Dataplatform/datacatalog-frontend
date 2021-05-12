@@ -1,0 +1,33 @@
+@import './../../shared/variables';
+
+.message-notifier__wrapper {
+  position: fixed;
+  bottom: 5rem;
+  max-width: 40%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background-color: @error;
+  color: @white;
+  display: flex;
+  padding: 2rem;
+  border-radius: @borderRadius;
+  box-shadow: 0 1rem 4rem rgba(@error, 0.6);
+  z-index: @z-max;
+  word-break: break-word;
+}
+
+.message-notifier__content {
+  flex: 1;
+}
+
+.message-notifier__close {
+  align-self: end;
+  margin: -1rem -2rem -1rem 0;
+  width: 4rem;
+}
+
+.message-notifier__close-button {
+  background-color: transparent;
+  color: @white;
+
+}

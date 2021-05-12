@@ -1,0 +1,65 @@
+
+<div class="data-container">
+  <h3>{{'dataSteward.meta.category.heading' | translate}}</h3>
+  <ng-select [items]="categories$ | async"
+             [hideSelected]="true"
+             placeholder="{{'dataSteward.meta.category.addToCategory' | translate}}"
+             [ngClass]="{'filled': data.categories}"
+             multiple="true"
+             bindLabel="name"
+             (change)="onDataChange()"
+             [(ngModel)]="data.categories">
+    <ng-template ng-label-tmp let-item="item" let-clear="clear">
+      <span [ngStyle]="{'background-color': item.colour}" class="data-meta__tags">
+        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+        <span class="ng-value-label">{{item.name}}</span>
+      </span>
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item">
+      <span class="data-meta__tags">
+        <span class="data-meta__tags-indicator" [ngStyle]="{'background-color': item.colour}"></span>
+        <span class="ng-value-label">{{item.name}}</span>
+      </span>
+    </ng-template>
+  </ng-select>
+</div>
+<div class="data-container">
+  <h3>{{'dataSteward.meta.description.heading' | translate}}</h3>
+  <app-text-input inputType="text-area" placeholderText="{{'dataSteward.meta.description.describe' | translate }}" [(value)]="data.description" (change)="onDataChange()"></app-text-input>
+</div>
+
+<app-transformation-selector [(dataSetTransformation)]="data.sourceTransformation" (change)="onDataChange()"></app-transformation-selector>
+
+<div class="data-container">
+  <h3>{{'dataSteward.meta.metadata.heading' | translate }}</h3>
+  <app-data-field [(dataFields)]="data.dataFields" (change)="onDataChange()"></app-data-field>
+</div>
+<div class="data-container">
+  <h3>{{'dataSteward.meta.metadataVersion.heading' | translate }}</h3>
+  <p>
+    <span class="meta-data-version">v. {{metadataVersion.version}} </span>
+    <span class="meta-data-version-date">({{metadataVersion.changeDate}})</span>
+  </p>
+</div>
+<div class="data-container">
+  <h3>{{'dataSteward.meta.changeLog.heading' | translate }}</h3>
+  <div *ngFor="let change of data.datasetChangeLogs"
+       class="meta-data__change-log">
+    <span class="meta-data__icon-wrapper">
+      <i class="material-icons-outlined"> person </i>
+    </span>
+
+    <span class="meta-data__change-info">
+      <span class="profile">{{change.member.name}}</span> - <span>{{'dataSteward.meta.changeLog.change' | translate}}</span>
+      <div class="grey-italic small-font">{{formatTime(change.createdDate)}}</div>
+    </span>
+
+  </div>
+  <div *ngIf="!data.datasetChangeLogs || !data.datasetChangeLogs.length">
+    {{'dataSteward.meta.changeLog.noChangesYet' | translate }}
+  </div>
+</div>
+
+<div class="steward-actions">
+  <button class="steward-actions__save" (click)="nextPage()">{{'dataSteward.next' | translate}}</button>
+</div>

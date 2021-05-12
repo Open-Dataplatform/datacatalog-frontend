@@ -1,0 +1,28 @@
+<div *ngIf="showLoading">
+  <div class="container">
+    <div class="loading" *ngIf="state === 'loading'">
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">L</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">o</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">a</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">d</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">i</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">n</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">g</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">.</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">.</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">.</div>
+    </div>
+    <div class="saving" *ngIf="state === 'saving'">
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">S</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">a</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">v</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">i</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">n</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">g</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}"> </div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">.</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">.</div>
+      <div class="loading__letter" [ngStyle]="{fontSize: size + 'rem'}">.</div>
+    </div>
+  </div>
+</div>

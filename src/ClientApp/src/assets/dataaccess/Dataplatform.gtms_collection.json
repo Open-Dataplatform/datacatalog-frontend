@@ -1,0 +1,481 @@
+{
+	"info": {
+		"_postman_id": "e28f498b-1407-4b6e-9fea-91485585c20d",
+		"name": "Dataplatform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "APIM",
+			"item": [
+				{
+					"name": "GAS GMTS",
+					"item": [
+						{
+							"name": "GET GT_DATA_H_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_DATA_H_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_DATA_H_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_ALLOC_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_BALANCE_SYSTEM_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_BIOCERTIFICATE_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_CONTRACT_CAPACITY_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_INVOICE_LINES_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_NOM_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_PLAYER_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_POINT_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_TIME_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET GT_TRADE_BI",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://dpapi-gateway-prod.azure-api.net/gas/gtms/Items?DatasetName=GT_ALLOC_BI&FromDate=2021-02-01&ToDate=2021-02-02",
+									"protocol": "https",
+									"host": [
+										"dpapi-gateway-prod",
+										"azure-api",
+										"net"
+									],
+									"path": [
+										"gas",
+										"gtms",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "DatasetName",
+											"value": "GT_ALLOC_BI"
+										},
+										{
+											"key": "FromDate",
+											"value": "2021-02-01"
+										},
+										{
+											"key": "ToDate",
+											"value": "2021-02-02"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

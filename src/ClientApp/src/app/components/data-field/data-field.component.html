@@ -1,0 +1,84 @@
+<section class="details__section">
+  <div class="data-field__container" *ngFor="let dataField of dataFields; index as i">
+    <div class="data-field__header-container">
+      <h4 class="data-field__header"><input type="text" (keyup)="dataChange()" [(ngModel)]="dataField.name"/></h4>
+      <button class="data-field__header-button" (click)="removeField(dataField.name)"> <i class="material-icons-outlined"> delete </i></button>
+    </div>
+    <table class='table table-striped' aria-labelledby="tableLabel">
+      <tbody>
+      <tr>
+        <td class="data-field__table-name">
+          <label for="data-field-name-{{i}}">{{'dataSteward.meta.metadata.name' | translate}}</label>
+        </td>
+        <td class="data-field__table-description">
+          <textarea id="data-field-name-{{i}}" rows="1" appAutosize class="data-field__table-input" type="text" (keyup)="dataChange()" [(ngModel)]="dataField.name"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="data-field__table-name">
+          <label for="data-field-description-{{i}}">{{'dataSteward.meta.metadata.description' | translate}}</label>
+        </td>
+        <td class="data-field__table-description">
+          <textarea id="data-field-description-{{i}}"
+                    rows="1"
+                    appAutosize
+                    class="data-field__table-input"
+                    type="text"
+                    placeholder="{{'dataSteward.meta.metadata.descriptionPlaceholder' | translate}}"
+                    (keyup)="dataChange()"
+                    [(ngModel)]="dataField.description"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="data-field__table-name">
+          <label for="data-field-type-{{i}}">{{'dataSteward.meta.metadata.type' | translate}}</label>
+        </td>
+        <td class="data-field__table-description">
+          <textarea id="data-field-type-{{i}}"
+                    rows="1"
+                    appAutosize
+                    class="data-field__table-input"
+                    type="text"
+                    placeholder="{{'dataSteward.meta.metadata.typePlaceholder' | translate}}"
+                    (keyup)="dataChange()"
+                    [(ngModel)]="dataField.type"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="data-field__table-name">
+          <label for="data-field-format-{{i}}">{{'dataSteward.meta.metadata.format' | translate}}</label>
+        </td>
+        <td class="data-field__table-description">
+          <textarea id="data-field-format-{{i}}"
+                    rows="1"
+                    appAutosize
+                    class="data-field__table-input"
+                    type="text"
+                    placeholder="{{'dataSteward.meta.metadata.formatPlaceholder' | translate}}"
+                    (keyup)="dataChange()"
+                    [(ngModel)]="dataField.format"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="data-field__table-name">
+          <label for="data-field-validation-{{i}}">{{'dataSteward.meta.metadata.validation' | translate}}</label>
+        </td>
+        <td class="data-field__table-description">
+          <textarea id="data-field-validation-{{i}}"
+                    rows="1"
+                    appAutosize
+                    class="data-field__table-input"
+                    placeholder="{{'dataSteward.meta.metadata.validationPlaceholder' | translate}}"
+                    type="text"
+                    (keyup)="dataChange()"
+                    [(ngModel)]="dataField.validation"></textarea>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <button class="data-field__create" (click)="addField()">
+    <i class="material-icons-outlined"> add </i> <span>{{'dataSteward.meta.metadata.addField' | translate}}</span>
+  </button>
+
+</section>

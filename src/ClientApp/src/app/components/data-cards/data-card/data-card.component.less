@@ -1,0 +1,85 @@
+@import '../../../shared/variables';
+
+:host {
+  width: 33.3%;
+}
+
+.data-card {
+  background-color: @white;
+  padding: 1.5rem 3rem 1.5rem 1.5rem;
+  border: 1px solid @lightGreyInterface;
+  border-radius: 0.5rem;
+  min-height: 17.5rem;
+  margin: 0 0 @gutters @gutters;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out;
+  overflow: hidden;
+  font-size: 1.4rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &:hover {
+    box-shadow: 0 5px 15px @primaryShadow;
+
+    h4 {
+      color: @black;
+    }
+  }
+
+  h4 {
+    color: @darkGreyInterface;
+    transition: color 0.5s ease;
+
+  }
+
+  .data-card__tags {
+    margin-bottom: 1rem;
+    .data-card__chips {
+      font-size: 1rem;
+      color: @white;
+      border-radius: 5rem;
+      margin-right: 0.5rem;
+      padding: 0.2rem 0.5rem;
+    }
+  }
+
+  .data-card__access {
+    color: @primaryColor;
+    display: flex;
+    justify-content: space-between;
+
+    .data-card__status {
+      color: @grey;
+    }
+  }
+
+  .fade-ellipsis {
+    position: relative;
+    height: 5.9rem; /* exactly three lines */
+    overflow: hidden;
+  }
+  .fade-ellipsis:after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 70%;
+    height: 1.2em;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+  }
+}
+
+@media @tablet {
+  :host {
+    width: 50%;
+  }
+}
+
+@media @phone {
+  :host {
+    width: 100%;
+  }
+}

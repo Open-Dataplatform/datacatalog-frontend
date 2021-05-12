@@ -1,0 +1,7 @@
+<div class="data-card__tags">
+      <span *ngFor="let category of tags"
+            [style.background-color]="category.colour"
+            class="data-card__chips" >
+        {{category.name}}
+      </span>
+</div>

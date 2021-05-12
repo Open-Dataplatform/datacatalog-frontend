@@ -1,0 +1,144 @@
+@import '../../shared/variables';
+
+.details__container {
+  margin: 5rem 0;
+  border: 1px solid @lightGreyInterface;
+  border-radius: @borderRadius;
+  background-color: @white;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+
+  .details__main-container {
+    width: 67%;
+  }
+
+  .details__side-container {
+    width: 33%;
+    padding: 0 2rem;
+  }
+  .details__member-container {
+    width: 100%;
+    padding-top: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.details__tags {
+  margin-bottom: @gutters;
+  .details__chips {
+    font-size: 1rem;
+    color: @white;
+    border-radius: 5rem;
+    margin-right: 1rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
+
+.details__section {
+  margin-top: @gutters;
+  margin-bottom: 4rem;
+  h2 {
+    color: @grey;
+    margin-bottom: 1rem;
+  }
+}
+
+.details__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .button {
+    border: 1px solid @lightGreyInterface;
+    border-radius: 50rem;
+    transition: all 0.3s ease-in-out;
+    width: 4rem;
+    height: 4rem;
+
+    &:hover {
+      box-shadow: @smallShadow;
+      color: @primaryColor;
+    }
+  }
+}
+
+.details__request-button {
+  background-color: @primaryColor;
+  border-radius: 5rem;
+  padding: 1rem 2rem;
+  color: @white;
+  font-weight: bold;
+}
+
+.details__master-data {
+  margin-top: 2rem;
+  border: 1px solid @darkGreen;
+  border-radius: @borderRadius;
+  background-color: @lightGreyInterface;
+  padding: 2rem;
+  color: @darkGreen;
+
+  h2 {
+    padding-left: 8rem;
+  }
+
+  .details__data-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .master-data {
+    display: flex;
+    align-items: center;
+    margin: 3rem 0;
+    word-break: break-word;
+
+    .master-data-field__container {
+      padding-right: @gutters;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 7rem;
+    }
+
+    .master-data-field__comment {
+      font-size: 1rem;
+    }
+
+    .master-data__data {
+      flex: 1;
+    }
+  }
+}
+
+.details__id {
+  color: @grey;
+  font-size: 1rem;
+}
+
+.loading {
+  height: 200px;
+}
+
+@media @tablet {
+  .details__container {
+    flex-direction: column;
+
+    .details__main-container,
+    .details__side-container {
+      width: 100%;
+    }
+  }
+}
+
+@media @phone {
+  .details__container {
+    flex-direction: column;
+
+    .details__main-container,
+    .details__side-container {
+      width: 100%;
+    }
+  }
+}

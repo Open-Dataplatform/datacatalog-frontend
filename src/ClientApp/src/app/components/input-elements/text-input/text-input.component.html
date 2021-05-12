@@ -1,0 +1,16 @@
+<input *ngIf="(inputType === 'text' || inputType === 'password') && !controlName"
+       [ngClass]="{'filled': value}"
+       class="input-text"
+       type="{{inputType}}"
+       placeholder="{{placeholderText}}"
+       [(ngModel)]="value"
+       (ngModelChange)="this.modelUpdated.next($event)" />
+
+<textarea *ngIf="inputType === 'text-area'"
+          [ngClass]="{'filled': value}"
+          class="input-text-area"
+          placeholder="{{placeholderText}}"
+          appAutosize
+          [(ngModel)]="value"
+          (ngModelChange)="this.modelUpdated.next($event)">
+</textarea>

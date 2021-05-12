@@ -1,0 +1,44 @@
+<a>
+  <div class="data-card"
+       *ngIf="card"
+       [routerLink]="['/detail', card.id]"
+       [routerLinkActive]="['link-active']">
+    <h4>{{ card.name }}</h4>
+    <app-tags-list [tags]="card.categories"></app-tags-list>
+    <p class="fade-ellipsis">{{ card.description }}</p>
+    <div class="data-card__access" [ngSwitch]="card.confidentiality">
+      <div *ngSwitchCase="0">
+        <i class="material-icons-outlined"> lock_open </i>
+        <span> {{'dataCard.public' | translate}} </span>
+      </div>
+      <div *ngSwitchCase="1">
+        <i class="material-icons-outlined"> lock_open </i>
+        <span> {{'dataCard.Internal' | translate}} </span>
+      </div>
+      <div *ngSwitchCase="2">
+        <i class="material-icons-outlined"> lock </i>
+        <span> {{'dataCard.confidential' | translate}} </span>
+      </div>
+      <div *ngSwitchCase="3">
+        <i class="material-icons-outlined"> lock </i>
+        <span> {{'dataCard.strictlyConfidential' | translate}} </span>
+      </div>
+
+      <div class="data-card__status"
+           *ngIf="(userHasDataStewardRole$ | async)"
+           [ngSwitch]="card.status">
+        <div *ngSwitchCase="0">
+          <span> {{'dataCard.draft' | translate}} </span>
+        </div>
+        <div *ngSwitchCase="1">
+          <span> {{'dataCard.published' | translate}} </span>
+        </div>
+        <div *ngSwitchCase="2">
+          <span> {{'dataCard.archived' | translate}} </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</a>
+

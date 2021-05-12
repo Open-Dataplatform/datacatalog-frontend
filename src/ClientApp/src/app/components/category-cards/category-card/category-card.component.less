@@ -1,0 +1,46 @@
+@import './../../../shared/variables';
+:host {
+  width: 20%;
+}
+
+.category-card {
+  padding: 1.2rem;
+  border-radius: 0.5rem;
+  margin: 0 0 @gutters @gutters;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out;
+  overflow: hidden;
+  height: 15rem;
+  background-size: 21rem 15rem;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
+
+  &:hover {
+    box-shadow: 0 5px 15px @categoryShadow;
+  }
+
+  .category-card__name {
+    padding: 0.5rem 1rem;
+    margin-left: -1.2rem;
+    width: 85%;
+    border-top-right-radius: 5rem;
+    border-bottom-right-radius: 5rem;
+  }
+
+  h4 {
+    color: @white;
+  }
+}
+
+@media @tablet {
+  :host {
+    width: 33.3%;
+  }
+}
+
+@media @phone {
+  :host {
+    width: 50%;
+  }
+}

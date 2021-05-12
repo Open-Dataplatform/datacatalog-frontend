@@ -1,0 +1,10 @@
+<div class="steward-container">
+
+  <ul class="steward-navigation">
+    <li routerLink="/datasteward/" [routerLinkActive]="['tab-active']" [routerLinkActiveOptions]="{ exact: true }">{{'dataSteward.tabs.dataSet' | translate}}</li>
+    <li routerLink="/datasteward/datameta" [routerLinkActive]="['tab-active']">{{'dataSteward.tabs.metadata' | translate}}</li>
+    <li routerLink="/datasteward/dataabout" [routerLinkActive]="['tab-active']">{{'dataSteward.tabs.about' | translate}}</li>
+  </ul>
+
+  <router-outlet></router-outlet>
+</div>

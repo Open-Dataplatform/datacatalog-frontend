@@ -1,0 +1,5 @@
+<h3 class="category-header">Categories</h3>
+<div class="category-list" [@listAnimation]="categories && categories.length">
+  <app-category-card *ngFor="let category of categories" [category]="category" ></app-category-card>
+  <app-loading [showLoading]="!categories"></app-loading>
+</div>

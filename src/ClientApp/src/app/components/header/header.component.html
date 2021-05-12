@@ -1,0 +1,36 @@
+<header *ngIf="!login">
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']" title="{{'abbreviation' | translate}}">
+        <img src="./assets/logo.png" alt="{{ 'energinet' | translate}}"/>
+        <span class="logo-divider">|</span>
+        <span style="padding-top: 0.1rem;">{{'dataplatform' | translate}}</span>
+      </a>
+
+      <div *ngIf="(userLoggedIn$ | async) as user">
+        <span class="header__user-icon"><i class="material-icons-outlined"> person </i></span>
+        <span class="header__username">{{user.profile.name}}</span>
+        <button (click)="logout()">{{'header.logout' | translate}}</button>
+      </div>
+
+    </div>
+  </nav>
+
+  <div class="container header-extra position-relative">
+    <app-search [hidden]="!(userHasDataStewardRole$ | async)"></app-search>
+
+    <button class="nav-data-steward"
+            href="#"
+            *ngIf="userLoggedIn$ | async"
+            (click)="newDataSet()"
+            [hidden]="!(userHasDataStewardRole$ | async)"
+            [routerLink]="['datasteward']">
+      <i class="material-icons-outlined"> add </i>
+    </button>
+  </div>
+
+  <div class="alpha-banner">alpha</div>
+
+</header>
+
+<app-message-notifier></app-message-notifier>

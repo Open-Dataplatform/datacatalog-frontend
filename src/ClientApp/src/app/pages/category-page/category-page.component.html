@@ -1,0 +1,28 @@
+<div class="category__result-description" *ngIf="dataCards && !isCategory">
+  <span>{{'categories.displaying' | translate}}
+    <span class="category__result-amount">{{dataCards.length}} </span>
+    <span >{{'categories.resultsFor' | translate:{term: term} }}</span>
+  </span>
+</div>
+
+
+  <div class="category__container" *ngIf="dataCards">
+    <infinite-scroll (scrolled)="onScroll()">
+      <app-card-list [dataCards]="dataCards"></app-card-list>
+    </infinite-scroll>
+  </div>
+
+<div class="category__loading">
+  <app-loading [showLoading]="!dataCards"></app-loading>
+</div>
+
+<div clasS="category__empty" *ngIf="dataCards && !dataCards.length">
+  <p>{{'categories.empty.noResult' | translate}}</p>
+  <p>{{'categories.empty.suggestions' | translate}}</p>
+  <ul>
+    <li>{{'categories.empty.list.spelling' | translate}}</li>
+    <li>{{'categories.empty.list.searchTerms' | translate}}</li>
+    <li>{{'categories.empty.list.generalTerms' | translate}}</li>
+  </ul>
+</div>
+

@@ -1,0 +1,11 @@
+<div class="category-card"
+     *ngIf="category"
+     [routerLink]="['/category', category.id, true]"
+     [routerLinkActive]="['link-active']"
+     [style.background-image]="getBackgroundImage()"
+     [style.background-color]="category.colour">
+  <div class="category-card__name"
+       [style.background-color]="category.colour">
+    <h4>{{ category.name }}</h4>
+  </div>
+</div>

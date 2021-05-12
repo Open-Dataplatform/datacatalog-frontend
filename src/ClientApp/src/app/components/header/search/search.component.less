@@ -1,0 +1,122 @@
+@import '../../../shared/variables';
+
+.search__wrapper {
+  position: relative;
+  margin: 12.5rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: margin 0.3s ease-in-out;
+
+  &.-active {
+    margin: 3rem auto;
+  }
+
+  .search__back {
+    position: absolute;
+    left: 2rem;
+    border-radius: 5rem;
+    border: 1px solid @lightGreyInterface;
+    padding: 1rem;
+    background-color: @white;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+
+    &.-active {
+      opacity: 1;
+    }
+
+    &:hover {
+      box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1);
+      color: @primaryColor;
+    }
+  }
+}
+
+.search__container {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  width: 50%;
+  transition: margin 0.5s ease-in-out;
+  position: relative;
+
+  .search__input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1.5rem;
+    border: 1px solid @grey;
+    border-radius: 10rem;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+    &:focus,
+    &:hover {
+      border-color: @primaryColor;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1);
+    }
+  }
+
+  label {
+    margin: -0.2rem 0 0 -3.5rem;
+    color: @primaryColor;
+  }
+
+  .search__output {
+    position: absolute;
+    top: 6rem;
+    border: 1px solid @lightGreyInterface;
+    border-radius: @borderRadius;
+    width: 100%;
+    background-color: @white;
+    box-shadow: @inputShadow;
+    z-index: @z-max;
+
+    .search__item {
+      padding: 2rem;
+      border-bottom: 1px solid #f7f7f7;
+      cursor: pointer;
+      transition: all 200ms ease-in-out;
+
+      &:hover,
+      .active {
+        background-color: @lightGreyInterface;
+      }
+
+      .search__item-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .search__searching {
+      padding: 1rem;
+    }
+  }
+}
+
+.search__category-wrapper {
+  min-width: 4rem;
+  flex-shrink: 99999;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+
+  .search__category {
+    width: 1rem;
+    height: 1rem;
+    margin: 0.5rem;
+    border-radius: 50rem;
+    display: inline-block;
+  }
+}
+
+
+@media @phone {
+  .search__container {
+    width: 65%;
+  }
+}

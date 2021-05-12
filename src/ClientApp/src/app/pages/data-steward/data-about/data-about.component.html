@@ -1,0 +1,76 @@
+
+<div class="data-container">
+  <h3>{{'dataSteward.about.contact.heading' | translate}}</h3>
+  <ng-select [items]="contacts$ | async"
+             placeholder="{{'dataSteward.about.contact.whoToContact' | translate}}"
+             [ngClass]="{'filled': data.contact}"
+             bindLabel="name"
+             (change)="onChange()"
+             [(ngModel)]="data.contact">
+  </ng-select>
+
+</div>
+<div class="data-container">
+  <h3>{{'dataSteward.about.confidentiality.heading' | translate}}</h3>
+  <ng-select [items]="confidentiality$ | async"
+             placeholder="{{'dataSteward.about.confidentiality.securityLevel' | translate}}"
+             [ngClass]="{'filled': data.confidentiality}"
+             bindLabel="description"
+             bindValue="id"
+             (change)="onChange()"
+             [(ngModel)]="data.confidentiality">
+  </ng-select>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.about.resolution.heading' | translate}}</h3>
+  <ng-select [items]="durations$ | async"
+             placeholder="{{'dataSteward.about.resolution.resolution' | translate}}"
+             [ngClass]="{'filled': data.resolution}"
+             bindLabel="code"
+             (change)="onChange()"
+             [(ngModel)]="data.resolution"></ng-select>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.about.updateFrequency.heading' | translate}}</h3>
+  <ng-select [items]="durations$ | async"
+             placeholder="{{'dataSteward.about.updateFrequency.frequency' | translate}}"
+             [ngClass]="{'filled': data.frequency}"
+             bindLabel="code"
+             (change)="onChange()"
+             [(ngModel)]="data.frequency"></ng-select>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.about.sla.heading' | translate}}</h3>
+  <app-text-input placeholderText="{{'dataSteward.about.sla.describe' | translate}}"
+                  inputType="text-area"
+                  (change)="onChange()"
+                  [(value)]="data.slaDescription"></app-text-input>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.about.slaLink.heading' | translate}}</h3>
+  <app-text-input placeholderText="{{'dataSteward.about.slaLink.addSlaLink' | translate}}"
+                  (change)="onChange()"
+                  [(value)]="data.slaLink"></app-text-input>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.about.creationDate.heading' | translate}}</h3>
+  <div class="creation-date__date">
+    {{data.createdDate ? formatTime(data.createdDate) : formatTime(currentDate)}}
+  </div>
+</div>
+
+
+<div class="steward-actions">
+  <button class="steward-actions__save" [ngClass]="{'disabled': !isDataExisting()}" (click)="publishDataSet()">{{'dataSteward.save' | translate}}</button>
+</div>
+
+<div *ngIf="saving" class="saving-background"></div>
+
+<div *ngIf="saving" class="saving-container">
+  <app-loading [showLoading]="saving" [state]="'saving'"></app-loading>
+</div>

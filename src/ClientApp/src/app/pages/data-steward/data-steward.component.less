@@ -1,0 +1,216 @@
+@import './../../shared/variables';
+
+.steward-container {
+  background-color: white;
+  border: 1px solid @lightGreyInterface;
+  border-radius: @borderRadius;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.steward-navigation {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 2rem;
+
+  li {
+    padding: 1rem 2rem;
+    border-top: 1px solid @lightGreyInterface;
+    border-bottom: 1px solid @lightGreyInterface;
+    border-right: 1px solid @lightGreyInterface;
+    background-color: white;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      box-shadow: 0 2px 4px @primaryShadow;
+    }
+
+    &.tab-active {
+      background-color: @primaryColor;
+      color: @white;
+      border-bottom: none;
+      box-shadow: 0 2px 4px @categoryShadow;
+    }
+  }
+
+  li:first-child {
+    border-left: 1px solid @lightGreyInterface;
+    border-top-left-radius: @borderRadius;
+    border-bottom-left-radius: @borderRadius;
+  }
+
+  li:last-child {
+    border-right: 1px solid @lightGreyInterface;
+    border-top-right-radius: @borderRadius;
+    border-bottom-right-radius: @borderRadius;
+  }
+}
+
+.steward-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  .steward-actions__save {
+    border: 1px solid @lightGreyInterface;
+    border-radius: 50rem;
+    padding: 1rem 3rem;
+    background-color: @primaryColor;
+    color: white;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      box-shadow: @smallShadow;
+    }
+
+    &.disabled {
+      background-color: @grey;
+    }
+  }
+}
+
+h3 {
+  color: @darkGreyInterface;
+}
+
+.data-container {
+  width: 80%;
+  margin-bottom: 3rem;
+}
+
+.disabled {
+  border: 1px solid @lightGreyInterface;
+  border-radius: @borderRadius;
+  color: @lightGreyInterface;
+  padding: 1rem 2rem;
+}
+
+
+/*
+---------------------
+ ng-select overrides
+---------------------
+ */
+
+ng-select {
+  background-color: @white;
+  border: 1px solid @lightGreyInterface;
+  border-radius: @borderRadius;
+  margin-bottom: 1rem;
+
+  transition: all 0.3s ease-in-out;
+
+  &.filled {
+    border-color: @secondaryGreen;
+  }
+
+  &.ng-select-focused {
+    border-color: @primaryColor;
+    box-shadow: @inputShadow;
+  }
+
+  &.ng-select-opened {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    .ng-arrow {
+      top: -2px;
+      border-color: transparent transparent #999;
+      border-width: 0 5px 5px;
+    }
+  }
+
+  &.ng-select-multiple {
+    .data-meta__tags {
+      padding: 0.2rem 1rem;
+      border-radius: 50rem;
+
+      .data-meta__tags-indicator {
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-right: 1rem;
+        display: inline-block;
+        border-radius: 50rem;
+      }
+    }
+
+    .default {
+      padding: 0.2rem 1rem;
+      border-radius: 50rem;
+      background-color: @grey;
+    }
+
+    .ng-select-container {
+      .ng-value {
+        margin-bottom: 0.5rem;
+        margin-right: 1rem;
+        color: @white;
+
+        .ng-value-icon {
+          padding-right: 0.5rem;
+        }
+      }
+      .ng-input {
+        padding: 0;
+      }
+    }
+  }
+
+  .ng-select-container {
+    padding: 1rem 2rem;
+    cursor: default;
+    display: flex;
+    outline: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+
+    .ng-clear-wrapper,
+    .ng-arrow-wrapper {
+      align-self: center;
+    }
+
+    .ng-input {
+      padding: 0 2rem;
+    }
+  }
+
+  .ng-placeholder {
+    color: @grey;
+  }
+
+  .ng-has-value {
+    .ng-placeholder {
+      display: none;
+    }
+  }
+
+  .ng-arrow {
+    border-color: #999 transparent transparent;
+    border-style: solid;
+    border-width: 5px 5px 2.5px;
+  }
+
+  .ng-dropdown-panel {
+    border: 1px solid @lightGreyInterface;
+    border-bottom-left-radius: @borderRadius;
+    border-bottom-right-radius: @borderRadius;
+    background-color: @white;
+    margin-top: 0.1rem;
+    box-shadow: @inputShadow;
+
+    transition: all 0.3s ease-in-out;
+
+    .ng-option {
+      padding: 1rem;
+    }
+
+    .ng-option-marked {
+      background-color: @lightGreyInterface;
+    }
+  }
+
+
+}

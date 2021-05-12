@@ -1,0 +1,50 @@
+<div class="search__spacer"></div>
+<div class="search__wrapper container" [ngClass]="{'-active': !notHome}">
+  <button class="search__back"
+          *ngIf="!notHome"
+          [ngClass]="{'-active': !notHome}"
+          (click)="goBack()">
+    <i class="material-icons-outlined"> arrow_back_ios </i>
+  </button>
+  <div class="search__container"
+       #searchContainer>
+    <input class="search__input"
+           id="type-ahead"
+           #searchInput
+           autocomplete="off"
+           placeholder="{{'search.searchPlaceholder' | translate}}"
+           [(ngModel)]="term"
+           (keyup.enter)="goSearch()"/>
+    <label for="type-ahead"
+           class="search__label"
+           (click)="goSearch()">
+      <i class="material-icons-outlined"> search </i>
+    </label>
+    <div class="search__output" *ngIf="suggestions && !isSearching && term && term.length > 2 && showing">
+      <div class="search__item"
+           [routerLink]="['/detail', suggestion.id]"
+           [routerLinkActive]="['link-active']"
+           (click)="term = ''"
+           *ngFor="let suggestion of suggestions">
+        <div class="search__item-content">
+          <span>
+            {{suggestion.name}}
+          </span>
+          <span class="search__category-wrapper">
+            <span class="search__category" [ngStyle]="{'background-color': category.colour}" *ngFor="let category of suggestion.categories"></span>
+          </span>
+        </div>
+
+      </div>
+    </div>
+    <div class="search__output" *ngIf="isSearching">
+      <div class="search__searching">Searching...</div>
+    </div>
+    <div class="search__output" *ngIf="suggestions && suggestions.length === 0 && !isSearching && term && term.length > 2 && showing">
+      <div class="search__searching">Nothing found</div>
+    </div>
+
+  </div>
+
+</div>
+

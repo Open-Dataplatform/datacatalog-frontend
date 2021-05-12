@@ -1,0 +1,12 @@
+<div class="message-notifier__wrapper" *ngIf="message">
+  <div class="message-notifier__content">
+    {{message}}
+  </div>
+  <div class="message-notifier__close">
+    <button class="message-notifier__close-button" (click)="closeMessage()">
+      <i class="material-icons-outlined"> clear </i>
+    </button>
+  </div>
+</div>
+
+

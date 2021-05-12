@@ -1,0 +1,64 @@
+<div class="data-container">
+  <h3>{{'dataSteward.meta.dataFlow.heading' | translate}}</h3>
+  <ng-select [items]="dataset$ | async"
+             [hideSelected]="true"
+             placeholder="{{'dataSteward.meta.transformation.sourceDataSetsPlaceholder' | translate}}"
+             [ngClass]="{'filled': dataSetTransformation.sourceDatasets}"
+             multiple="true"
+             bindLabel="name"
+             (change)="onDataChange()"
+             [(ngModel)]="dataSetTransformation.sourceDatasets">
+    <ng-template ng-label-tmp let-item="item" let-clear="clear">
+      <span class="default">
+        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+        <span class="ng-value-label">{{item.name}}</span>
+      </span>
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item">
+      <span class="data-meta__tags">
+        <span class="ng-value-label">{{item.name}}</span>
+      </span>
+    </ng-template>
+  </ng-select>
+
+</div>
+
+<div class="data-container"
+     *ngIf="showTransformationSelector()">
+  <h3>{{'dataSteward.meta.transformation.heading' | translate}}</h3>
+  <p class="subheading">{{'dataSteward.meta.transformation.selectTransformation' | translate}}</p>
+  <ng-select [items]="transformations"
+             class="transformation__selector"
+             placeholder="{{'dataSteward.meta.transformation.transformationPlaceholder' | translate}}"
+             [ngClass]="{'filled': activeTransformation}"
+             bindLabel="shortDescription"
+             #transformationSelect
+             (change)="changeTransformations()"
+             [(ngModel)]="activeTransformation">
+    <ng-template ng-option-tmp let-item="item">
+        <div class="ng-value-label full" (click)="removeAddNew()">{{item.shortDescription}}</div>
+    </ng-template>
+    <ng-template ng-footer-tmp>
+      <button (click)="addNewTransformation(transformationSelect)" class="transformation__footer">
+        <i class="material-icons-outlined"> add </i>
+        <span class="transformation__add-new">Add new transformation</span>
+      </button>
+    </ng-template>
+  </ng-select>
+</div>
+
+<div class="data-container" *ngIf="showCreateNew()">
+  <h3>{{'dataSteward.meta.transformation.heading' | translate}}</h3>
+  <div>
+    <p class="subheading">{{'dataSteward.meta.transformation.addNew' | translate}}</p>
+    <app-text-input placeholderText="{{'dataSteward.meta.transformation.describeShort' | translate}}"
+                    [(value)]="dataSetTransformation.shortDescription"
+                    (change)="changeTransformations(true)"></app-text-input>
+    <app-text-input inputType="text-area" placeholderText="{{'dataSteward.meta.transformation.describe' | translate}}"
+                    [(value)]="dataSetTransformation.description"
+                    (change)="changeTransformations(true)"></app-text-input>
+  </div>
+
+</div>
+
+

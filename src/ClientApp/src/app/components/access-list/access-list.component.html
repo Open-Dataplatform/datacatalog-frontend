@@ -1,0 +1,38 @@
+<div class="access__list-container">
+    <div class="access__list__members-container">
+        <h2>Read access</h2>
+        <div class="access__list__items">
+            <mat-selection-list [(ngModel)]="selectedReaders">
+                <mat-list-option *ngFor="let reader of readers" [value]="reader">
+                  {{reader.name}}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+        <div class="access__actions-container">
+            <div class="access__actions">
+                <button class="button" (click)="addReader()"> <i class="material-icons-outlined"> add </i> </button>
+            </div>
+            <div class="access__actions">   
+                <button class="button" (click)="removeReader()"> <i class="material-icons-outlined"> remove </i> </button> 
+            </div>
+        </div>
+    </div>
+    <div class="access__list__members-container">
+        <h2>Write access</h2>
+        <div class="access__list__items">
+            <mat-selection-list [(ngModel)]="selectedWriters">
+                <mat-list-option *ngFor="let writer of writers" [value]="writer">
+                  {{writer.name}}
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+        <div class="access__actions-container">
+            <div class="access__actions">
+                <button class="button" (click)="addWriter()"> <i class="material-icons-outlined"> add </i> </button>
+            </div>
+            <div class="access__actions">   
+                <button class="button" (click)="removeWriter()"> <i class="material-icons-outlined"> remove </i> </button> 
+            </div>
+        </div>
+    </div>
+</div>

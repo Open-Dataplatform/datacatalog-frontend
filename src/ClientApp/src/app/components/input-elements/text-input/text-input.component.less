@@ -1,0 +1,31 @@
+@import './../../../shared/variables';
+
+.input-text,
+.input-text-area {
+  border-radius: @borderRadius;
+  border: 1px solid @lightGreyInterface;
+  padding: 1rem 2rem;
+  width: 100%;
+  outline: none;
+  transition: all 0.3s ease-in-out, height 0s;
+  margin-bottom: 1rem;
+
+  &::placeholder {
+    color: @grey;
+  }
+
+  &:focus {
+    border-color: @primaryColor;
+    box-shadow: @inputShadow;
+  }
+}
+
+.input-text-area {
+  min-height: 5rem;
+  resize: none;
+  overflow: hidden;
+}
+
+.filled {
+  border-color: @secondaryGreen;
+}

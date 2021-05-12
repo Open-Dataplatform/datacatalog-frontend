@@ -1,0 +1,56 @@
+<div class="mapper__wrapper" id="mapper-wrapper">
+  <div class="mapper__container"
+       [style.height]="getBiggestSection() * SPACING + 'px'">
+
+    <div class="point"
+         *ngFor="let point of dynPoints; index as i"
+         [ngStyle]="{
+           top: point.y + 'px',
+           left: point.x + 'px',
+           height: point.height + 'px',
+           width: point.width + 'px',
+           backgroundColor: point.color
+         }"></div>
+
+    <div class="parent dataset"
+         id="parent-{{i}}"
+         [ngStyle]="calculateParentStyle(i)"
+         (click)="goToDataset(parent ? parent.id : '')"
+         *ngFor="let parent of relations.sourceDatasets; index as i">
+      {{parent.name}}
+      <div class="tooltip">
+        <h4> {{parent.name}} </h4>
+        <p class="fade-ellipsis"> {{parent.description}} </p>
+      </div>
+    </div>
+
+    <div class="divider"
+         [ngStyle]="parentDividerStyle()"
+         [ngClass]="{'hidden': !hasParents() || relations.sourceDatasets.length < 2}"></div>
+
+    <div class="current dataset"
+         id="current"
+         [ngStyle]="calculateCurrentStyle()"
+         [ngClass]="{'hide-parents': !hasParents(), 'hide-children': !hasChildren()}"
+         *ngFor="let current of currentTransform; index as i">
+      <div><strong>{{current.name}}</strong></div>
+      <p class="current-transformation">{{currentShortTransform}}</p>
+    </div>
+
+    <div class="divider"
+         [ngStyle]="childDividerStyle()"
+         [ngClass]="{'hidden': !hasChildren()}" ></div>
+
+    <div class="child dataset"
+         id="child-{{i}}"
+         [ngStyle]="calculateChildStyle(i)"
+         (click)="goToDataset(child ? child.id : '')"
+         *ngFor="let child of relations.sinkDatasets; index as i">
+      {{child.name}}
+      <div class="tooltip">
+        <h4> {{child.name}} </h4>
+        <p class="fade-ellipsis"> {{child.description}} </p>
+      </div>
+    </div>
+  </div>
+</div>

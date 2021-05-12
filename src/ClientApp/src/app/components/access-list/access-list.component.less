@@ -1,0 +1,49 @@
+@import '../../shared/variables';
+
+.access__list-container
+{
+  margin: 5rem 0;
+  background-color: @white;
+  display: flex;
+  flex-wrap: wrap;
+
+  .access__list__members-container {
+    width: 50%;
+    padding-right: 2rem;
+  }
+}
+
+.access__list__items {
+  border: 1px solid @lightGreyInterface;
+  border-radius: @borderRadius;
+  padding-bottom: 2rem;
+  padding-left: 1rem;
+  height: 20rem;
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+
+.access__actions-container {
+  padding-top: 1rem;
+}
+
+.access__actions {
+    justify-content: space-between;
+    align-items: center;
+    display: inline;
+    padding-right: 1rem;
+    padding-top: 1rem;
+  
+    .button {
+      border: 1px solid @lightGreyInterface;
+      border-radius: 50rem;
+      transition: all 0.3s ease-in-out;
+      width: 4rem;
+      height: 4rem;
+  
+      &:hover {
+        box-shadow: @smallShadow;
+        color: @primaryColor;
+      }
+    }
+}

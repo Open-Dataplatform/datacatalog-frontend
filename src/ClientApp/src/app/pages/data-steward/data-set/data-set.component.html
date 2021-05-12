@@ -1,0 +1,113 @@
+
+<div class="data-container disabled" *ngIf="data.id">
+  <p class="data-id" >{{'dataSteward.dataSet.id.heading' | translate}} : {{data.id}}</p>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.dataSet.name.heading' | translate}}</h3>
+  <app-text-input placeholderText="{{'dataSteward.dataSet.name.dataSet' | translate}}"
+                  id="data-name"
+                  [(value)]="data.name"
+                  (change)="onDataChange()"></app-text-input>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.dataSet.dataSetConnection.heading' | translate }}</h3>
+  <ng-select [items]="dataSource$ | async"
+             [multiple]="true"
+             [hideSelected]="true"
+             placeholder="{{'dataSteward.dataSet.dataSetConnection.setDataPlaceholder' | translate }}"
+             [ngClass]="{'filled': data.dataSources}"
+             (change)="onDataChange()"
+             [(ngModel)]="data.dataSources">
+    <ng-template ng-label-tmp let-item="item" let-clear="clear">
+      <span class="default">
+        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+        <span class="ng-value-label">{{item.name}}</span>
+      </span>
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item">
+      <span class="data-meta__tags">
+        <span class="ng-value-label">{{item.name}} - {{item.description}}</span>
+      </span>
+    </ng-template>
+  </ng-select>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.dataSet.owner.heading' | translate}}</h3>
+  <app-text-input placeholderText="{{'dataSteward.dataSet.owner.information' | translate}}"
+                  [inputType]="'text-area'"
+                  [(value)]="data.owner"
+                  (change)="onDataChange()"></app-text-input>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.dataSet.refinement.heading' | translate }}</h3>
+  <ng-select [items]="refinementLevel$ | async"
+             bindLabel="description"
+             bindValue="id"
+             placeholder="{{'dataSteward.dataSet.refinement.enterRefinement' | translate }}"
+             [ngClass]="{'filled': data.refinementLevel}"
+             (change)="onDataChange()"
+             [(ngModel)]="data.refinementLevel">
+  </ng-select>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.dataSet.hierarchy.heading' | translate }}</h3>
+  <ng-select [items]="hierarchies$ | async"
+             bindLabel="name"
+             bindValue="id"
+             placeholder="{{'dataSteward.dataSet.hierarchy.selectHierarchy' | translate }}"
+             [ngClass]="{'filled': data.hierarchy.parentHierarchyId}"
+             (change)="onDataChange()"
+             [(ngModel)]="data.hierarchy.parentHierarchyId">
+  </ng-select>
+  <ng-select *ngIf="data.hierarchy && data.hierarchy.parentHierarchyId"
+             [items]="selectedChildHierarchy(data.hierarchy.parentHierarchyId)"
+             bindLabel="name"
+             placeholder="{{'dataSteward.dataSet.hierarchy.selectChildHierarchy' | translate }}"
+             [ngClass]="{'filled': data.hierarchy}"
+             [clearable]="false"
+             (change)="onDataChange()"
+             [(ngModel)]="data.hierarchy">
+    <ng-template ng-label-tmp let-item="item" ng-loadingspinner-tmp>
+      <span>
+        <span class="ng-value-label">{{item.name}}</span>
+      </span>
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item">
+      <span class="data-meta__tags">
+        <span class="ng-value-label">{{item.name}}</span>
+      </span>
+    </ng-template>
+  </ng-select>
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.dataSet.location.heading' | translate}}</h3>
+  <app-text-input placeholderText="{{'dataSteward.dataSet.location.description' | translate}}" [(value)]="data.location" (change)="onDataChange()"></app-text-input>
+  <p class="dataset-location__description" *ngIf="!isDataReadyForLocationRequest()">{{'dataSteward.dataSet.generatedLocation.description' | translate}}</p>
+  <p class="dataset-location__description" *ngIf="isDataReadyForLocationRequest()">{{'dataSteward.dataSet.generatedLocation.label' | translate}}</p>
+  <p *ngIf="isDataReadyForLocationRequest()">{{generatedLocation}}</p>
+</div>
+
+<div class="data-container">
+
+</div>
+
+<div class="data-container">
+  <h3>{{'dataSteward.dataSet.status.heading' | translate }}</h3>
+  <ng-select [items]="status$ | async"
+             bindLabel="description"
+             bindValue="id"
+             [ngClass]="{'filled': data.status}"
+             (change)="onDataChange()"
+             [(ngModel)]="data.status">
+  </ng-select>
+</div>
+
+<div class="steward-actions">
+  <button class="steward-actions__save" (click)="nextPage()">{{'dataSteward.next' | translate}}</button>
+</div>

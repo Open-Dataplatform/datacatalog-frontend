@@ -1,0 +1,113 @@
+@import '../../shared/variables';
+
+a.navbar-brand {
+  font-size: 1.7rem;
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  color: @primaryBlue;
+  font-weight: bold;
+}
+
+.navbar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1337;
+  background-color: @white;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+.logo-divider {
+  margin: 0 1rem;
+}
+
+.navigation-item {
+  margin-left: @gutters;
+  color: @primaryBlue;
+}
+
+.nav-data-steward {
+  width: 4.5rem;
+  height: 4.5rem;
+  position: absolute;
+  right: 1.5rem;
+  top: 5.1rem;
+  border-radius: 50%;
+  background-color: @white;
+  border: 1px @lightGreyInterface solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    box-shadow: 0 3px 4px @primaryShadow;
+    color: @primaryColor;
+  }
+}
+
+.header-extra {
+  padding-top: 2rem;
+}
+
+.header-login__wrapper {
+  width: 50%;
+  margin: 0 auto;
+
+  .header-login__login-button {
+    display: block;
+    margin-left: auto;
+    padding: 1rem 2rem;
+    border-radius: 50rem;
+    background-color: @primaryColor;
+  }
+}
+
+.alpha-banner {
+  background-color: @primaryColor;
+  color: white;
+  position: fixed;
+  top: 1rem;
+  right: -5rem;
+  z-index: 1337;
+  transform: rotateZ(45deg);
+  width: 15rem;
+  text-align: center;
+
+}
+
+.header__username {
+  color: @grey;
+  font-style: italic;
+  margin-right: 2rem;
+}
+
+.header__user-icon {
+  background-color: @primaryColor;
+  color: @white;
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50rem;
+  margin-right: 1rem;
+  padding: 0.2rem 0.3rem;
+
+  .material-icons-outlined {
+    font-size: 2rem;
+    padding-bottom: 0.3rem;
+  }
+}
+
+.login-modal__bottom-container {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 2rem;
+
+  .login-modal__error {
+    color: darkred;
+  }
+}
