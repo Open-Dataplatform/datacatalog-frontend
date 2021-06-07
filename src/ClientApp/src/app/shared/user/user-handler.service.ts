@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject } from "rxjs";
-import { environment } from "../../../environments/environment";
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { UserManager, User } from 'oidc-client';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Components } from '../../../types/dataplatform-api'
+import { Components } from '../../../types/dataplatform-api';
 
 import IUser = Components.Schemas.IUser;
 
@@ -19,14 +19,14 @@ export class UserHandlerService {
   public userHasDataStewardRole$ = this.userHasDataStewardRole.asObservable();
 
   constructor(
-    private readonly http:HttpClient,
+    private readonly http: HttpClient,
     private readonly userManager: UserManager) {
   }
 
   public async initialize(): Promise<void> {
     this.instantiate();
 
-    var loggedInUser = await this.userManager.getUser()
+    const loggedInUser = await this.userManager.getUser();
 
     if (loggedInUser && loggedInUser.expired) {
       await this.userManager.signinSilent().catch(error => console.error('Error received when refreshing token: ' + error));

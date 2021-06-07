@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
-import {TranslateService} from "@ngx-translate/core";
-import {UserHandlerService} from "../../shared/user/user-handler.service";
-import {finalize} from "rxjs/operators";
-import { Components } from '../../../types/dataplatform-api'
-import IMember = Components.Schemas.IMember;
-import {ParticlesConfig} from "./particles-config";
+import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
+import {UserHandlerService} from '../../shared/user/user-handler.service';
+import {ParticlesConfig} from './particles-config';
 
 @Component({
   selector: 'app-login-page',
@@ -28,7 +25,7 @@ export class LoginPageComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (particlesJS) {
-      particlesJS('particles-js', ParticlesConfig, function() {});
+      //particlesJS('particles-js', ParticlesConfig, function() {});
     }
 
     if (this.isTokenInURL(this.router.url)) {

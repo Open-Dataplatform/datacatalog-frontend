@@ -8,7 +8,7 @@ import {
   CanActivate
 } from '@angular/router';
 import {  Observable } from 'rxjs';
-import { UserHandlerService } from "../shared/user/user-handler.service";
+import { UserHandlerService } from '../shared/user/user-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   private hasDataStewardAccess: boolean;
 
-  constructor(private readonly userHandlerService: UserHandlerService,  readonly router: Router) 
-  {
+  constructor(private readonly userHandlerService: UserHandlerService,  readonly router: Router) {
       this.userHandlerService.userHasDataStewardRole$.subscribe(
         x => this.hasDataStewardAccess = x
       );
@@ -37,12 +36,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
 
   async checkLogin(unsecure: boolean = false): Promise<boolean | UrlTree> {
-    var currentUser = await this.userHandlerService.getUser();
+    let currentUser = await this.userHandlerService.getUser();
 
     if (currentUser && !currentUser.expired && (this.hasDataStewardAccess || unsecure)) {
       return true;
     }
-    
+
     return this.router.createUrlTree(['/login']);
   }
 }
