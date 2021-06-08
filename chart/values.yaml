@@ -2,7 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-secretName: datacatalog-api-test
 environment: test
 appName: datacatalog-frontend
 
@@ -10,7 +9,7 @@ deployment:
   replicaCount: 1
 
   image:
-    repository: <IMAGENAME>
+    repository: datacatalog-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "latest"
