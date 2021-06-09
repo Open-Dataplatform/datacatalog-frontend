@@ -5,19 +5,17 @@ import { WebStorageStateStore } from 'oidc-client';
 
 export const environment = {
   production: false,
-  //base: 'https://dpdatacatalogwebapi-appservice-awo.azurewebsites.net',
   base: 'https://localhost:5000',
-  elk: 'http://10.0.6.4:9200/datacatalog.web-xnikh',
   oidcSettings: {
-    client_id : '8cdf0892-b169-47e4-baa2-03a118a61804',
-    authority: 'https://login.microsoftonline.com/f7619355-6c67-4100-9a78-1847f30742e2/v2.0/',
+    client_id : 'interactive.public',
+    authority: 'https://demo.identityserver.io/',
     response_type: 'code',
     post_logout_redirect_uri: 'http://localhost:4200/',
     loadUserInfo: false,
     redirect_uri: 'http://localhost:4200/login',
     silent_redirect_uri: 'http://localhost:4200/login',
     automaticSilentRenew: true,
-    scope: 'api://8cdf0892-b169-47e4-baa2-03a118a61804/user_impersonation openid profile offline_access',
+    scope: 'openid profile offline_access',
     userStore: new WebStorageStateStore({ store: window.localStorage })
   }
 };

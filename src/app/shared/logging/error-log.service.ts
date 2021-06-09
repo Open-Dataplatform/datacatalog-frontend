@@ -45,23 +45,4 @@ export class ErrorLogService {
       console.error(error);
     }
   }
-
-  // Take the error and log it to the ELK stack.
-  logToELK(message: any, type: string) {
-    const logMessage = {
-      timestamp: new Date().toISOString(),
-      type: "POST",
-      url: 'testPage',
-      contentType: "application/json",
-      data: {
-        url: window.location.href,
-        content: message,
-        type: type,
-        userAgent: window.navigator.userAgent,
-        userLang: window.navigator.language
-      }
-    };
-
-    this.httpClient.post(`${environment.elk}/${type}`, logMessage).subscribe(res => console.log('res', res)); // post log to ELK stack.
-  }
 }
