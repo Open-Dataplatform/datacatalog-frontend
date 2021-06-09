@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 import { WebStorageStateStore } from 'oidc-client';
 
-export const environment = {
+export const environment = Object.assign({
   production: false,
   base: 'https://localhost:5000',
   oidcSettings: {
@@ -18,7 +18,8 @@ export const environment = {
     scope: 'openid profile offline_access',
     userStore: new WebStorageStateStore({ store: window.localStorage })
   }
-};
+},
+  (window as any).dynamicEnvironment);
 
 /*
  * In development mode, to ignore zone related error stack frames such as
