@@ -20,6 +20,20 @@ deployment:
     timeoutSeconds: 2
     periodSeconds: 60
 
+  dynamicEnvironment:
+    base: https://localhost:5000
+    production: false
+    oidcSettings:
+      client_id: interactive.public
+      authority: https://demo.identityserver.io/
+      response_type: code
+      post_logout_redirect_uri: http://localhost:4200/
+      loadUserInfo: false
+      redirect_uri: http://localhost:4200/login
+      silent_redirect_uri: http://localhost:4200/login
+      automaticSilentRenew: true
+      scope: openid profile offline_access
+
   podSecurityContext: {}
 
   securityContext: {}

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appName }}-cm
+  labels:
+    {{- include "datacatalog-frontend.labels" . | nindent 4 }}
+data:
+  dynamicEnvironment.js: |
+    (function (window) {
+      window.dynamicEnvironment = {
+        base: '{{ .Values.deployment.dynamicEnvironment.base }}',
+        production: {{ .Values.deployment.dynamicEnvironment.production }},
+        oidcSettings: {
+          client_id : '{{ .Values.deployment.dynamicEnvironment.oidcSettings.client_id }}',
+          authority: '{{ .Values.deployment.dynamicEnvironment.oidcSettings.authority }}',
+          response_type: '{{ .Values.deployment.dynamicEnvironment.oidcSettings.response_type }}',
+          post_logout_redirect_uri: '{{ .Values.deployment.dynamicEnvironment.oidcSettings.post_logout_redirect_uri }}',
+          loadUserInfo: {{ .Values.deployment.dynamicEnvironment.oidcSettings.loadUserInfo }},
+          redirect_uri: '{{ .Values.deployment.dynamicEnvironment.oidcSettings.redirect_uri }}',
+          silent_redirect_uri: '{{ .Values.deployment.dynamicEnvironment.oidcSettings.silent_redirect_uri }}',
+          automaticSilentRenew: {{ .Values.deployment.dynamicEnvironment.oidcSettings.automaticSilentRenew }},
+          scope: '{{ .Values.deployment.dynamicEnvironment.oidcSettings.scope }}',
+        }
+      };
+    }(this));

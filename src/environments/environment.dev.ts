@@ -3,7 +3,7 @@ This is the environments file for the personal development environment, the base
  */
 import { WebStorageStateStore } from 'oidc-client';
 
-export const environment = {
+export const environment = Object.assign({
   production: false,
   base: 'https://dpdatacatalogwebapi-appservice-DevEnvironmentName.azurewebsites.net',
   oidcSettings: {
@@ -18,4 +18,5 @@ export const environment = {
     scope: 'api://8cdf0892-b169-47e4-baa2-03a118a61804/user_impersonation openid profile offline_access',
     userStore: new WebStorageStateStore({ store: window.localStorage })
   }
-};
+},
+  (window as any).dynamicEnvironment);
