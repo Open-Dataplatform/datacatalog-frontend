@@ -41,10 +41,6 @@ deployment:
   #   cpu: 100m
   #   memory: 128Mi
 
-  env:
-    "ASPNETCORE_ENVIRONMENT": "{{ .Values.environment }}"
-    "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
-
 service:
   type: ClusterIP
   port: 80

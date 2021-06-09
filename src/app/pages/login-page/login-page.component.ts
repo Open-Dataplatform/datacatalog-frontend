@@ -25,7 +25,7 @@ export class LoginPageComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (particlesJS) {
-      //particlesJS('particles-js', ParticlesConfig, function() {});
+      particlesJS('particles-js', ParticlesConfig, function() {});
     }
 
     if (this.isTokenInURL(this.router.url)) {

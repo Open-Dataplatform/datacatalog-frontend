@@ -28,11 +28,6 @@ spec:
             {{- toYaml .Values.deployment.securityContext | nindent 12 }}
           image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
-          env:
-          {{ range $k, $v := .Values.deployment.env }}
-            - name: {{ $k | quote }}
-              value: {{ $v | quote }}
-          {{- end }}
           ports:
             - name: http
               containerPort: 80
