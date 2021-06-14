@@ -14,7 +14,7 @@ ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . ./
 
-RUN npm run ng build --configuration=prod
+RUN npm run ng build --configuration=prod --base-href \"/datacatalog/\"
 
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/nginx.conf
