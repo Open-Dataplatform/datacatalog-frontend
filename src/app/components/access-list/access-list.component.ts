@@ -1,7 +1,7 @@
 import {Component, OnInit, Input, Inject} from '@angular/core';
 import { Components } from '../../../types/dataplatform-api'
 import IDataAccessEntry = Components.Schemas.IDataAccessEntry;
-import IAdSearchResultResponse = Components.Schemas.IAdSearchResultResponse;
+import IAdSearchResult = Components.Schemas.IAdSearchResult;
 import {DataHandlerService} from "../../shared/data-handler.service";
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { Observable } from 'rxjs';
@@ -87,7 +87,7 @@ export class AccessListComponent implements OnInit {
       }, error => { console.log('Failed to get members: ' + JSON.stringify(error)) });
   }
 
-  openSearchDialog(): Observable<IAdSearchResultResponse> {
+  openSearchDialog(): Observable<IAdSearchResult> {
     const dialogRef = this.searchDialog.open(SearchAdDialog, {
       width: '500px',
       height: '400px',
@@ -105,9 +105,9 @@ export class AccessListComponent implements OnInit {
 })
 export class SearchAdDialog {
 
-  searchResults :IAdSearchResultResponse[];
+  searchResults :IAdSearchResult[];
   searchString: string;
-  selectedSearchResult: IAdSearchResultResponse;
+  selectedSearchResult: IAdSearchResult;
 
   constructor(
     public dialogRef: MatDialogRef<SearchAdDialog>,
