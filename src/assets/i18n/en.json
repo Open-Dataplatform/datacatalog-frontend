@@ -47,24 +47,6 @@
         "requested": "Data requested",
         "request": "Request data"
       }
-    },
-    "dataaccess": {
-      "title": "Data access",
-      "information": "This is a description of how data in this dataset can be accessed.",
-      "detailed": {
-        "information": "The dataset data is available through RESTful APIs. A Postmand collection is supplied to illustrate how these RESTful API calls work. To understand what postman is, please read the",
-        "documentationlink": "documentation"
-      },
-      "postman": {
-        "download": "You will need Postman, get it",
-        "downloadlink": "here",
-        "environment": "Get the postman",
-        "environmentlink": "environment",
-        "collection": "Get the postman",
-        "collectionlink": "collection",
-        "apikey": "You will need an API key to access the data. The API key is inserted as a value for the http header 'x-api-key' in the Postman collection. An API key can be retrieved by contacting",
-        "apikeylink": "Janus"
-      }
     }
   },
   "dataCard": {
