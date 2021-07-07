@@ -64,14 +64,16 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     kubernetes.io/ingress.class: nginx
-  host:
-  path: /
+  hosts:
+    - name: dp-test.com/datacatalog
+      paths:
+      - /
 
   # tls: 
   #   hosts:
   #     - secretName: datacatalog-energinet-crt
   #       hosts:
-  #         - dataplatform.energinet.dk/
+  #         - dataplatform.energinet.dk
       
 externalSecret:
   enable: false
