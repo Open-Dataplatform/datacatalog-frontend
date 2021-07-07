@@ -68,9 +68,11 @@ ingress:
   host:
   path: /
 
-  tls: 
-    hosts:
-      - secretName: datacatalog-energinet-crt
-        hosts:
-          - dataplatform.energinet.dk/
+  # tls: 
+  #   hosts:
+  #     - secretName: datacatalog-energinet-crt
+  #       hosts:
+  #         - dataplatform.energinet.dk/
       
+externalSecret:
+  enable: false
