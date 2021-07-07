@@ -1,5 +1,13 @@
 export declare module Components {
     export module Schemas {
+        export interface IAdSearchResult {
+            id?: string | null;
+            displayName?: string | null;
+            type?: string | null;
+        }
+        export interface IAddDatasetAccessMemberRequestDto {
+            memberId?: string; // uuid
+        }
         export interface ICategory {
             name?: string | null;
             colour?: string | null;
@@ -26,10 +34,10 @@ export declare module Components {
             imageUri?: string | null; // uri
         }
         export type IConfidentiality = 0 | 1 | 2 | 3; // int32
-		export interface IDataAccessEntry {
+        export interface IDataAccessEntry {
             id?: string | null;
             name?: string | null;
-            memberType?: string |null;
+            memberType?: string | null;
         }
         export interface IDataContract {
             datasetId?: string; // uuid
@@ -116,6 +124,7 @@ export declare module Components {
             categories?: ICategory[] | null;
             datasetChangeLogs?: IDatasetChangeLog[] | null;
             dataSources?: IDataSource[] | null;
+            provisionStatus?: IProvisionDatasetStatusEnum; // int32
             version?: number; // int32
             originEnvironment?: string | null;
             originDeleted?: boolean;
@@ -123,7 +132,7 @@ export declare module Components {
             modifiedDate?: string; // date-time
             createdDate?: string; // date-time
         }
-		export interface IDatasetAccessList {
+        export interface IDatasetAccessList {
             readAccessList?: IDataAccessEntry[] | null;
             writeAccessList?: IDataAccessEntry[] | null;
         }
@@ -209,11 +218,6 @@ export declare module Components {
             modifiedDate?: string; // date-time
             createdDate?: string; // date-time
         }
-        export interface IAdSearchResultResponse {
-            id?: string | null;
-            displayName?: string | null;
-            type?: string | null;
-        }
         export interface IDatasetUpdateRequest {
             id?: string; // uuid
             name?: string | null;
@@ -241,6 +245,15 @@ export declare module Components {
             modifiedDate?: string; // date-time
             createdDate?: string; // date-time
         }
+        export interface IDurationCreateRequest {
+            code?: string | null;
+            description?: string | null;
+        }
+        export interface IDurationUpdateRequest {
+            id?: string; // uuid
+            code?: string | null;
+            description?: string | null;
+        }
         export interface IDurationUpsertRequest {
             code?: string | null;
             description?: string | null;
@@ -261,6 +274,17 @@ export declare module Components {
             id?: string; // uuid
             modifiedDate?: string; // date-time
             createdDate?: string; // date-time
+        }
+        export interface IHierarchyCreateRequest {
+            name?: string | null;
+            description?: string | null;
+            parentHierarchyId?: string | null; // uuid
+        }
+        export interface IHierarchyUpdateRequest {
+            id?: string; // uuid
+            name?: string | null;
+            description?: string | null;
+            parentHierarchyId?: string | null; // uuid
         }
         export interface ILineageDataset {
             sourceTransformations?: ILineageTransformation[] | null;
@@ -306,13 +330,6 @@ export declare module Components {
             email?: string | null;
             members?: IGuidId[] | null;
         }
-        export interface IMemberGroupUpdateRequest {
-            name?: string | null;
-            description?: string | null;
-            email?: string | null;
-            members?: IGuidId[] | null;
-            id?: string; // uuid
-        }
         export interface INullableGuidId {
             id?: string | null; // uuid
         }
@@ -325,6 +342,7 @@ export declare module Components {
             detail?: string | null;
             instance?: string | null;
         }
+        export type IProvisionDatasetStatusEnum = 0 | 1 | 2; // int32
         export type IRefinementLevel = 0 | 1 | 2; // int32
         export type IRole = 0 | 1 | 2; // int32
         export type ISortType = 0 | 1 | 2 | 3 | 4 | 5 | 6; // int32
@@ -375,6 +393,10 @@ declare namespace Paths {
                  */
                 export type IId = string; // uuid
             }
+            namespace Responses {
+                export interface I200 {
+                }
+            }
         }
         namespace Get {
             export interface IQueryParameters {
@@ -382,19 +404,31 @@ declare namespace Paths {
             }
             namespace Parameters {
                 /**
-                 * If set to true the returned category loist will include categories without datasets
+                 * If set to true the returned category list will include categories without datasets
                  */
                 export type IIncludeEmpty = boolean | null;
             }
             namespace Responses {
+                export interface I200 {
+                }
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
         namespace Post {
             export type IRequestBody = Components.Schemas.ICategoryCreateRequest;
+            namespace Responses {
+                export interface I200 {
+                }
+            }
         }
         namespace Put {
             export type IRequestBody = Components.Schemas.ICategoryUpdateRequest;
+            namespace Responses {
+                export interface I200 {
+                }
+            }
         }
     }
     namespace ApiCategory$Id {
@@ -409,38 +443,48 @@ declare namespace Paths {
                 export type IId = string; // uuid
             }
             namespace Responses {
+                export interface I200 {
+                }
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
     namespace ApiDataContract {
         namespace Delete {
-            export type IRequestBody = Components.Schemas.IGuidId;
+            export interface IQueryParameters {
+                id?: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the data contract to delete
+                 */
+                export type IId = string; // uuid
+            }
             namespace Responses {
-                export type I400 = Components.Schemas.IProblemDetails;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Get {
             namespace Responses {
-                export type I200 = Components.Schemas.IDataContract[];
-                export type I401 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Post {
             export type IRequestBody = Components.Schemas.IDataContractCreateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.IDataContract;
-                export type I401 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Put {
             export type IRequestBody = Components.Schemas.IDataContractUpdateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.IDataContract;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
     }
@@ -456,8 +500,11 @@ declare namespace Paths {
                 export type IId = string; // uuid
             }
             namespace Responses {
-                export type I200 = Components.Schemas.IDataContract;
+                export interface I200 {
+                }
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
@@ -475,6 +522,8 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.IDataContract[];
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
@@ -492,37 +541,45 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.IDataContract[];
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
     namespace ApiDataSource {
         namespace Delete {
-            export type IRequestBody = Components.Schemas.IGuidId;
+            export interface IQueryParameters {
+                id?: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the data source to delete
+                 */
+                export type IId = string; // uuid
+            }
             namespace Responses {
-                export type I400 = Components.Schemas.IProblemDetails;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Get {
             namespace Responses {
-                export type I200 = Components.Schemas.IDataSource[];
-                export type I401 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Post {
             export type IRequestBody = Components.Schemas.IDataSourceCreateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.IDataSource;
-                export type I401 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Put {
             export type IRequestBody = Components.Schemas.IDataSourceUpdateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.IDataSource;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
     }
@@ -538,18 +595,28 @@ declare namespace Paths {
                 export type IId = string; // uuid
             }
             namespace Responses {
-                export type I200 = Components.Schemas.IDataSource;
+                export interface I200 {
+                }
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
     namespace ApiDataset {
         namespace Delete {
-            export type IRequestBody = Components.Schemas.IGuidId;
+            export interface IQueryParameters {
+                request?: Parameters.IRequest; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the dataset to delete
+                 */
+                export type IRequest = string; // uuid
+            }
             namespace Responses {
-                export type I400 = Components.Schemas.IProblemDetails;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Get {
@@ -561,15 +628,72 @@ declare namespace Paths {
             export type IRequestBody = Components.Schemas.IDatasetCreateRequest;
             namespace Responses {
                 export type I200 = Components.Schemas.IDataset;
-                export type I401 = Components.Schemas.IProblemDetails;
             }
         }
         namespace Put {
             export type IRequestBody = Components.Schemas.IDatasetUpdateRequest;
             namespace Responses {
                 export type I200 = Components.Schemas.IDataset;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+            }
+        }
+    }
+    namespace ApiDataset$DatasetIdAccess$MemberIdRead {
+        namespace Delete {
+            export interface IPathParameters {
+                datasetId: Parameters.IDatasetId; // uuid
+                memberId: Parameters.IMemberId; // uuid
+            }
+            namespace Parameters {
+                export type IDatasetId = string; // uuid
+                export type IMemberId = string; // uuid
+            }
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+    }
+    namespace ApiDataset$DatasetIdAccess$MemberIdWrite {
+        namespace Delete {
+            export interface IPathParameters {
+                datasetId: Parameters.IDatasetId; // uuid
+                memberId: Parameters.IMemberId; // uuid
+            }
+            namespace Parameters {
+                export type IDatasetId = string; // uuid
+                export type IMemberId = string; // uuid
+            }
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+    }
+    namespace ApiDataset$DatasetIdAccessRead {
+        namespace Post {
+            export interface IPathParameters {
+                datasetId: Parameters.IDatasetId; // uuid
+            }
+            export type IRequestBody = Components.Schemas.IAddDatasetAccessMemberRequestDto;
+            namespace Parameters {
+                export type IDatasetId = string; // uuid
+            }
+            namespace Responses {
+                export type I200 = Components.Schemas.IDataAccessEntry;
+            }
+        }
+    }
+    namespace ApiDataset$DatasetIdAccessWrite {
+        namespace Post {
+            export interface IPathParameters {
+                datasetId: Parameters.IDatasetId; // uuid
+            }
+            export type IRequestBody = Components.Schemas.IAddDatasetAccessMemberRequestDto;
+            namespace Parameters {
+                export type IDatasetId = string; // uuid
+            }
+            namespace Responses {
+                export type I200 = Components.Schemas.IDataAccessEntry;
             }
         }
     }
@@ -586,37 +710,75 @@ declare namespace Paths {
             }
             namespace Responses {
                 export type I200 = Components.Schemas.IDataset;
+            }
+        }
+    }
+    namespace ApiDataset$IdAccess {
+        namespace Get {
+            export interface IPathParameters {
+                id: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the dataset to get the access list for
+                 */
+                export type IId = string; // uuid
+            }
+            namespace Responses {
+                export type I200 = Components.Schemas.IDatasetAccessList;
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
+            }
+        }
+    }
+    namespace ApiDatasetAccess {
+        namespace Get {
+            export interface IQueryParameters {
+                search?: Parameters.ISearch;
+            }
+            namespace Parameters {
+                export type ISearch = string | null;
+            }
+            namespace Responses {
+                export type I200 = Components.Schemas.IAdSearchResult[];
             }
         }
     }
     namespace ApiDatasetGroup {
         namespace Delete {
-            export type IRequestBody = Components.Schemas.IGuidId;
+            export interface IQueryParameters {
+                id?: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the category to delete
+                 */
+                export type IId = string; // uuid
+            }
             namespace Responses {
-                export type I400 = Components.Schemas.IProblemDetails;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Get {
             namespace Responses {
-                export type I200 = Components.Schemas.IDatasetGroup[];
+                export interface I200 {
+                }
             }
         }
         namespace Post {
             export type IRequestBody = Components.Schemas.IDatasetGroupCreateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.IDatasetGroup;
-                export type I401 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Put {
             export type IRequestBody = Components.Schemas.IDatasetGroupUpdateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.IDatasetGroup;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
     }
@@ -634,6 +796,8 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.IDatasetGroup;
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
@@ -651,6 +815,8 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.ILineageDataset;
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
@@ -660,6 +826,24 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.IDatasetLocation;
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
+            }
+        }
+    }
+    namespace ApiDatasetPromote$Id {
+        namespace Post {
+            export interface IPathParameters {
+                id: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * Id for dataset in raw
+                 */
+                export type IId = string; // uuid
+            }
+            namespace Responses {
+                export type I200 = Components.Schemas.IDataset;
             }
         }
     }
@@ -669,6 +853,8 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.IDatasetSummary[];
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
@@ -678,6 +864,8 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.IDatasetPredictiveSearch[];
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
@@ -687,6 +875,65 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.IDatasetSummary[];
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
+            }
+        }
+    }
+    namespace ApiDuration {
+        namespace Delete {
+            export interface IQueryParameters {
+                id?: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the duration to delete
+                 */
+                export type IId = string; // uuid
+            }
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+        namespace Get {
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+        namespace Post {
+            export type IRequestBody = Components.Schemas.IDurationCreateRequest;
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+        namespace Put {
+            export type IRequestBody = Components.Schemas.IDurationUpdateRequest;
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+    }
+    namespace ApiDuration$Id {
+        namespace Get {
+            export interface IPathParameters {
+                id: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the duration to get
+                 */
+                export type IId = string; // uuid
+            }
+            namespace Responses {
+                export interface I200 {
+                }
+                export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
@@ -746,34 +993,90 @@ declare namespace Paths {
             }
         }
     }
-    namespace ApiMemberGroup {
+    namespace ApiHierarchy {
         namespace Delete {
-            export type IRequestBody = Components.Schemas.IGuidId;
+            export interface IQueryParameters {
+                id?: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the hierarchy to delete
+                 */
+                export type IId = string; // uuid
+            }
             namespace Responses {
-                export type I400 = Components.Schemas.IProblemDetails;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Get {
             namespace Responses {
-                export type I200 = Components.Schemas.IMemberGroup[];
+                export interface I200 {
+                }
+            }
+        }
+        namespace Post {
+            export type IRequestBody = Components.Schemas.IHierarchyCreateRequest;
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+        namespace Put {
+            export type IRequestBody = Components.Schemas.IHierarchyUpdateRequest;
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+    }
+    namespace ApiHierarchy$Id {
+        namespace Get {
+            export interface IPathParameters {
+                id: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the hierarchy to get
+                 */
+                export type IId = string; // uuid
+            }
+            namespace Responses {
+                export interface I200 {
+                }
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
+            }
+        }
+    }
+    namespace ApiMemberGroup {
+        namespace Delete {
+            export interface IQueryParameters {
+                id?: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the data source to delete
+                 */
+                export type IId = string; // uuid
+            }
+            namespace Responses {
+                export interface I200 {
+                }
+            }
+        }
+        namespace Get {
+            namespace Responses {
+                export interface I200 {
+                }
             }
         }
         namespace Post {
             export type IRequestBody = Components.Schemas.IMemberGroupCreateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.IMemberGroup;
-                export type I401 = Components.Schemas.IProblemDetails;
-            }
-        }
-        namespace Put {
-            export type IRequestBody = Components.Schemas.IMemberGroupUpdateRequest;
-            namespace Responses {
-                export type I200 = Components.Schemas.IMemberGroup;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
     }
@@ -789,51 +1092,68 @@ declare namespace Paths {
                 export type IId = string; // uuid
             }
             namespace Responses {
-                export type I200 = Components.Schemas.IMemberGroup;
+                export interface I200 {
+                }
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
     namespace ApiMemberGroupMembergroups$Id {
         namespace Get {
             export interface IPathParameters {
-                id: Parameters.IId;
-            }
-            export interface IQueryParameters {
-                memberId?: Parameters.IMemberId; // uuid
+                id: Parameters.IId; // uuid
             }
             namespace Parameters {
-                export type IId = string;
-                export type IMemberId = string; // uuid
+                /**
+                 * The id of the member
+                 */
+                export type IId = string; // uuid
             }
             namespace Responses {
-                export type I200 = Components.Schemas.IMemberGroup[];
+                export interface I200 {
+                }
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
     namespace ApiTransformation {
         namespace Delete {
-            export type IRequestBody = Components.Schemas.IGuidId;
+            export interface IQueryParameters {
+                id?: Parameters.IId; // uuid
+            }
+            namespace Parameters {
+                /**
+                 * The id of the transformation to delete
+                 */
+                export type IId = string; // uuid
+            }
             namespace Responses {
-                export type I400 = Components.Schemas.IProblemDetails;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
+            }
+        }
+        namespace Get {
+            namespace Responses {
+                export interface I200 {
+                }
             }
         }
         namespace Post {
             export type IRequestBody = Components.Schemas.ITransformationCreateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.ITransformation;
-                export type I401 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
         namespace Put {
             export type IRequestBody = Components.Schemas.ITransformationUpdateRequest;
             namespace Responses {
-                export type I200 = Components.Schemas.ITransformation;
-                export type I401 = Components.Schemas.IProblemDetails;
-                export type I404 = Components.Schemas.IProblemDetails;
+                export interface I200 {
+                }
             }
         }
     }
@@ -849,8 +1169,11 @@ declare namespace Paths {
                 export type IId = string; // uuid
             }
             namespace Responses {
-                export type I200 = Components.Schemas.ITransformation;
+                export interface I200 {
+                }
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }
@@ -863,6 +1186,8 @@ declare namespace Paths {
             namespace Responses {
                 export type I200 = Components.Schemas.ITransformation[];
                 export type I401 = Components.Schemas.IProblemDetails;
+                export interface I500 {
+                }
             }
         }
     }

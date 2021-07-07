@@ -21,7 +21,7 @@ import {TranslateService} from "@ngx-translate/core";
 import IDuration = Components.Schemas.IDuration;
 import IDatasetAccessList = Components.Schemas.IDatasetAccessList;
 import IDatasetGroup = Components.Schemas.IDatasetGroup;
-import IAdSearchResultResponse = Components.Schemas.IAdSearchResultResponse;
+import IAdSearchResult = Components.Schemas.IAdSearchResult;
 import IDataAccessEntry = Components.Schemas.IDataAccessEntry;
 import { UserHandlerService } from "../shared/user/user-handler.service";
 
@@ -113,10 +113,10 @@ export class DataHandlerService {
     return this.http.delete(url);
   }
 
-  public memberSearch(searchString: string): Observable<IAdSearchResultResponse[]>
+  public memberSearch(searchString: string): Observable<IAdSearchResult[]>
   {
     const url = `${this.urlBase}/api/dataset/access?search=${searchString}`;
-    return this.http.get<IAdSearchResultResponse[]>(url);
+    return this.http.get<IAdSearchResult[]>(url);
   }
 
   public addDatasetAccessReader(datasetId: string, memberId: string): Observable<IDataAccessEntry>

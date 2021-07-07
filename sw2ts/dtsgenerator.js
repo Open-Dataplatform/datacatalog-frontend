@@ -59,7 +59,7 @@ function main() {
         var response, content, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch('http://localhost:5000/swagger/v1.0/swagger.json')];
+                case 0: return [4 /*yield*/, fetch('http://localhost:5001/swagger/v1.0/swagger.json')];
                 case 1:
                     response = _a.sent();
                     return [4 /*yield*/, response.json()];
