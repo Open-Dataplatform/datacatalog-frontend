@@ -67,3 +67,10 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   host:
   path: /
+
+  tls: 
+    hosts:
+      - secretName: datacatalog-energinet-crt
+        hosts:
+          - dataplatform.energinet.dk/
+      

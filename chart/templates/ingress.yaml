@@ -23,4 +23,14 @@ spec:
             name: {{ $fullName }}-svc
             port:
               number: 80
+
+{{ if .Values.ingress.tls }}
+  tls:
+{{- range .Values.ingress.tls.hosts }}
+  - hosts: 
+{{ .hosts | toYaml | indent 4 }}
+    secretName: {{ .secretName }}
+{{- end }}
+{{- end }}
+
 {{- end -}}
