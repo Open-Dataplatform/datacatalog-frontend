@@ -8,6 +8,7 @@ data:
   dynamicEnvironment.js: |
     (function (window) {
       window.dynamicEnvironment = {
+        baseHref: '{{ .Values.deployment.dynamicEnvironment.baseHref }}',
         base: '{{ .Values.deployment.dynamicEnvironment.base }}',
         production: {{ .Values.deployment.dynamicEnvironment.production }},
         oidcSettings: {
