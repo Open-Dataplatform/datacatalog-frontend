@@ -4,6 +4,7 @@
 import { WebStorageStateStore } from 'oidc-client';
 
 export const environment = Object.assign({
+  baseHref: '/',
   production: false,
   base: 'https://localhost:5000',
   oidcSettings: {

@@ -4,6 +4,7 @@
     // This is needed since angular is statically served, and will not read environment variables at runtime,
     // thus we need this dynamic file which is loaded upon initializing the page.
     /*
+    basehref: '/'
     base: 'https://localhost:5000',
     production: false,
     oidcSettings: {

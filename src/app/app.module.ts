@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { APP_BASE_HREF } from '@angular/common';
 import { ErrorHandler, NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
@@ -14,6 +15,7 @@ import { ErrorInterceptService } from "./shared/error-intercept/error-intercept.
 import { GlobalErrorHandler } from "./shared/logging/global-error-handler.service";
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { UserHandlerService } from "./shared/user/user-handler.service";
+import { environment } from '../environments/environment';
 
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -58,6 +60,10 @@ export function getTranslateConfig() {
       provide : HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi   : true,
+    },
+    {
+      provide  : APP_BASE_HREF, 
+      useValue : environment.baseHref 
     },
     UserHandlerService,
     { 
