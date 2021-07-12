@@ -15,7 +15,7 @@ import { ErrorInterceptService } from "./shared/error-intercept/error-intercept.
 import { GlobalErrorHandler } from "./shared/logging/global-error-handler.service";
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { UserHandlerService } from "./shared/user/user-handler.service";
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -37,7 +37,7 @@ export function getTranslateConfig() {
     AppComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
     TranslateModule.forRoot(getTranslateConfig()),
     HttpClientModule,
     SharedModule,
@@ -48,25 +48,28 @@ export function getTranslateConfig() {
   ],
   providers: [
     {
-      provide: HTTP_INTERCEPTORS,
+      provide:  HTTP_INTERCEPTORS,
       useClass: ErrorInterceptService,
-      multi: true
+      multi:    true
     },
     {
-      provide: ErrorHandler,
+      provide:  ErrorHandler, 
       useClass: GlobalErrorHandler
     },
     {
-      provide: HTTP_INTERCEPTORS,
+      provide : HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true,
+      multi   : true,
     },
-    { provide: APP_BASE_HREF, useValue: environment.baseHref },
-    UserHandlerService,
     {
+      provide  : APP_BASE_HREF, 
+      useValue : environment.baseHref 
+    },
+    UserHandlerService,
+    { 
       provide: APP_INITIALIZER,
-      useFactory: (userHandlerService: UserHandlerService) => () => userHandlerService.initialize(),
-      deps: [UserHandlerService],
+      useFactory: (userHandlerService : UserHandlerService) => () => userHandlerService.initialize(), 
+      deps: [UserHandlerService], 
       multi: true
     }
   ],
