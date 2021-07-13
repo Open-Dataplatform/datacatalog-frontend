@@ -20,6 +20,9 @@ deployment:
     timeoutSeconds: 2
     periodSeconds: 60
 
+  nginxConf:
+    path: "/"
+  
   dynamicEnvironment:
     baseHref: '/'
     base: https://localhost:5000
