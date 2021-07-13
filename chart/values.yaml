@@ -65,10 +65,9 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     kubernetes.io/ingress.class: nginx
-  hosts:
-    - name: dp-test.com
-      paths:
-      - /
+  
+  host: "dp-test.com"
+  path: "/"
 
   # tls: 
   #   hosts:

@@ -24,3 +24,12 @@ data:
         }
       };
     }(this));
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appName }}-nginx-cm
+  labels:
+    {{- include "datacatalog-frontend.labels" . | nindent 4 }}
+data:
+{{ (tpl (.Files.Glob "files/nginx.conf").AsConfig . ) | indent 2 }}
