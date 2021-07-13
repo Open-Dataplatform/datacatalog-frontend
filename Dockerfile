@@ -3,7 +3,7 @@
 # ex
 # docker build -t sweetimage:1.3 --no-cache  .
 
-FROM node AS build
+FROM node:12.11.1-alpine AS build
 
 WORKDIR /opt/ng
 COPY package.json ./
