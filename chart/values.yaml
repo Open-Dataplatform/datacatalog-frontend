@@ -19,9 +19,6 @@ deployment:
     initialDelaySeconds: 30
     timeoutSeconds: 2
     periodSeconds: 60
-
-  nginxConf:
-    path: "/"
   
   dynamicEnvironment:
     baseHref: '/'
