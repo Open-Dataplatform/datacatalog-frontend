@@ -21,7 +21,6 @@ deployment:
     periodSeconds: 60
   
   dynamicEnvironment:
-    baseHref: '/'
     base: https://localhost:5000
     production: false
     oidcSettings:
