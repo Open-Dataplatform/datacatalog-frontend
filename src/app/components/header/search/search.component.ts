@@ -2,10 +2,9 @@ import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {DataHandlerService} from "../../../shared/data-handler.service";
-import { Components } from '../../../../types/dataplatform-api'
-import IDataset = Components.Schemas.IDataset;
 import {fromEvent} from "rxjs";
 import {debounceTime, distinctUntilChanged, filter, map} from "rxjs/operators";
+import { IDatasetResponse } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-search',
@@ -23,7 +22,7 @@ export class SearchComponent implements OnInit {
   term: string;
   notHome: boolean;
 
-  suggestions: IDataset[];
+  suggestions: IDatasetResponse[];
 
   constructor(private readonly router: Router,
               private readonly activeRoute: ActivatedRoute,

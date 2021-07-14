@@ -4,26 +4,8 @@ import {EMPTY, Observable, throwError} from "rxjs";
 import { filter } from "rxjs/operators";
 import {environment} from "../../environments/environment";
 
-import { IConfidentialityEnum } from "../../types/dataplatform-enum";
-import { Components } from '../../types/dataplatform-api'
-import ICategory = Components.Schemas.ICategory;
-import IDataset = Components.Schemas.IDataset;
-import ITransformation = Components.Schemas.ITransformation;
-import IMemberGroup = Components.Schemas.IMemberGroup;
-import IDatasetStatus = Components.Schemas.IDatasetStatus;
-import IRefinementLevel = Components.Schemas.IRefinementLevel;
-import IHierarchy = Components.Schemas.IHierarchy;
-import IDatasetLocationRequest = Components.Schemas.IDatasetLocationRequest;
-import IDatasetLocation = Components.Schemas.IDatasetLocation;
-import ILineageDataset = Components.Schemas.ILineageDataset;
-import IDataSource = Components.Schemas.IDataSource;
-import {TranslateService} from "@ngx-translate/core";
-import IDuration = Components.Schemas.IDuration;
-import IDatasetAccessList = Components.Schemas.IDatasetAccessList;
-import IDatasetGroup = Components.Schemas.IDatasetGroup;
-import IAdSearchResult = Components.Schemas.IAdSearchResult;
-import IDataAccessEntry = Components.Schemas.IDataAccessEntry;
 import { UserHandlerService } from "../shared/user/user-handler.service";
+import { CategoryClient, DatasetAccessClient, DatasetClient, DatasetSearchByCategoryRequest, DatasetSearchByTermRequest, ICategoryResponse, IDatasetAccessListResponse, IDatasetResponse, IDatasetSummaryResponse, ILineageTransformationResponse } from './api/api';
 
 /*
 This is a service that handles the connection to the api,
@@ -36,13 +18,17 @@ This will then handle error and log them if the backend sends an error.
 })
 export class DataHandlerService {
 
-  categories: ICategory[];
-  currentTransformation?: ITransformation;
+  categories: ICategoryResponse[];
+  currentTransformation?: ILineageTransformationResponse;
   userLoggedIn$ = this.userHandlerService.userLoggedIn$;
 
-  constructor(private readonly http:HttpClient,
-              private readonly translate: TranslateService,
-              private readonly userHandlerService: UserHandlerService) {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly userHandlerService: UserHandlerService,
+    private readonly categoryClient: CategoryClient,
+    private readonly datasetClient: DatasetClient,
+    private readonly datasetAccessClient: DatasetAccessClient
+  ) {
       this.userLoggedIn$.pipe(filter(user => user !== null))
         .subscribe(() => this.getCategoryData().subscribe(response => { this.categories = response; }));
   }
@@ -51,54 +37,60 @@ export class DataHandlerService {
     return environment.base;
   }
 
-  public getCategoryData(includeEmpty :boolean = false): Observable<ICategory[]> {
-    const url = `${this.urlBase}/api/category?includeEmpty=${includeEmpty}`;
-    return this.http
-      .get<ICategory[]>(url);
+  public getCategoryData(includeEmpty :boolean = false): Observable<ICategoryResponse[]> {
+    return this.categoryClient.getAll(includeEmpty);
   }
 
-  public getDataSets(term: string, pageSize?: number, pageIndex?: number): Observable<IDataset[]> {
-    const url = `${this.urlBase}/api/dataset/search/term`;
-    return this.http
-      .post<IDataset[]>(url, {
-        "sortType": 0,
-        "searchTerm": term,
-        "pageSize": pageSize,
-        "pageIndex": pageIndex
-      });
+  public getDataSets(term: string, pageSize?: number, pageIndex?: number): Observable<IDatasetSummaryResponse[]> {
+    return this.datasetClient.getBySearchTerm(new DatasetSearchByTermRequest(
+      {
+        sortType: 0,
+        searchTerm: term,
+        pageSize: pageSize,
+        pageIndex: pageIndex,
+        take: 0
+      }
+    ));
   }
 
-  public getCategorySets(term: string, pageSize?: number, pageIndex?: number): Observable<IDataset[]> {
-    const url = `${this.urlBase}/api/dataset/search/category`;
-    return this.http
-      .post<IDataset[]>(url, {
-        "sortType": 0,
-        "categoryId": term,
-        "pageSize": pageSize,
-        "pageIndex": pageIndex
-      });
+  public getCategorySets(categoryId: string, pageSize?: number, pageIndex?: number): Observable<IDatasetSummaryResponse[]> {
+      return this.datasetClient.getByCategory(new DatasetSearchByCategoryRequest(
+        {
+          sortType: 0,
+          categoryId: categoryId,
+          pageSize: pageSize,
+          pageIndex: pageIndex,
+          take: 0
+        }
+      ));
   }
 
-  public getSearchSuggestions(term): Observable<IDataset[]> {
-    const url = `${this.urlBase}/api/dataset/search/predictive`;
-    return this.http
-      .post<IDataset[]>(url, {
-        "take": 5,
-        "sortType": 0,
-        "searchTerm": term
-      });
+  public getSearchSuggestions(term): Observable<IDatasetResponse[]> {
+    return this.datasetClient.getNameBySearchTerm(new DatasetSearchByTermRequest(
+      {
+        take: 5,
+        sortType: 0,
+        searchTerm: term,
+        pageIndex: 0,
+        pageSize: 0
+      }
+    ));
   }
 
-  public getDetailsFromId(id: string): Observable<IDataset> {
-    const url = `${this.urlBase}/api/dataset/${id}`;
-    return this.http
-      .get<IDataset>(url);
+  public getDetailsFromId(id: string): Observable<IDatasetResponse> {
+    // const url = `${this.urlBase}/api/dataset/${id}`;
+    // return this.http
+    //   .get<IDatasetResponse>(url);
+
+    return this.datasetClient.findById(id);
   }
 
-  public getDatasetAccess(id: string): Observable<IDatasetAccessList> {
-    const url = `${this.urlBase}/api/dataset/${id}/access`;
-    return this.http
-      .get<IDatasetAccessList>(url);
+  public getDatasetAccess(id: string): Observable<IDatasetAccessListResponse> {
+    // const url = `${this.urlBase}/api/dataset/${id}/access`;
+    // return this.http
+    //   .get<IDatasetAccessList>(url);
+
+    return this.datasetAccessClient.getAccessList(id);
   }
 
   public removeDatasetAccessReader(datasetId: string, memberId: string): Observable<any>
@@ -139,12 +131,6 @@ export class DataHandlerService {
     const url = `${this.urlBase}/api/dataset/lineage/${id}`;
     return this.http
       .get<ILineageDataset>(url);
-  }
-
-  public getSimpleLineage(id: string): Observable<ITransformation> {
-    const url = `${this.urlBase}/api/dataset/lineage/simple/${id}`;
-    return this.http
-      .get<ITransformation>(url);
   }
 
   public getStarred(): Observable<any> {
@@ -232,7 +218,7 @@ export class DataHandlerService {
       .get<IDatasetStatus[]>(url);
   }
 
-  public createNewDataSet(dataSet: IDataset): Observable<IDataset> {
+  public createNewDataSet(dataSet: IDatasetResponse): Observable<IDatasetResponse> {
     if (!dataSet) {
       this.handleError('please fill out data');
       return EMPTY;
@@ -241,7 +227,7 @@ export class DataHandlerService {
     return this.http.post(url, dataSet);
   }
 
-  public updateDataSet(dataSet: IDataset): Observable<IDataset> {
+  public updateDataSet(dataSet: IDatasetResponse): Observable<IDatasetResponse> {
     if (!dataSet) {
       this.handleError('please fill out data');
       return EMPTY;
@@ -250,7 +236,7 @@ export class DataHandlerService {
     return this.http.put(url, dataSet);
   }
 
-  public setCurrentTransformation(transform: ITransformation[]) {
+  public setCurrentTransformation(transform: ILineageTransformationResponse[]) {
     this.currentTransformation = transform && transform.length ? transform[0]: undefined;
   }
 

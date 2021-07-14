@@ -2,10 +2,8 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {DataHandlerService} from "../../../shared/data-handler.service";
 import {Observable} from "rxjs";
 import {DataStewardHandlerService, IMetaDataInfo} from "../data-steward-handler.service";
-import { Components } from '../../../../types/dataplatform-api'
-import ICategory = Components.Schemas.ICategory;
-import IDataset = Components.Schemas.IDataset;
 import {Router} from "@angular/router";
+import { ICategoryResponse, IDatasetSummaryResponse } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-meta',
@@ -18,8 +16,8 @@ export class DataMetaComponent implements OnInit {
   data: IDataset;
   today: Date;
 
-  categories$: Observable<ICategory[]>;
-  dataset$: Observable<IDataset[]>;
+  categories$: Observable<ICategoryResponse[]>;
+  dataset$: Observable<IDatasetSummaryResponse[]>;
 
   constructor(private readonly dataHandlerService: DataHandlerService,
               private readonly dataStewardHandlerService: DataStewardHandlerService,

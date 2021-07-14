@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataHandlerService} from "../../shared/data-handler.service";
-import { Components } from '../../../types/dataplatform-api'
-import ICategory = Components.Schemas.ICategory;
-import IDataset = Components.Schemas.IDataset;
 import { IConfidentialityEnum } from "../../../types/dataplatform-enum";
 import {DataStewardHandlerService} from "../data-steward/data-steward-handler.service";
 import {UserHandlerService} from "../../shared/user/user-handler.service";
+import { IDatasetResponse } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-details-page',
@@ -17,9 +15,7 @@ export class DetailsPageComponent implements OnInit {
 
   id: string;
   categories: ICategory[];
-  dataSet: IDataset;
-  showGtmsDataAccessDescription: boolean = false;
-  showNeptunDataAccessDescription: boolean = false;
+  dataSet: IDatasetResponse;
   confidentiality: IConfidentialityEnum;
   currentTransformationDescription: string = '';
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
@@ -117,20 +113,6 @@ export class DetailsPageComponent implements OnInit {
   getDetailsFromId(id: string): void {
     this.dataHandlerService.getDetailsFromId(id).subscribe(response => {
       this.dataSet = response;
-
-      if (this.dataSet.categories && this.dataSet.name)
-      {
-            this.showGtmsDataAccessDescription = 
-              this.dataSet.categories.some(cat => cat.name == "Gas") &&
-              this.dataSet.name.startsWith('GT');
-      }
-
-      if (this.dataSet.categories && this.dataSet.name)
-      {
-            this.showNeptunDataAccessDescription = 
-              this.dataSet.categories.some(cat => cat.name == "Gas") &&
-              this.dataSet.name.startsWith('Neptun');
-      }
       this.getConfidentiality();
     });
   }

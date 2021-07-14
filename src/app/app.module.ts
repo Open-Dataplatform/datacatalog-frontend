@@ -65,6 +65,10 @@ export function getTranslateConfig() {
       provide  : APP_BASE_HREF, 
       useValue : environment.baseHref 
     },
+    {
+      provide  : 'API_BASE_URL', 
+      useValue : environment.base
+    },
     UserHandlerService,
     { 
       provide: APP_INITIALIZER,

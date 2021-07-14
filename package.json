@@ -10,7 +10,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:dts": "node sw2ts/dtsgenerator.js"
+    "build:dts": "node sw2ts/dtsgenerator.js",
+    "codegen": "nswag swagger2tsclient /input:http://localhost:5001/swagger/v1/swagger.json /output:src/app/shared/api/api.ts /template:Angular /httpClass:HttpClient /InjectionTokenType:InjectionToken /UseSingletonProvider:true /typeScriptVersion:4.1.3 /runtime:Net50"
   },
   "private": true,
   "dependencies": {
@@ -58,7 +59,8 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
-    "typescript": "4.1.3"
+    "typescript": "4.1.3",
+    "nswag": "13.11.3"
   },
   "optionalDependencies": {
     "node-sass": "^4.12.0",

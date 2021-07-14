@@ -1,11 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {DataStewardHandlerService} from "../../pages/data-steward/data-steward-handler.service";
 import {Observable} from "rxjs";
-import { Components } from '../../../types/dataplatform-api'
-import IDataset = Components.Schemas.IDataset;
 import {DataHandlerService} from "../../shared/data-handler.service";
-import ITransformation = Components.Schemas.ITransformation;
 import {NgSelectComponent} from "@ng-select/ng-select";
+import { IDatasetSummaryResponse, ILineageDatasetResponse, ILineageTransformationResponse, ITransformationResponse } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-transformation-selector',
@@ -15,12 +13,12 @@ import {NgSelectComponent} from "@ng-select/ng-select";
 })
 export class TransformationSelectorComponent implements OnInit {
 
-  @Input() dataSetTransformation: ITransformation;
+  @Input() dataSetTransformation: ITransformationResponse;
   @Output() dataSetTransformationChange = new EventEmitter();
 
-  dataset$: Observable<IDataset[]>;
-  transformations: ITransformation[];
-  activeTransformation: ITransformation;
+  dataset$: Observable<IDatasetSummaryResponse[]>;
+  transformations: ITransformationResponse[];
+  activeTransformation: ITransformationResponse;
 
   addNew: boolean;
 
@@ -30,7 +28,7 @@ export class TransformationSelectorComponent implements OnInit {
   ngOnInit() {
     this.dataset$ = this.dataHandlerService.getDataSets('');
     if (!this.dataSetTransformation) {
-      this.dataSetTransformation = {};
+      this.dataSetTransformation = null;
     } else {
       this.onDataChange();
       this.activeTransformation = Object.assign({}, this.dataSetTransformation);
