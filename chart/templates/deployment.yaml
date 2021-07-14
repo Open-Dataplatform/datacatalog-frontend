@@ -26,6 +26,9 @@ spec:
         - configMap:
             name: {{ .Values.appName }}-cm
           name: {{ .Values.appName }}-cm
+        - configMap:
+            name: {{ .Values.appName }}-nginx-cm
+          name: {{ .Values.appName }}-nginx-cm
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -49,6 +52,10 @@ spec:
             - name: {{ .Values.appName }}-cm
               mountPath: /usr/share/nginx/html/assets/dynamicEnvironment.js
               subPath: dynamicEnvironment.js
+              readOnly: true
+            - name: {{ .Values.appName }}-nginx-cm
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
               readOnly: true
       {{- with .Values.deployment.nodeSelector }}
       nodeSelector:

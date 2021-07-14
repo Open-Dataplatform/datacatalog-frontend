@@ -61,10 +61,6 @@ export function getTranslateConfig() {
       useClass: AuthInterceptor,
       multi   : true,
     },
-    {
-      provide  : APP_BASE_HREF, 
-      useValue : environment.baseHref 
-    },
     UserHandlerService,
     { 
       provide: APP_INITIALIZER,
