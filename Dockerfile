@@ -14,7 +14,7 @@ ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . ./
 
-RUN ng build --base-href "/datacatalog/"
+RUN ng build
 
 FROM nginx:alpine
 # Remove default nginx index page
