@@ -77,6 +77,8 @@ ingress:
 externalSecret:
   enabled: true
 
+  role: dataplatform
+
   secrets: 
     - name: tls.crt
       # The full path of the secret to read, as in `vault read secret/data/hello-service/credentials`
