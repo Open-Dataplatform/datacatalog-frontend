@@ -75,7 +75,7 @@ ingress:
   #         - dataplatform.energinet.dk
       
 externalSecret:
-  enabled: true
+  enabled: false
 
   role: dataplatform
 
