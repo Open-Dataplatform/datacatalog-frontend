@@ -1,10 +1,7 @@
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {DataHandlerService} from "../../shared/data-handler.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import { Components } from '../../../types/dataplatform-api'
-import IDataset = Components.Schemas.IDataset;
-import ITransformation = Components.Schemas.ITransformation;
-import ILineageTransformation = Components.Schemas.ILineageTransformation;
+import { DatasetSummary, IDataset, IDatasetSummary, ILineageTransformation, ITransformation, LineageDataset } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-relation-mapper',
@@ -16,7 +13,7 @@ export class RelationMapperComponent implements OnInit {
   @Input()
   dataCard: IDataset;
   relations: ITransformation;
-  currentTransform: IDataset[];
+  currentTransform: IDatasetSummary[];
   currentShortTransform: string;
 
   dynPoints: any[] = [];
@@ -45,7 +42,9 @@ export class RelationMapperComponent implements OnInit {
       description: '',
       shortDescription: '',
       sinkDatasets: [],
-      sourceDatasets: []
+      sourceDatasets: [],
+      createdDate: new Date(),
+      modifiedDate: new Date()
     }
   }
 
@@ -56,12 +55,12 @@ export class RelationMapperComponent implements OnInit {
 
       this.relations.sinkDatasets = this.getSinkData(response.sinkTransformations);
       this.relations.sourceDatasets = this.getSourceData(response.sourceTransformations);
-      this.currentTransform = [{id: this.dataCard ? this.dataCard.id : '', description: this.dataCard.description, name: this.dataCard.name}];
+      this.currentTransform = [{ ...this.dataCard, id: this.dataCard ? this.dataCard.id : '' }];
     });
   }
 
-  getSourceData(transformations: ILineageTransformation[]): IDataset[] | [] {
-    let sourceData = [];
+  getSourceData(transformations: ILineageTransformation[]): LineageDataset[] | [] {
+    let sourceData: LineageDataset[] = [];
     transformations.forEach(transform => {
       sourceData = [...sourceData, ...transform.datasets];
     });
@@ -69,8 +68,8 @@ export class RelationMapperComponent implements OnInit {
     return sourceData;
   }
 
-  getSinkData(transformations: ILineageTransformation[]): IDataset[] | [] {
-    let sinkData = [];
+  getSinkData(transformations: ILineageTransformation[]): LineageDataset[] | [] {
+    let sinkData: LineageDataset[] = [];
     transformations.forEach(transform => {
       sinkData = [...sinkData, ...transform.datasets];
     });
@@ -101,7 +100,7 @@ export class RelationMapperComponent implements OnInit {
     };
   }
 
-  private calculateTop(section: IDataset[], index: number = 0):number {
+  private calculateTop(section: IDatasetSummary[], index: number = 0):number {
     let placement: number = 0;
     if (section.length > 1) {
       placement = (index * this.SPACING) + ((this.getBiggestSection() / section.length) * this.SPACING) - this.SPACING * 2;

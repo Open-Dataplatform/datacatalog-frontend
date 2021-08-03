@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { Components } from '../../../../types/dataplatform-api'
-import ICategory = Components.Schemas.ICategory;
+import { ICategory } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-category-card',

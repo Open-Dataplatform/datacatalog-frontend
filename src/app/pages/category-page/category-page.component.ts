@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {DataHandlerService} from "../../shared/data-handler.service";
-import { IDatasetSummaryResponse } from 'src/app/shared/api/api';
+import { IDatasetSummary } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-category-page',
@@ -11,7 +11,7 @@ import { IDatasetSummaryResponse } from 'src/app/shared/api/api';
 export class CategoryPageComponent implements OnInit {
   term: string;
   isCategory: boolean;
-  dataCards: IDatasetSummaryResponse[];
+  dataCards: IDatasetSummary[];
   pageSize: number = 50;
   pageIndex: number = 0;
 

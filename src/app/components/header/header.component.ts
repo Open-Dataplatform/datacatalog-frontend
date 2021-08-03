@@ -1,6 +1,7 @@
 import { typeSourceSpan } from '@angular/compiler';
 import {Component, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
+import { Dataset } from 'src/app/shared/api/api';
 import {DataStewardHandlerService} from "../../pages/data-steward/data-steward-handler.service";
 import {UserHandlerService} from "../../shared/user/user-handler.service";
 
@@ -33,7 +34,7 @@ export class HeaderComponent implements OnInit{
   }
 
   newDataSet() {
-    this.dataStewardHandlerService.setDataSet({});
+    this.dataStewardHandlerService.setDataSet(new Dataset());
   }
 
   logout() {

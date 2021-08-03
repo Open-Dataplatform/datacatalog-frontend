@@ -60,7 +60,7 @@
 <div class="data-container">
   <h3>{{'dataSteward.about.creationDate.heading' | translate}}</h3>
   <div class="creation-date__date">
-    {{data.createdDate ? formatTime(data.createdDate) : formatTime(currentDate)}}
+    {{data.createdDate ? formatTime(data.createdDate.toISOString()) : formatTime(currentDate)}}
   </div>
 </div>
 

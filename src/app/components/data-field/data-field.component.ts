@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { Components } from '../../../types/dataplatform-api'
-import IDataField = Components.Schemas.IDataField;
+import { IDataField } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-field',
@@ -26,11 +25,14 @@ export class DataFieldComponent implements OnInit {
 
   addField(): void {
     this.dataFields.push({
+      id: "",
       name: "New field",
       type: "",
       description: "",
       format: "",
-      validation: ""
+      validation: "",
+      modifiedDate: new Date(),
+      createdDate: new Date()
     });
     this.dataChange();
   }

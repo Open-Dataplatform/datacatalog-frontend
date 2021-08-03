@@ -4,7 +4,7 @@ import {Location} from "@angular/common";
 import {DataHandlerService} from "../../../shared/data-handler.service";
 import {fromEvent} from "rxjs";
 import {debounceTime, distinctUntilChanged, filter, map} from "rxjs/operators";
-import { IDatasetResponse } from 'src/app/shared/api/api';
+import { IDataset } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-search',
@@ -22,7 +22,7 @@ export class SearchComponent implements OnInit {
   term: string;
   notHome: boolean;
 
-  suggestions: IDatasetResponse[];
+  suggestions: IDataset[];
 
   constructor(private readonly router: Router,
               private readonly activeRoute: ActivatedRoute,

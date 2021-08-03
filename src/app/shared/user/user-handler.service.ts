@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { UserManager, User } from 'oidc-client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Components } from '../../../types/dataplatform-api';
-
-import IUser = Components.Schemas.IUser;
+import { IUser, UserClient } from '../api/api';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +15,7 @@ export class UserHandlerService {
   public userHasDataStewardRole$ = this.userHasDataStewardRole.asObservable();
 
   constructor(
-    private readonly http: HttpClient,
+    private readonly userClient: UserClient,
     private readonly userManager: UserManager) {
   }
 
@@ -36,10 +32,6 @@ export class UserHandlerService {
       await this.getUserInfo().toPromise();
       this.userLoggedIn.next(loggedInUser);
     }
-  }
-
-  get urlBase(): string {
-    return environment.base;
   }
 
   public getUser(): Promise<User> {
@@ -62,11 +54,11 @@ export class UserHandlerService {
   }
 
   getUserInfo(): Observable<void> {
-    const url = `${this.urlBase}/api/user`;
-    return this.http.get<IUser>(url)
-                      .pipe(
-                        map(user => this.userHasDataStewardRole.next(user.roles.indexOf('DataSteward') > -1))
-                      );
+
+    return this.userClient.getUserInfo()
+                  .pipe(
+                    map(user => this.userHasDataStewardRole.next(user.roles.indexOf('DataSteward') > -1))
+                  );
   }
 
   public instantiate() {

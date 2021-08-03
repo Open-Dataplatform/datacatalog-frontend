@@ -23,6 +23,7 @@ export class CategoryClient {
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        console.log(baseUrl);
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
     }
@@ -32,7 +33,7 @@ export class CategoryClient {
      * @param includeEmpty (optional) If set to true the returned category list will include categories without datasets
      * @return A list of all categories
      */
-    getAll(includeEmpty: boolean | null | undefined): Observable<CategoryResponse[]> {
+    getAll(includeEmpty: boolean | null | undefined): Observable<Category[]> {
         let url_ = this.baseUrl + "/api/Category?";
         if (includeEmpty !== undefined && includeEmpty !== null)
             url_ += "includeEmpty=" + encodeURIComponent("" + includeEmpty) + "&";
@@ -53,14 +54,14 @@ export class CategoryClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<CategoryResponse[]>><any>_observableThrow(e);
+                    return <Observable<Category[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<CategoryResponse[]>><any>_observableThrow(response_);
+                return <Observable<Category[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<CategoryResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<Category[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -74,7 +75,7 @@ export class CategoryClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(CategoryResponse.fromJS(item));
+                    result200!.push(Category.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -97,7 +98,7 @@ export class CategoryClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<CategoryResponse[]>(<any>null);
+        return _observableOf<Category[]>(<any>null);
     }
 
     /**
@@ -159,8 +160,8 @@ export class CategoryClient {
 
     /**
      * Update category
-     * @param request The category to create
-     * @return The created category
+     * @param request The category to update
+     * @return The updated category Id
      */
     put(request: CategoryUpdateRequest): Observable<string> {
         let url_ = this.baseUrl + "/api/Category";
@@ -273,7 +274,7 @@ export class CategoryClient {
      * @param id The id of the category to get
      * @return The category
      */
-    get(id: string): Observable<CategoryResponse> {
+    get(id: string): Observable<Category> {
         let url_ = this.baseUrl + "/api/Category/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -295,14 +296,14 @@ export class CategoryClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<CategoryResponse>><any>_observableThrow(e);
+                    return <Observable<Category>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<CategoryResponse>><any>_observableThrow(response_);
+                return <Observable<Category>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<CategoryResponse> {
+    protected processGet(response: HttpResponseBase): Observable<Category> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -313,7 +314,7 @@ export class CategoryClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CategoryResponse.fromJS(resultData200);
+            result200 = Category.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -332,7 +333,7 @@ export class CategoryClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<CategoryResponse>(<any>null);
+        return _observableOf<Category>(<any>null);
     }
 }
 
@@ -353,7 +354,7 @@ export class DataContractClient {
      * Get all data contracts
      * @return All data contracts
      */
-    getAll(): Observable<DataContractResponse[]> {
+    getAll(): Observable<DataContract[]> {
         let url_ = this.baseUrl + "/api/DataContract";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -372,14 +373,14 @@ export class DataContractClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<DataContractResponse[]>><any>_observableThrow(e);
+                    return <Observable<DataContract[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DataContractResponse[]>><any>_observableThrow(response_);
+                return <Observable<DataContract[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<DataContractResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<DataContract[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -393,7 +394,7 @@ export class DataContractClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DataContractResponse.fromJS(item));
+                    result200!.push(DataContract.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -405,7 +406,7 @@ export class DataContractClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DataContractResponse[]>(<any>null);
+        return _observableOf<DataContract[]>(<any>null);
     }
 
     /**
@@ -581,7 +582,7 @@ export class DataContractClient {
      * @param id The id of the data contract to get
      * @return A data contract
      */
-    get(id: string): Observable<DataContractResponse> {
+    get(id: string): Observable<DataContract> {
         let url_ = this.baseUrl + "/api/DataContract/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -603,14 +604,14 @@ export class DataContractClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<DataContractResponse>><any>_observableThrow(e);
+                    return <Observable<DataContract>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DataContractResponse>><any>_observableThrow(response_);
+                return <Observable<DataContract>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<DataContractResponse> {
+    protected processGet(response: HttpResponseBase): Observable<DataContract> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -621,7 +622,7 @@ export class DataContractClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DataContractResponse.fromJS(resultData200);
+            result200 = DataContract.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -640,7 +641,7 @@ export class DataContractClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DataContractResponse>(<any>null);
+        return _observableOf<DataContract>(<any>null);
     }
 
     /**
@@ -648,7 +649,7 @@ export class DataContractClient {
      * @param id The id of the dataset to get data contracts for
      * @return A list of data contracts
      */
-    getByDatasetId(id: string): Observable<DataContractResponse[]> {
+    getByDatasetId(id: string): Observable<DataContract[]> {
         let url_ = this.baseUrl + "/api/DataContract/bydataset/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -670,14 +671,14 @@ export class DataContractClient {
                 try {
                     return this.processGetByDatasetId(<any>response_);
                 } catch (e) {
-                    return <Observable<DataContractResponse[]>><any>_observableThrow(e);
+                    return <Observable<DataContract[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DataContractResponse[]>><any>_observableThrow(response_);
+                return <Observable<DataContract[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByDatasetId(response: HttpResponseBase): Observable<DataContractResponse[]> {
+    protected processGetByDatasetId(response: HttpResponseBase): Observable<DataContract[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -691,7 +692,7 @@ export class DataContractClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DataContractResponse.fromJS(item));
+                    result200!.push(DataContract.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -714,7 +715,7 @@ export class DataContractClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DataContractResponse[]>(<any>null);
+        return _observableOf<DataContract[]>(<any>null);
     }
 
     /**
@@ -722,7 +723,7 @@ export class DataContractClient {
      * @param id The id of the data source to get data contracts for
      * @return A list of data contracts
      */
-    getByDataSourceId(id: string): Observable<DataContractResponse[]> {
+    getByDataSourceId(id: string): Observable<DataContract[]> {
         let url_ = this.baseUrl + "/api/DataContract/bydatasource/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -744,14 +745,14 @@ export class DataContractClient {
                 try {
                     return this.processGetByDataSourceId(<any>response_);
                 } catch (e) {
-                    return <Observable<DataContractResponse[]>><any>_observableThrow(e);
+                    return <Observable<DataContract[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DataContractResponse[]>><any>_observableThrow(response_);
+                return <Observable<DataContract[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByDataSourceId(response: HttpResponseBase): Observable<DataContractResponse[]> {
+    protected processGetByDataSourceId(response: HttpResponseBase): Observable<DataContract[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -765,7 +766,7 @@ export class DataContractClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DataContractResponse.fromJS(item));
+                    result200!.push(DataContract.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -788,7 +789,7 @@ export class DataContractClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DataContractResponse[]>(<any>null);
+        return _observableOf<DataContract[]>(<any>null);
     }
 }
 
@@ -810,7 +811,7 @@ export class DatasetAccessClient {
      * @param id The id of the dataset to get the access list for
      * @return A dataset access list
      */
-    getAccessList(id: string): Observable<DatasetAccessListResponse> {
+    getAccessList(id: string): Observable<DatasetAccessList> {
         let url_ = this.baseUrl + "/api/dataset/{id}/access";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -832,14 +833,14 @@ export class DatasetAccessClient {
                 try {
                     return this.processGetAccessList(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetAccessListResponse>><any>_observableThrow(e);
+                    return <Observable<DatasetAccessList>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetAccessListResponse>><any>_observableThrow(response_);
+                return <Observable<DatasetAccessList>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAccessList(response: HttpResponseBase): Observable<DatasetAccessListResponse> {
+    protected processGetAccessList(response: HttpResponseBase): Observable<DatasetAccessList> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -850,7 +851,7 @@ export class DatasetAccessClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetAccessListResponse.fromJS(resultData200);
+            result200 = DatasetAccessList.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -869,7 +870,7 @@ export class DatasetAccessClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetAccessListResponse>(<any>null);
+        return _observableOf<DatasetAccessList>(<any>null);
     }
 
     addReadAccessMember(datasetId: string, accessMemberRequest: AddDatasetAccessMemberRequestDto): Observable<DataAccessEntry> {
@@ -1086,7 +1087,7 @@ export class DatasetAccessClient {
         return _observableOf<FileResponse | null>(<any>null);
     }
 
-    search(search: string | null | undefined): Observable<AdSearchResultResponse[]> {
+    search(search: string | null | undefined): Observable<AdSearchResult[]> {
         let url_ = this.baseUrl + "/api/dataset/access?";
         if (search !== undefined && search !== null)
             url_ += "search=" + encodeURIComponent("" + search) + "&";
@@ -1107,14 +1108,14 @@ export class DatasetAccessClient {
                 try {
                     return this.processSearch(<any>response_);
                 } catch (e) {
-                    return <Observable<AdSearchResultResponse[]>><any>_observableThrow(e);
+                    return <Observable<AdSearchResult[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AdSearchResultResponse[]>><any>_observableThrow(response_);
+                return <Observable<AdSearchResult[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processSearch(response: HttpResponseBase): Observable<AdSearchResultResponse[]> {
+    protected processSearch(response: HttpResponseBase): Observable<AdSearchResult[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1128,7 +1129,7 @@ export class DatasetAccessClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(AdSearchResultResponse.fromJS(item));
+                    result200!.push(AdSearchResult.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1140,7 +1141,7 @@ export class DatasetAccessClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AdSearchResultResponse[]>(<any>null);
+        return _observableOf<AdSearchResult[]>(<any>null);
     }
 }
 
@@ -1162,7 +1163,7 @@ export class DatasetClient {
      * @param id The id of the dataset to get
      * @return A dataset
      */
-    findById(id: string): Observable<DatasetResponse> {
+    findById(id: string): Observable<Dataset> {
         let url_ = this.baseUrl + "/api/Dataset/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1184,14 +1185,14 @@ export class DatasetClient {
                 try {
                     return this.processFindById(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetResponse>><any>_observableThrow(e);
+                    return <Observable<Dataset>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetResponse>><any>_observableThrow(response_);
+                return <Observable<Dataset>><any>_observableThrow(response_);
         }));
     }
 
-    protected processFindById(response: HttpResponseBase): Observable<DatasetResponse> {
+    protected processFindById(response: HttpResponseBase): Observable<Dataset> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1202,7 +1203,7 @@ export class DatasetClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetResponse.fromJS(resultData200);
+            result200 = Dataset.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1210,14 +1211,14 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetResponse>(<any>null);
+        return _observableOf<Dataset>(<any>null);
     }
 
     /**
      * Get all datasets
      * @return A list of dataset summaries
      */
-    getAll(): Observable<DatasetResponse[]> {
+    getAll(): Observable<Dataset[]> {
         let url_ = this.baseUrl + "/api/Dataset";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1236,14 +1237,14 @@ export class DatasetClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetResponse[]>><any>_observableThrow(e);
+                    return <Observable<Dataset[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetResponse[]>><any>_observableThrow(response_);
+                return <Observable<Dataset[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<DatasetResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<Dataset[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1257,7 +1258,7 @@ export class DatasetClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DatasetResponse.fromJS(item));
+                    result200!.push(Dataset.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1269,7 +1270,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetResponse[]>(<any>null);
+        return _observableOf<Dataset[]>(<any>null);
     }
 
     /**
@@ -1277,7 +1278,7 @@ export class DatasetClient {
      * @param request The dataset to create
      * @return The created dataset
      */
-    post(request: DatasetCreateRequest): Observable<DatasetResponse> {
+    post(request: DatasetCreateRequest): Observable<Dataset> {
         let url_ = this.baseUrl + "/api/Dataset";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1300,14 +1301,14 @@ export class DatasetClient {
                 try {
                     return this.processPost(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetResponse>><any>_observableThrow(e);
+                    return <Observable<Dataset>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetResponse>><any>_observableThrow(response_);
+                return <Observable<Dataset>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPost(response: HttpResponseBase): Observable<DatasetResponse> {
+    protected processPost(response: HttpResponseBase): Observable<Dataset> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1318,7 +1319,7 @@ export class DatasetClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetResponse.fromJS(resultData200);
+            result200 = Dataset.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1326,7 +1327,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetResponse>(<any>null);
+        return _observableOf<Dataset>(<any>null);
     }
 
     /**
@@ -1334,7 +1335,7 @@ export class DatasetClient {
      * @param request The dataset to update
      * @return The updated dataset
      */
-    put(request: DatasetUpdateRequest): Observable<DatasetResponse> {
+    put(request: DatasetUpdateRequest): Observable<Dataset> {
         let url_ = this.baseUrl + "/api/Dataset";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1357,14 +1358,14 @@ export class DatasetClient {
                 try {
                     return this.processPut(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetResponse>><any>_observableThrow(e);
+                    return <Observable<Dataset>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetResponse>><any>_observableThrow(response_);
+                return <Observable<Dataset>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPut(response: HttpResponseBase): Observable<DatasetResponse> {
+    protected processPut(response: HttpResponseBase): Observable<Dataset> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1375,7 +1376,7 @@ export class DatasetClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetResponse.fromJS(resultData200);
+            result200 = Dataset.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1383,7 +1384,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetResponse>(<any>null);
+        return _observableOf<Dataset>(<any>null);
     }
 
     /**
@@ -1445,7 +1446,7 @@ export class DatasetClient {
      * @param request The search request
      * @return A list of dataset summaries
      */
-    getByCategory(request: DatasetSearchByCategoryRequest): Observable<DatasetSummaryResponse[]> {
+    getByCategory(request: DatasetSearchByCategoryRequest): Observable<DatasetSummary[]> {
         let url_ = this.baseUrl + "/api/Dataset/search/category";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1468,14 +1469,14 @@ export class DatasetClient {
                 try {
                     return this.processGetByCategory(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetSummaryResponse[]>><any>_observableThrow(e);
+                    return <Observable<DatasetSummary[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetSummaryResponse[]>><any>_observableThrow(response_);
+                return <Observable<DatasetSummary[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByCategory(response: HttpResponseBase): Observable<DatasetSummaryResponse[]> {
+    protected processGetByCategory(response: HttpResponseBase): Observable<DatasetSummary[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1489,7 +1490,7 @@ export class DatasetClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DatasetSummaryResponse.fromJS(item));
+                    result200!.push(DatasetSummary.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1512,7 +1513,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetSummaryResponse[]>(<any>null);
+        return _observableOf<DatasetSummary[]>(<any>null);
     }
 
     /**
@@ -1520,7 +1521,7 @@ export class DatasetClient {
      * @param request The search request
      * @return A list of dataset summaries
      */
-    getBySearchTerm(request: DatasetSearchByTermRequest): Observable<DatasetSummaryResponse[]> {
+    getBySearchTerm(request: DatasetSearchByTermRequest): Observable<DatasetSummary[]> {
         let url_ = this.baseUrl + "/api/Dataset/search/term";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1543,14 +1544,14 @@ export class DatasetClient {
                 try {
                     return this.processGetBySearchTerm(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetSummaryResponse[]>><any>_observableThrow(e);
+                    return <Observable<DatasetSummary[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetSummaryResponse[]>><any>_observableThrow(response_);
+                return <Observable<DatasetSummary[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetBySearchTerm(response: HttpResponseBase): Observable<DatasetSummaryResponse[]> {
+    protected processGetBySearchTerm(response: HttpResponseBase): Observable<DatasetSummary[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1564,7 +1565,7 @@ export class DatasetClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DatasetSummaryResponse.fromJS(item));
+                    result200!.push(DatasetSummary.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1587,7 +1588,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetSummaryResponse[]>(<any>null);
+        return _observableOf<DatasetSummary[]>(<any>null);
     }
 
     /**
@@ -1595,7 +1596,7 @@ export class DatasetClient {
      * @param request The search request
      * @return A list of dataset names
      */
-    getNameBySearchTerm(request: DatasetSearchByTermRequest): Observable<DatasetResponse[]> {
+    getNameBySearchTerm(request: DatasetSearchByTermRequest): Observable<Dataset[]> {
         let url_ = this.baseUrl + "/api/Dataset/search/predictive";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1618,14 +1619,14 @@ export class DatasetClient {
                 try {
                     return this.processGetNameBySearchTerm(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetResponse[]>><any>_observableThrow(e);
+                    return <Observable<Dataset[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetResponse[]>><any>_observableThrow(response_);
+                return <Observable<Dataset[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetNameBySearchTerm(response: HttpResponseBase): Observable<DatasetResponse[]> {
+    protected processGetNameBySearchTerm(response: HttpResponseBase): Observable<Dataset[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1639,7 +1640,7 @@ export class DatasetClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DatasetResponse.fromJS(item));
+                    result200!.push(Dataset.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1662,7 +1663,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetResponse[]>(<any>null);
+        return _observableOf<Dataset[]>(<any>null);
     }
 
     /**
@@ -1670,7 +1671,7 @@ export class DatasetClient {
      * @param request The location request
      * @return The location path
      */
-    getDatasetLocation(request: DatasetLocationRequest): Observable<DatasetLocationResponse> {
+    getDatasetLocation(request: DatasetLocationRequest): Observable<DatasetLocation> {
         let url_ = this.baseUrl + "/api/Dataset/location";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1693,14 +1694,14 @@ export class DatasetClient {
                 try {
                     return this.processGetDatasetLocation(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetLocationResponse>><any>_observableThrow(e);
+                    return <Observable<DatasetLocation>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetLocationResponse>><any>_observableThrow(response_);
+                return <Observable<DatasetLocation>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetDatasetLocation(response: HttpResponseBase): Observable<DatasetLocationResponse> {
+    protected processGetDatasetLocation(response: HttpResponseBase): Observable<DatasetLocation> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1711,7 +1712,7 @@ export class DatasetClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetLocationResponse.fromJS(resultData200);
+            result200 = DatasetLocation.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -1730,7 +1731,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetLocationResponse>(<any>null);
+        return _observableOf<DatasetLocation>(<any>null);
     }
 
     /**
@@ -1738,7 +1739,7 @@ export class DatasetClient {
      * @param id The id of the dataset
      * @return A lineage model with source and sink transformations
      */
-    getLineage(id: string): Observable<LineageDatasetResponse> {
+    getLineage(id: string): Observable<LineageDataset> {
         let url_ = this.baseUrl + "/api/Dataset/lineage/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1760,14 +1761,14 @@ export class DatasetClient {
                 try {
                     return this.processGetLineage(<any>response_);
                 } catch (e) {
-                    return <Observable<LineageDatasetResponse>><any>_observableThrow(e);
+                    return <Observable<LineageDataset>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<LineageDatasetResponse>><any>_observableThrow(response_);
+                return <Observable<LineageDataset>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetLineage(response: HttpResponseBase): Observable<LineageDatasetResponse> {
+    protected processGetLineage(response: HttpResponseBase): Observable<LineageDataset> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1778,7 +1779,7 @@ export class DatasetClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = LineageDatasetResponse.fromJS(resultData200);
+            result200 = LineageDataset.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -1797,7 +1798,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<LineageDatasetResponse>(<any>null);
+        return _observableOf<LineageDataset>(<any>null);
     }
 
     /**
@@ -1805,7 +1806,7 @@ export class DatasetClient {
      * @param id Id for dataset in raw
      * @return The stock copy
      */
-    copyDatasetInRaw(id: string): Observable<DatasetResponse> {
+    copyDatasetInRaw(id: string): Observable<Dataset> {
         let url_ = this.baseUrl + "/api/Dataset/promote/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1827,14 +1828,14 @@ export class DatasetClient {
                 try {
                     return this.processCopyDatasetInRaw(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetResponse>><any>_observableThrow(e);
+                    return <Observable<Dataset>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetResponse>><any>_observableThrow(response_);
+                return <Observable<Dataset>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCopyDatasetInRaw(response: HttpResponseBase): Observable<DatasetResponse> {
+    protected processCopyDatasetInRaw(response: HttpResponseBase): Observable<Dataset> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1845,7 +1846,7 @@ export class DatasetClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetResponse.fromJS(resultData200);
+            result200 = Dataset.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1853,7 +1854,7 @@ export class DatasetClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetResponse>(<any>null);
+        return _observableOf<Dataset>(<any>null);
     }
 }
 
@@ -1874,7 +1875,7 @@ export class DatasetGroupClient {
      * Get all dataset groups
      * @return A list of all dataset groups
      */
-    getAll(): Observable<DatasetGroupResponse[]> {
+    getAll(): Observable<DatasetGroup[]> {
         let url_ = this.baseUrl + "/api/DatasetGroup";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1893,14 +1894,14 @@ export class DatasetGroupClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetGroupResponse[]>><any>_observableThrow(e);
+                    return <Observable<DatasetGroup[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetGroupResponse[]>><any>_observableThrow(response_);
+                return <Observable<DatasetGroup[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<DatasetGroupResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<DatasetGroup[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1914,7 +1915,7 @@ export class DatasetGroupClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DatasetGroupResponse.fromJS(item));
+                    result200!.push(DatasetGroup.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1926,7 +1927,7 @@ export class DatasetGroupClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetGroupResponse[]>(<any>null);
+        return _observableOf<DatasetGroup[]>(<any>null);
     }
 
     /**
@@ -1934,7 +1935,7 @@ export class DatasetGroupClient {
      * @param request The dataset group to create
      * @return The created dataset group
      */
-    post(request: DatasetGroupCreateRequest): Observable<DatasetGroupResponse> {
+    post(request: DatasetGroupCreateRequest): Observable<DatasetGroup> {
         let url_ = this.baseUrl + "/api/DatasetGroup";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1957,14 +1958,14 @@ export class DatasetGroupClient {
                 try {
                     return this.processPost(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetGroupResponse>><any>_observableThrow(e);
+                    return <Observable<DatasetGroup>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetGroupResponse>><any>_observableThrow(response_);
+                return <Observable<DatasetGroup>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPost(response: HttpResponseBase): Observable<DatasetGroupResponse> {
+    protected processPost(response: HttpResponseBase): Observable<DatasetGroup> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1975,7 +1976,7 @@ export class DatasetGroupClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetGroupResponse.fromJS(resultData200);
+            result200 = DatasetGroup.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1983,7 +1984,7 @@ export class DatasetGroupClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetGroupResponse>(<any>null);
+        return _observableOf<DatasetGroup>(<any>null);
     }
 
     /**
@@ -1991,7 +1992,7 @@ export class DatasetGroupClient {
      * @param request The dataset group to update
      * @return The updated dataset group
      */
-    put(request: DatasetGroupUpdateRequest): Observable<DatasetGroupResponse> {
+    put(request: DatasetGroupUpdateRequest): Observable<DatasetGroup> {
         let url_ = this.baseUrl + "/api/DatasetGroup";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2014,14 +2015,14 @@ export class DatasetGroupClient {
                 try {
                     return this.processPut(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetGroupResponse>><any>_observableThrow(e);
+                    return <Observable<DatasetGroup>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetGroupResponse>><any>_observableThrow(response_);
+                return <Observable<DatasetGroup>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPut(response: HttpResponseBase): Observable<DatasetGroupResponse> {
+    protected processPut(response: HttpResponseBase): Observable<DatasetGroup> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2032,7 +2033,7 @@ export class DatasetGroupClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetGroupResponse.fromJS(resultData200);
+            result200 = DatasetGroup.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2040,7 +2041,7 @@ export class DatasetGroupClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetGroupResponse>(<any>null);
+        return _observableOf<DatasetGroup>(<any>null);
     }
 
     /**
@@ -2102,7 +2103,7 @@ export class DatasetGroupClient {
      * @param id The id of the dataset group to get
      * @return The dataset group
      */
-    get(id: string): Observable<DatasetGroupResponse> {
+    get(id: string): Observable<DatasetGroup> {
         let url_ = this.baseUrl + "/api/DatasetGroup/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2124,14 +2125,14 @@ export class DatasetGroupClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<DatasetGroupResponse>><any>_observableThrow(e);
+                    return <Observable<DatasetGroup>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DatasetGroupResponse>><any>_observableThrow(response_);
+                return <Observable<DatasetGroup>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<DatasetGroupResponse> {
+    protected processGet(response: HttpResponseBase): Observable<DatasetGroup> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2142,7 +2143,7 @@ export class DatasetGroupClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetGroupResponse.fromJS(resultData200);
+            result200 = DatasetGroup.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -2161,7 +2162,7 @@ export class DatasetGroupClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DatasetGroupResponse>(<any>null);
+        return _observableOf<DatasetGroup>(<any>null);
     }
 }
 
@@ -2182,7 +2183,7 @@ export class DataSourceClient {
      * Get all data sources
      * @return A list of all data sources
      */
-    getAll(): Observable<DataSourceResponse[]> {
+    getAll(): Observable<DataSource[]> {
         let url_ = this.baseUrl + "/api/DataSource";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2201,14 +2202,14 @@ export class DataSourceClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<DataSourceResponse[]>><any>_observableThrow(e);
+                    return <Observable<DataSource[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DataSourceResponse[]>><any>_observableThrow(response_);
+                return <Observable<DataSource[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<DataSourceResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<DataSource[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2222,7 +2223,7 @@ export class DataSourceClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DataSourceResponse.fromJS(item));
+                    result200!.push(DataSource.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -2234,7 +2235,7 @@ export class DataSourceClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DataSourceResponse[]>(<any>null);
+        return _observableOf<DataSource[]>(<any>null);
     }
 
     /**
@@ -2410,7 +2411,7 @@ export class DataSourceClient {
      * @param id The id of the data source to get
      * @return The category
      */
-    get(id: string): Observable<DataSourceResponse> {
+    get(id: string): Observable<DataSource> {
         let url_ = this.baseUrl + "/api/DataSource/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2432,14 +2433,14 @@ export class DataSourceClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<DataSourceResponse>><any>_observableThrow(e);
+                    return <Observable<DataSource>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DataSourceResponse>><any>_observableThrow(response_);
+                return <Observable<DataSource>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<DataSourceResponse> {
+    protected processGet(response: HttpResponseBase): Observable<DataSource> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2450,7 +2451,7 @@ export class DataSourceClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DataSourceResponse.fromJS(resultData200);
+            result200 = DataSource.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -2469,7 +2470,7 @@ export class DataSourceClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DataSourceResponse>(<any>null);
+        return _observableOf<DataSource>(<any>null);
     }
 }
 
@@ -2490,7 +2491,7 @@ export class DurationClient {
      * Get all durations
      * @return A list of all durations
      */
-    getAll(): Observable<DurationResponse[]> {
+    getAll(): Observable<Duration[]> {
         let url_ = this.baseUrl + "/api/Duration";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2509,14 +2510,14 @@ export class DurationClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<DurationResponse[]>><any>_observableThrow(e);
+                    return <Observable<Duration[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DurationResponse[]>><any>_observableThrow(response_);
+                return <Observable<Duration[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<DurationResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<Duration[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2530,7 +2531,7 @@ export class DurationClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DurationResponse.fromJS(item));
+                    result200!.push(Duration.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -2542,7 +2543,7 @@ export class DurationClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DurationResponse[]>(<any>null);
+        return _observableOf<Duration[]>(<any>null);
     }
 
     /**
@@ -2660,7 +2661,7 @@ export class DurationClient {
     }
 
     /**
-     * Delete a data source
+     * Delete a Duration
      * @param id (optional) The id of the duration to delete
      */
     delete(id: string | undefined): Observable<FileResponse | null> {
@@ -2718,7 +2719,7 @@ export class DurationClient {
      * @param id The id of the duration to get
      * @return The duration
      */
-    get(id: string): Observable<DurationResponse> {
+    get(id: string): Observable<Duration> {
         let url_ = this.baseUrl + "/api/Duration/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2740,14 +2741,14 @@ export class DurationClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<DurationResponse>><any>_observableThrow(e);
+                    return <Observable<Duration>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DurationResponse>><any>_observableThrow(response_);
+                return <Observable<Duration>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<DurationResponse> {
+    protected processGet(response: HttpResponseBase): Observable<Duration> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2758,7 +2759,7 @@ export class DurationClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DurationResponse.fromJS(resultData200);
+            result200 = Duration.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -2777,7 +2778,7 @@ export class DurationClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DurationResponse>(<any>null);
+        return _observableOf<Duration>(<any>null);
     }
 }
 
@@ -2798,7 +2799,7 @@ export class GeneralClient {
      * Get sort types
      * @return A list of sort types
      */
-    getSortTypeValues(): Observable<EnumResponse[]> {
+    getSortTypeValues(): Observable<Enum[]> {
         let url_ = this.baseUrl + "/api/General/sorttype";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2817,14 +2818,14 @@ export class GeneralClient {
                 try {
                     return this.processGetSortTypeValues(<any>response_);
                 } catch (e) {
-                    return <Observable<EnumResponse[]>><any>_observableThrow(e);
+                    return <Observable<Enum[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<EnumResponse[]>><any>_observableThrow(response_);
+                return <Observable<Enum[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetSortTypeValues(response: HttpResponseBase): Observable<EnumResponse[]> {
+    protected processGetSortTypeValues(response: HttpResponseBase): Observable<Enum[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2838,7 +2839,7 @@ export class GeneralClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(EnumResponse.fromJS(item));
+                    result200!.push(Enum.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -2850,14 +2851,14 @@ export class GeneralClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<EnumResponse[]>(<any>null);
+        return _observableOf<Enum[]>(<any>null);
     }
 
     /**
      * Get dataset statuses
      * @return A list of dataset statuses
      */
-    getDatasetStatusValues(): Observable<EnumResponse[]> {
+    getDatasetStatusValues(): Observable<Enum[]> {
         let url_ = this.baseUrl + "/api/General/datasetstatus";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2876,14 +2877,14 @@ export class GeneralClient {
                 try {
                     return this.processGetDatasetStatusValues(<any>response_);
                 } catch (e) {
-                    return <Observable<EnumResponse[]>><any>_observableThrow(e);
+                    return <Observable<Enum[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<EnumResponse[]>><any>_observableThrow(response_);
+                return <Observable<Enum[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetDatasetStatusValues(response: HttpResponseBase): Observable<EnumResponse[]> {
+    protected processGetDatasetStatusValues(response: HttpResponseBase): Observable<Enum[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2897,7 +2898,7 @@ export class GeneralClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(EnumResponse.fromJS(item));
+                    result200!.push(Enum.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -2909,14 +2910,14 @@ export class GeneralClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<EnumResponse[]>(<any>null);
+        return _observableOf<Enum[]>(<any>null);
     }
 
     /**
      * Get member roles
      * @return A list of member roles
      */
-    getMemberRoles(): Observable<EnumResponse[]> {
+    getMemberRoles(): Observable<Enum[]> {
         let url_ = this.baseUrl + "/api/General/memberrole";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2935,14 +2936,14 @@ export class GeneralClient {
                 try {
                     return this.processGetMemberRoles(<any>response_);
                 } catch (e) {
-                    return <Observable<EnumResponse[]>><any>_observableThrow(e);
+                    return <Observable<Enum[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<EnumResponse[]>><any>_observableThrow(response_);
+                return <Observable<Enum[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetMemberRoles(response: HttpResponseBase): Observable<EnumResponse[]> {
+    protected processGetMemberRoles(response: HttpResponseBase): Observable<Enum[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2956,7 +2957,7 @@ export class GeneralClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(EnumResponse.fromJS(item));
+                    result200!.push(Enum.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -2968,14 +2969,14 @@ export class GeneralClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<EnumResponse[]>(<any>null);
+        return _observableOf<Enum[]>(<any>null);
     }
 
     /**
      * Get confidentialities
      * @return A list of confidentialities
      */
-    getConfidentialities(): Observable<EnumResponse[]> {
+    getConfidentialities(): Observable<Enum[]> {
         let url_ = this.baseUrl + "/api/General/confidentiality";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2994,14 +2995,14 @@ export class GeneralClient {
                 try {
                     return this.processGetConfidentialities(<any>response_);
                 } catch (e) {
-                    return <Observable<EnumResponse[]>><any>_observableThrow(e);
+                    return <Observable<Enum[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<EnumResponse[]>><any>_observableThrow(response_);
+                return <Observable<Enum[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetConfidentialities(response: HttpResponseBase): Observable<EnumResponse[]> {
+    protected processGetConfidentialities(response: HttpResponseBase): Observable<Enum[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3015,7 +3016,7 @@ export class GeneralClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(EnumResponse.fromJS(item));
+                    result200!.push(Enum.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3027,14 +3028,14 @@ export class GeneralClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<EnumResponse[]>(<any>null);
+        return _observableOf<Enum[]>(<any>null);
     }
 
     /**
      * Get refinement levels
      * @return A list of refinement levels
      */
-    getRefinementLevels(): Observable<EnumResponse[]> {
+    getRefinementLevels(): Observable<Enum[]> {
         let url_ = this.baseUrl + "/api/General/refinementlevel";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3053,14 +3054,14 @@ export class GeneralClient {
                 try {
                     return this.processGetRefinementLevels(<any>response_);
                 } catch (e) {
-                    return <Observable<EnumResponse[]>><any>_observableThrow(e);
+                    return <Observable<Enum[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<EnumResponse[]>><any>_observableThrow(response_);
+                return <Observable<Enum[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetRefinementLevels(response: HttpResponseBase): Observable<EnumResponse[]> {
+    protected processGetRefinementLevels(response: HttpResponseBase): Observable<Enum[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3074,7 +3075,7 @@ export class GeneralClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(EnumResponse.fromJS(item));
+                    result200!.push(Enum.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3086,14 +3087,14 @@ export class GeneralClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<EnumResponse[]>(<any>null);
+        return _observableOf<Enum[]>(<any>null);
     }
 
     /**
      * Get source types
      * @return A list of refinement levels
      */
-    getSourceTypes(): Observable<EnumResponse[]> {
+    getSourceTypes(): Observable<Enum[]> {
         let url_ = this.baseUrl + "/api/General/sourcetypes";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3112,14 +3113,14 @@ export class GeneralClient {
                 try {
                     return this.processGetSourceTypes(<any>response_);
                 } catch (e) {
-                    return <Observable<EnumResponse[]>><any>_observableThrow(e);
+                    return <Observable<Enum[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<EnumResponse[]>><any>_observableThrow(response_);
+                return <Observable<Enum[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetSourceTypes(response: HttpResponseBase): Observable<EnumResponse[]> {
+    protected processGetSourceTypes(response: HttpResponseBase): Observable<Enum[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3133,7 +3134,7 @@ export class GeneralClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(EnumResponse.fromJS(item));
+                    result200!.push(Enum.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3145,7 +3146,7 @@ export class GeneralClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<EnumResponse[]>(<any>null);
+        return _observableOf<Enum[]>(<any>null);
     }
 
     /**
@@ -3153,7 +3154,7 @@ export class GeneralClient {
      * @return A list of durations
      * @deprecated
      */
-    getDuration(): Observable<DurationResponse[]> {
+    getDuration(): Observable<Duration[]> {
         let url_ = this.baseUrl + "/api/General/duration";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3172,14 +3173,14 @@ export class GeneralClient {
                 try {
                     return this.processGetDuration(<any>response_);
                 } catch (e) {
-                    return <Observable<DurationResponse[]>><any>_observableThrow(e);
+                    return <Observable<Duration[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DurationResponse[]>><any>_observableThrow(response_);
+                return <Observable<Duration[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetDuration(response: HttpResponseBase): Observable<DurationResponse[]> {
+    protected processGetDuration(response: HttpResponseBase): Observable<Duration[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3193,7 +3194,7 @@ export class GeneralClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(DurationResponse.fromJS(item));
+                    result200!.push(Duration.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3205,7 +3206,7 @@ export class GeneralClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DurationResponse[]>(<any>null);
+        return _observableOf<Duration[]>(<any>null);
     }
 
     /**
@@ -3213,7 +3214,7 @@ export class GeneralClient {
      * @return A list of hierarchies with their child hierarchies
      * @deprecated
      */
-    getHierarchies(): Observable<HierarchyResponse[]> {
+    getHierarchies(): Observable<Hierarchy[]> {
         let url_ = this.baseUrl + "/api/General/hierarchies";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3232,14 +3233,14 @@ export class GeneralClient {
                 try {
                     return this.processGetHierarchies(<any>response_);
                 } catch (e) {
-                    return <Observable<HierarchyResponse[]>><any>_observableThrow(e);
+                    return <Observable<Hierarchy[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<HierarchyResponse[]>><any>_observableThrow(response_);
+                return <Observable<Hierarchy[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetHierarchies(response: HttpResponseBase): Observable<HierarchyResponse[]> {
+    protected processGetHierarchies(response: HttpResponseBase): Observable<Hierarchy[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3253,7 +3254,7 @@ export class GeneralClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(HierarchyResponse.fromJS(item));
+                    result200!.push(Hierarchy.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3265,7 +3266,7 @@ export class GeneralClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<HierarchyResponse[]>(<any>null);
+        return _observableOf<Hierarchy[]>(<any>null);
     }
 }
 
@@ -3286,7 +3287,7 @@ export class HierarchyClient {
      * Get all hierarchies
      * @return A list of all hierarchies
      */
-    getAll(): Observable<HierarchyResponse[]> {
+    getAll(): Observable<Hierarchy[]> {
         let url_ = this.baseUrl + "/api/Hierarchy";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3305,14 +3306,14 @@ export class HierarchyClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<HierarchyResponse[]>><any>_observableThrow(e);
+                    return <Observable<Hierarchy[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<HierarchyResponse[]>><any>_observableThrow(response_);
+                return <Observable<Hierarchy[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<HierarchyResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<Hierarchy[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3326,7 +3327,7 @@ export class HierarchyClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(HierarchyResponse.fromJS(item));
+                    result200!.push(Hierarchy.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3338,7 +3339,7 @@ export class HierarchyClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<HierarchyResponse[]>(<any>null);
+        return _observableOf<Hierarchy[]>(<any>null);
     }
 
     /**
@@ -3514,7 +3515,7 @@ export class HierarchyClient {
      * @param id The id of the hierarchy to get
      * @return The hierarchy
      */
-    get(id: string): Observable<HierarchyResponse> {
+    get(id: string): Observable<Hierarchy> {
         let url_ = this.baseUrl + "/api/Hierarchy/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -3536,14 +3537,14 @@ export class HierarchyClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<HierarchyResponse>><any>_observableThrow(e);
+                    return <Observable<Hierarchy>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<HierarchyResponse>><any>_observableThrow(response_);
+                return <Observable<Hierarchy>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<HierarchyResponse> {
+    protected processGet(response: HttpResponseBase): Observable<Hierarchy> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3554,7 +3555,7 @@ export class HierarchyClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = HierarchyResponse.fromJS(resultData200);
+            result200 = Hierarchy.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -3573,7 +3574,7 @@ export class HierarchyClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<HierarchyResponse>(<any>null);
+        return _observableOf<Hierarchy>(<any>null);
     }
 }
 
@@ -3594,7 +3595,7 @@ export class MemberGroupClient {
      * Get all member groups
      * @return A list of all member groups
      */
-    getAll(): Observable<MemberGroupResponse[]> {
+    getAll(): Observable<MemberGroup[]> {
         let url_ = this.baseUrl + "/api/MemberGroup";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -3613,14 +3614,14 @@ export class MemberGroupClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<MemberGroupResponse[]>><any>_observableThrow(e);
+                    return <Observable<MemberGroup[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<MemberGroupResponse[]>><any>_observableThrow(response_);
+                return <Observable<MemberGroup[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<MemberGroupResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<MemberGroup[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3634,7 +3635,7 @@ export class MemberGroupClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(MemberGroupResponse.fromJS(item));
+                    result200!.push(MemberGroup.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3646,7 +3647,7 @@ export class MemberGroupClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<MemberGroupResponse[]>(<any>null);
+        return _observableOf<MemberGroup[]>(<any>null);
     }
 
     /**
@@ -3765,7 +3766,7 @@ export class MemberGroupClient {
      * @param id The id of the member group to get
      * @return The member group
      */
-    get(id: string): Observable<MemberGroupResponse> {
+    get(id: string): Observable<MemberGroup> {
         let url_ = this.baseUrl + "/api/MemberGroup/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -3787,14 +3788,14 @@ export class MemberGroupClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<MemberGroupResponse>><any>_observableThrow(e);
+                    return <Observable<MemberGroup>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<MemberGroupResponse>><any>_observableThrow(response_);
+                return <Observable<MemberGroup>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<MemberGroupResponse> {
+    protected processGet(response: HttpResponseBase): Observable<MemberGroup> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3805,7 +3806,7 @@ export class MemberGroupClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = MemberGroupResponse.fromJS(resultData200);
+            result200 = MemberGroup.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -3824,7 +3825,7 @@ export class MemberGroupClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<MemberGroupResponse>(<any>null);
+        return _observableOf<MemberGroup>(<any>null);
     }
 
     /**
@@ -3832,7 +3833,7 @@ export class MemberGroupClient {
      * @param id The id of the member
      * @return The member groups
      */
-    getMemberGroups(id: string): Observable<MemberGroupResponse[]> {
+    getMemberGroups(id: string): Observable<MemberGroup[]> {
         let url_ = this.baseUrl + "/api/MemberGroup/membergroups/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -3854,14 +3855,14 @@ export class MemberGroupClient {
                 try {
                     return this.processGetMemberGroups(<any>response_);
                 } catch (e) {
-                    return <Observable<MemberGroupResponse[]>><any>_observableThrow(e);
+                    return <Observable<MemberGroup[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<MemberGroupResponse[]>><any>_observableThrow(response_);
+                return <Observable<MemberGroup[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetMemberGroups(response: HttpResponseBase): Observable<MemberGroupResponse[]> {
+    protected processGetMemberGroups(response: HttpResponseBase): Observable<MemberGroup[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3875,7 +3876,7 @@ export class MemberGroupClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(MemberGroupResponse.fromJS(item));
+                    result200!.push(MemberGroup.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3898,7 +3899,7 @@ export class MemberGroupClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<MemberGroupResponse[]>(<any>null);
+        return _observableOf<MemberGroup[]>(<any>null);
     }
 
     /**
@@ -4027,7 +4028,7 @@ export class TransformationClient {
      * Get all transformations
      * @return A list of all transformations
      */
-    getAll(): Observable<TransformationResponse[]> {
+    getAll(): Observable<Transformation[]> {
         let url_ = this.baseUrl + "/api/Transformation";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4046,14 +4047,14 @@ export class TransformationClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<TransformationResponse[]>><any>_observableThrow(e);
+                    return <Observable<Transformation[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<TransformationResponse[]>><any>_observableThrow(response_);
+                return <Observable<Transformation[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<TransformationResponse[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<Transformation[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4067,7 +4068,7 @@ export class TransformationClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(TransformationResponse.fromJS(item));
+                    result200!.push(Transformation.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -4079,7 +4080,7 @@ export class TransformationClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<TransformationResponse[]>(<any>null);
+        return _observableOf<Transformation[]>(<any>null);
     }
 
     /**
@@ -4255,7 +4256,7 @@ export class TransformationClient {
      * @param id The id of the transformation to get
      * @return The category
      */
-    get(id: string): Observable<TransformationResponse> {
+    get(id: string): Observable<Transformation> {
         let url_ = this.baseUrl + "/api/Transformation/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -4277,14 +4278,14 @@ export class TransformationClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<TransformationResponse>><any>_observableThrow(e);
+                    return <Observable<Transformation>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<TransformationResponse>><any>_observableThrow(response_);
+                return <Observable<Transformation>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<TransformationResponse> {
+    protected processGet(response: HttpResponseBase): Observable<Transformation> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4295,7 +4296,7 @@ export class TransformationClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TransformationResponse.fromJS(resultData200);
+            result200 = Transformation.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -4314,7 +4315,7 @@ export class TransformationClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<TransformationResponse>(<any>null);
+        return _observableOf<Transformation>(<any>null);
     }
 
     /**
@@ -4322,7 +4323,7 @@ export class TransformationClient {
      * @param datasets The datasets to find transformations for
      * @return A list of transformations
      */
-    getByDatasets(datasets: GuidId[]): Observable<TransformationResponse[]> {
+    getByDatasets(datasets: GuidId[]): Observable<Transformation[]> {
         let url_ = this.baseUrl + "/api/Transformation/getbydatasets";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4345,14 +4346,14 @@ export class TransformationClient {
                 try {
                     return this.processGetByDatasets(<any>response_);
                 } catch (e) {
-                    return <Observable<TransformationResponse[]>><any>_observableThrow(e);
+                    return <Observable<Transformation[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<TransformationResponse[]>><any>_observableThrow(response_);
+                return <Observable<Transformation[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetByDatasets(response: HttpResponseBase): Observable<TransformationResponse[]> {
+    protected processGetByDatasets(response: HttpResponseBase): Observable<Transformation[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4366,7 +4367,7 @@ export class TransformationClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(TransformationResponse.fromJS(item));
+                    result200!.push(Transformation.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -4389,7 +4390,7 @@ export class TransformationClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<TransformationResponse[]>(<any>null);
+        return _observableOf<Transformation[]>(<any>null);
     }
 }
 
@@ -4569,12 +4570,12 @@ export interface IReplicantEntity extends IEntity {
     originDeleted: boolean;
 }
 
-export class CategoryResponse extends ReplicantEntity implements ICategoryResponse {
+export class Category extends ReplicantEntity implements ICategory {
     name?: string | undefined;
     colour?: string | undefined;
     imageUri?: string | undefined;
 
-    constructor(data?: ICategoryResponse) {
+    constructor(data?: ICategory) {
         super(data);
     }
 
@@ -4587,9 +4588,9 @@ export class CategoryResponse extends ReplicantEntity implements ICategoryRespon
         }
     }
 
-    static fromJS(data: any): CategoryResponse {
+    static fromJS(data: any): Category {
         data = typeof data === 'object' ? data : {};
-        let result = new CategoryResponse();
+        let result = new Category();
         result.init(data);
         return result;
     }
@@ -4604,7 +4605,7 @@ export class CategoryResponse extends ReplicantEntity implements ICategoryRespon
     }
 }
 
-export interface ICategoryResponse extends IReplicantEntity {
+export interface ICategory extends IReplicantEntity {
     name?: string | undefined;
     colour?: string | undefined;
     imageUri?: string | undefined;
@@ -4761,14 +4762,14 @@ export interface ICategoryUpdateRequest extends ICategoryCreateRequest {
     id: string;
 }
 
-export class DataContractResponse extends ReplicantEntity implements IDataContractResponse {
+export class DataContract extends ReplicantEntity implements IDataContract {
     datasetId!: string;
     dataSourceId!: string;
     datasetContainer?: string | undefined;
     datasetLocation?: string | undefined;
     datasetStatus!: DatasetStatus;
 
-    constructor(data?: IDataContractResponse) {
+    constructor(data?: IDataContract) {
         super(data);
     }
 
@@ -4783,9 +4784,9 @@ export class DataContractResponse extends ReplicantEntity implements IDataContra
         }
     }
 
-    static fromJS(data: any): DataContractResponse {
+    static fromJS(data: any): DataContract {
         data = typeof data === 'object' ? data : {};
-        let result = new DataContractResponse();
+        let result = new DataContract();
         result.init(data);
         return result;
     }
@@ -4802,7 +4803,7 @@ export class DataContractResponse extends ReplicantEntity implements IDataContra
     }
 }
 
-export interface IDataContractResponse extends IReplicantEntity {
+export interface IDataContract extends IReplicantEntity {
     datasetId: string;
     dataSourceId: string;
     datasetContainer?: string | undefined;
@@ -4889,11 +4890,11 @@ export interface IDataContractUpdateRequest extends IDataContractCreateRequest {
     id: string;
 }
 
-export class DatasetAccessListResponse implements IDatasetAccessListResponse {
+export class DatasetAccessList implements IDatasetAccessList {
     readAccessList?: DataAccessEntry[] | undefined;
     writeAccessList?: DataAccessEntry[] | undefined;
 
-    constructor(data?: IDatasetAccessListResponse) {
+    constructor(data?: IDatasetAccessList) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4917,9 +4918,9 @@ export class DatasetAccessListResponse implements IDatasetAccessListResponse {
         }
     }
 
-    static fromJS(data: any): DatasetAccessListResponse {
+    static fromJS(data: any): DatasetAccessList {
         data = typeof data === 'object' ? data : {};
-        let result = new DatasetAccessListResponse();
+        let result = new DatasetAccessList();
         result.init(data);
         return result;
     }
@@ -4940,7 +4941,7 @@ export class DatasetAccessListResponse implements IDatasetAccessListResponse {
     }
 }
 
-export interface IDatasetAccessListResponse {
+export interface IDatasetAccessList {
     readAccessList?: DataAccessEntry[] | undefined;
     writeAccessList?: DataAccessEntry[] | undefined;
 }
@@ -5025,12 +5026,12 @@ export interface IAddDatasetAccessMemberRequestDto {
     memberId: string;
 }
 
-export class AdSearchResultResponse implements IAdSearchResultResponse {
+export class AdSearchResult implements IAdSearchResult {
     id?: string | undefined;
     displayName?: string | undefined;
     type?: string | undefined;
 
-    constructor(data?: IAdSearchResultResponse) {
+    constructor(data?: IAdSearchResult) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5047,9 +5048,9 @@ export class AdSearchResultResponse implements IAdSearchResultResponse {
         }
     }
 
-    static fromJS(data: any): AdSearchResultResponse {
+    static fromJS(data: any): AdSearchResult {
         data = typeof data === 'object' ? data : {};
-        let result = new AdSearchResultResponse();
+        let result = new AdSearchResult();
         result.init(data);
         return result;
     }
@@ -5063,13 +5064,13 @@ export class AdSearchResultResponse implements IAdSearchResultResponse {
     }
 }
 
-export interface IAdSearchResultResponse {
+export interface IAdSearchResult {
     id?: string | undefined;
     displayName?: string | undefined;
     type?: string | undefined;
 }
 
-export class DatasetResponse extends ReplicantEntity implements IDatasetResponse {
+export class Dataset extends ReplicantEntity implements IDataset {
     memberId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
@@ -5080,18 +5081,18 @@ export class DatasetResponse extends ReplicantEntity implements IDatasetResponse
     confidentiality!: Confidentiality;
     refinementLevel!: RefinementLevel;
     location?: string | undefined;
-    contact?: MemberGroupResponse | undefined;
-    frequency?: DurationResponse | undefined;
-    resolution?: DurationResponse | undefined;
-    sourceTransformation?: TransformationResponse | undefined;
-    hierarchy?: HierarchyResponse | undefined;
-    dataFields?: DataFieldResponse[] | undefined;
-    categories?: CategoryResponse[] | undefined;
-    datasetChangeLogs?: DatasetChangeLogResponse[] | undefined;
-    dataSources?: DataSourceResponse[] | undefined;
+    contact?: MemberGroup | undefined;
+    frequency?: Duration | undefined;
+    resolution?: Duration | undefined;
+    sourceTransformation?: Transformation | undefined;
+    hierarchy?: Hierarchy | undefined;
+    dataFields?: DataField[] | undefined;
+    categories?: Category[] | undefined;
+    datasetChangeLogs?: DatasetChangeLog[] | undefined;
+    dataSources?: DataSource[] | undefined;
     provisionStatus!: ProvisionDatasetStatusEnum;
 
-    constructor(data?: IDatasetResponse) {
+    constructor(data?: IDataset) {
         super(data);
     }
 
@@ -5108,38 +5109,38 @@ export class DatasetResponse extends ReplicantEntity implements IDatasetResponse
             this.confidentiality = _data["confidentiality"];
             this.refinementLevel = _data["refinementLevel"];
             this.location = _data["location"];
-            this.contact = _data["contact"] ? MemberGroupResponse.fromJS(_data["contact"]) : <any>undefined;
-            this.frequency = _data["frequency"] ? DurationResponse.fromJS(_data["frequency"]) : <any>undefined;
-            this.resolution = _data["resolution"] ? DurationResponse.fromJS(_data["resolution"]) : <any>undefined;
-            this.sourceTransformation = _data["sourceTransformation"] ? TransformationResponse.fromJS(_data["sourceTransformation"]) : <any>undefined;
-            this.hierarchy = _data["hierarchy"] ? HierarchyResponse.fromJS(_data["hierarchy"]) : <any>undefined;
+            this.contact = _data["contact"] ? MemberGroup.fromJS(_data["contact"]) : <any>undefined;
+            this.frequency = _data["frequency"] ? Duration.fromJS(_data["frequency"]) : <any>undefined;
+            this.resolution = _data["resolution"] ? Duration.fromJS(_data["resolution"]) : <any>undefined;
+            this.sourceTransformation = _data["sourceTransformation"] ? Transformation.fromJS(_data["sourceTransformation"]) : <any>undefined;
+            this.hierarchy = _data["hierarchy"] ? Hierarchy.fromJS(_data["hierarchy"]) : <any>undefined;
             if (Array.isArray(_data["dataFields"])) {
                 this.dataFields = [] as any;
                 for (let item of _data["dataFields"])
-                    this.dataFields!.push(DataFieldResponse.fromJS(item));
+                    this.dataFields!.push(DataField.fromJS(item));
             }
             if (Array.isArray(_data["categories"])) {
                 this.categories = [] as any;
                 for (let item of _data["categories"])
-                    this.categories!.push(CategoryResponse.fromJS(item));
+                    this.categories!.push(Category.fromJS(item));
             }
             if (Array.isArray(_data["datasetChangeLogs"])) {
                 this.datasetChangeLogs = [] as any;
                 for (let item of _data["datasetChangeLogs"])
-                    this.datasetChangeLogs!.push(DatasetChangeLogResponse.fromJS(item));
+                    this.datasetChangeLogs!.push(DatasetChangeLog.fromJS(item));
             }
             if (Array.isArray(_data["dataSources"])) {
                 this.dataSources = [] as any;
                 for (let item of _data["dataSources"])
-                    this.dataSources!.push(DataSourceResponse.fromJS(item));
+                    this.dataSources!.push(DataSource.fromJS(item));
             }
             this.provisionStatus = _data["provisionStatus"];
         }
     }
 
-    static fromJS(data: any): DatasetResponse {
+    static fromJS(data: any): Dataset {
         data = typeof data === 'object' ? data : {};
-        let result = new DatasetResponse();
+        let result = new Dataset();
         result.init(data);
         return result;
     }
@@ -5187,7 +5188,7 @@ export class DatasetResponse extends ReplicantEntity implements IDatasetResponse
     }
 }
 
-export interface IDatasetResponse extends IReplicantEntity {
+export interface IDataset extends IReplicantEntity {
     memberId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
@@ -5198,15 +5199,15 @@ export interface IDatasetResponse extends IReplicantEntity {
     confidentiality: Confidentiality;
     refinementLevel: RefinementLevel;
     location?: string | undefined;
-    contact?: MemberGroupResponse | undefined;
-    frequency?: DurationResponse | undefined;
-    resolution?: DurationResponse | undefined;
-    sourceTransformation?: TransformationResponse | undefined;
-    hierarchy?: HierarchyResponse | undefined;
-    dataFields?: DataFieldResponse[] | undefined;
-    categories?: CategoryResponse[] | undefined;
-    datasetChangeLogs?: DatasetChangeLogResponse[] | undefined;
-    dataSources?: DataSourceResponse[] | undefined;
+    contact?: MemberGroup | undefined;
+    frequency?: Duration | undefined;
+    resolution?: Duration | undefined;
+    sourceTransformation?: Transformation | undefined;
+    hierarchy?: Hierarchy | undefined;
+    dataFields?: DataField[] | undefined;
+    categories?: Category[] | undefined;
+    datasetChangeLogs?: DatasetChangeLog[] | undefined;
+    dataSources?: DataSource[] | undefined;
     provisionStatus: ProvisionDatasetStatusEnum;
 }
 
@@ -5223,14 +5224,14 @@ export enum RefinementLevel {
     Refined = 2,
 }
 
-export class MemberGroupResponse extends Entity implements IMemberGroupResponse {
+export class MemberGroup extends Entity implements IMemberGroup {
     name?: string | undefined;
     description?: string | undefined;
     email?: string | undefined;
     members?: GuidId[] | undefined;
     datasets?: GuidId[] | undefined;
 
-    constructor(data?: IMemberGroupResponse) {
+    constructor(data?: IMemberGroup) {
         super(data);
     }
 
@@ -5253,9 +5254,9 @@ export class MemberGroupResponse extends Entity implements IMemberGroupResponse 
         }
     }
 
-    static fromJS(data: any): MemberGroupResponse {
+    static fromJS(data: any): MemberGroup {
         data = typeof data === 'object' ? data : {};
-        let result = new MemberGroupResponse();
+        let result = new MemberGroup();
         result.init(data);
         return result;
     }
@@ -5280,7 +5281,7 @@ export class MemberGroupResponse extends Entity implements IMemberGroupResponse 
     }
 }
 
-export interface IMemberGroupResponse extends IEntity {
+export interface IMemberGroup extends IEntity {
     name?: string | undefined;
     description?: string | undefined;
     email?: string | undefined;
@@ -5324,11 +5325,11 @@ export interface IGuidId {
     id: string;
 }
 
-export class DurationResponse extends Entity implements IDurationResponse {
+export class Duration extends Entity implements IDuration {
     code?: string | undefined;
     description?: string | undefined;
 
-    constructor(data?: IDurationResponse) {
+    constructor(data?: IDuration) {
         super(data);
     }
 
@@ -5340,9 +5341,9 @@ export class DurationResponse extends Entity implements IDurationResponse {
         }
     }
 
-    static fromJS(data: any): DurationResponse {
+    static fromJS(data: any): Duration {
         data = typeof data === 'object' ? data : {};
-        let result = new DurationResponse();
+        let result = new Duration();
         result.init(data);
         return result;
     }
@@ -5356,18 +5357,18 @@ export class DurationResponse extends Entity implements IDurationResponse {
     }
 }
 
-export interface IDurationResponse extends IEntity {
+export interface IDuration extends IEntity {
     code?: string | undefined;
     description?: string | undefined;
 }
 
-export class TransformationResponse extends Entity implements ITransformationResponse {
+export class Transformation extends Entity implements ITransformation {
     shortDescription?: string | undefined;
     description?: string | undefined;
-    sourceDatasets?: DatasetSummaryResponse[] | undefined;
-    sinkDatasets?: DatasetSummaryResponse[] | undefined;
+    sourceDatasets?: DatasetSummary[] | undefined;
+    sinkDatasets?: DatasetSummary[] | undefined;
 
-    constructor(data?: ITransformationResponse) {
+    constructor(data?: ITransformation) {
         super(data);
     }
 
@@ -5379,19 +5380,19 @@ export class TransformationResponse extends Entity implements ITransformationRes
             if (Array.isArray(_data["sourceDatasets"])) {
                 this.sourceDatasets = [] as any;
                 for (let item of _data["sourceDatasets"])
-                    this.sourceDatasets!.push(DatasetSummaryResponse.fromJS(item));
+                    this.sourceDatasets!.push(DatasetSummary.fromJS(item));
             }
             if (Array.isArray(_data["sinkDatasets"])) {
                 this.sinkDatasets = [] as any;
                 for (let item of _data["sinkDatasets"])
-                    this.sinkDatasets!.push(DatasetSummaryResponse.fromJS(item));
+                    this.sinkDatasets!.push(DatasetSummary.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): TransformationResponse {
+    static fromJS(data: any): Transformation {
         data = typeof data === 'object' ? data : {};
-        let result = new TransformationResponse();
+        let result = new Transformation();
         result.init(data);
         return result;
     }
@@ -5415,21 +5416,21 @@ export class TransformationResponse extends Entity implements ITransformationRes
     }
 }
 
-export interface ITransformationResponse extends IEntity {
+export interface ITransformation extends IEntity {
     shortDescription?: string | undefined;
     description?: string | undefined;
-    sourceDatasets?: DatasetSummaryResponse[] | undefined;
-    sinkDatasets?: DatasetSummaryResponse[] | undefined;
+    sourceDatasets?: DatasetSummary[] | undefined;
+    sinkDatasets?: DatasetSummary[] | undefined;
 }
 
-export class DatasetSummaryResponse extends Entity implements IDatasetSummaryResponse {
+export class DatasetSummary extends Entity implements IDatasetSummary {
     name?: string | undefined;
     description?: string | undefined;
     status!: DatasetStatus;
     confidentiality!: Confidentiality;
-    categories?: CategoryResponse[] | undefined;
+    categories?: Category[] | undefined;
 
-    constructor(data?: IDatasetSummaryResponse) {
+    constructor(data?: IDatasetSummary) {
         super(data);
     }
 
@@ -5443,14 +5444,14 @@ export class DatasetSummaryResponse extends Entity implements IDatasetSummaryRes
             if (Array.isArray(_data["categories"])) {
                 this.categories = [] as any;
                 for (let item of _data["categories"])
-                    this.categories!.push(CategoryResponse.fromJS(item));
+                    this.categories!.push(Category.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): DatasetSummaryResponse {
+    static fromJS(data: any): DatasetSummary {
         data = typeof data === 'object' ? data : {};
-        let result = new DatasetSummaryResponse();
+        let result = new DatasetSummary();
         result.init(data);
         return result;
     }
@@ -5471,21 +5472,21 @@ export class DatasetSummaryResponse extends Entity implements IDatasetSummaryRes
     }
 }
 
-export interface IDatasetSummaryResponse extends IEntity {
+export interface IDatasetSummary extends IEntity {
     name?: string | undefined;
     description?: string | undefined;
     status: DatasetStatus;
     confidentiality: Confidentiality;
-    categories?: CategoryResponse[] | undefined;
+    categories?: Category[] | undefined;
 }
 
-export class HierarchyResponse extends Entity implements IHierarchyResponse {
+export class Hierarchy extends Entity implements IHierarchy {
     name?: string | undefined;
     description?: string | undefined;
     parentHierarchyId?: string | undefined;
-    childHierarchies?: HierarchyResponse[] | undefined;
+    childHierarchies?: Hierarchy[] | undefined;
 
-    constructor(data?: IHierarchyResponse) {
+    constructor(data?: IHierarchy) {
         super(data);
     }
 
@@ -5498,14 +5499,14 @@ export class HierarchyResponse extends Entity implements IHierarchyResponse {
             if (Array.isArray(_data["childHierarchies"])) {
                 this.childHierarchies = [] as any;
                 for (let item of _data["childHierarchies"])
-                    this.childHierarchies!.push(HierarchyResponse.fromJS(item));
+                    this.childHierarchies!.push(Hierarchy.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): HierarchyResponse {
+    static fromJS(data: any): Hierarchy {
         data = typeof data === 'object' ? data : {};
-        let result = new HierarchyResponse();
+        let result = new Hierarchy();
         result.init(data);
         return result;
     }
@@ -5525,21 +5526,21 @@ export class HierarchyResponse extends Entity implements IHierarchyResponse {
     }
 }
 
-export interface IHierarchyResponse extends IEntity {
+export interface IHierarchy extends IEntity {
     name?: string | undefined;
     description?: string | undefined;
     parentHierarchyId?: string | undefined;
-    childHierarchies?: HierarchyResponse[] | undefined;
+    childHierarchies?: Hierarchy[] | undefined;
 }
 
-export class DataFieldResponse extends Entity implements IDataFieldResponse {
+export class DataField extends Entity implements IDataField {
     name?: string | undefined;
     type?: string | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
 
-    constructor(data?: IDataFieldResponse) {
+    constructor(data?: IDataField) {
         super(data);
     }
 
@@ -5554,9 +5555,9 @@ export class DataFieldResponse extends Entity implements IDataFieldResponse {
         }
     }
 
-    static fromJS(data: any): DataFieldResponse {
+    static fromJS(data: any): DataField {
         data = typeof data === 'object' ? data : {};
-        let result = new DataFieldResponse();
+        let result = new DataField();
         result.init(data);
         return result;
     }
@@ -5573,7 +5574,7 @@ export class DataFieldResponse extends Entity implements IDataFieldResponse {
     }
 }
 
-export interface IDataFieldResponse extends IEntity {
+export interface IDataField extends IEntity {
     name?: string | undefined;
     type?: string | undefined;
     description?: string | undefined;
@@ -5581,23 +5582,23 @@ export interface IDataFieldResponse extends IEntity {
     validation?: string | undefined;
 }
 
-export class DatasetChangeLogResponse extends Created implements IDatasetChangeLogResponse {
-    member?: MemberResponse | undefined;
+export class DatasetChangeLog extends Created implements IDatasetChangeLog {
+    member?: Member | undefined;
 
-    constructor(data?: IDatasetChangeLogResponse) {
+    constructor(data?: IDatasetChangeLog) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.member = _data["member"] ? MemberResponse.fromJS(_data["member"]) : <any>undefined;
+            this.member = _data["member"] ? Member.fromJS(_data["member"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): DatasetChangeLogResponse {
+    static fromJS(data: any): DatasetChangeLog {
         data = typeof data === 'object' ? data : {};
-        let result = new DatasetChangeLogResponse();
+        let result = new DatasetChangeLog();
         result.init(data);
         return result;
     }
@@ -5610,16 +5611,16 @@ export class DatasetChangeLogResponse extends Created implements IDatasetChangeL
     }
 }
 
-export interface IDatasetChangeLogResponse extends ICreated {
-    member?: MemberResponse | undefined;
+export interface IDatasetChangeLog extends ICreated {
+    member?: Member | undefined;
 }
 
-export class MemberResponse extends Entity implements IMemberResponse {
+export class Member extends Entity implements IMember {
     name?: string | undefined;
     email?: string | undefined;
     memberRole!: Role;
 
-    constructor(data?: IMemberResponse) {
+    constructor(data?: IMember) {
         super(data);
     }
 
@@ -5632,9 +5633,9 @@ export class MemberResponse extends Entity implements IMemberResponse {
         }
     }
 
-    static fromJS(data: any): MemberResponse {
+    static fromJS(data: any): Member {
         data = typeof data === 'object' ? data : {};
-        let result = new MemberResponse();
+        let result = new Member();
         result.init(data);
         return result;
     }
@@ -5649,7 +5650,7 @@ export class MemberResponse extends Entity implements IMemberResponse {
     }
 }
 
-export interface IMemberResponse extends IEntity {
+export interface IMember extends IEntity {
     name?: string | undefined;
     email?: string | undefined;
     memberRole: Role;
@@ -5661,13 +5662,13 @@ export enum Role {
     User = 2,
 }
 
-export class DataSourceResponse extends ReplicantEntity implements IDataSourceResponse {
+export class DataSource extends ReplicantEntity implements IDataSource {
     name?: string | undefined;
     description?: string | undefined;
     contactInfo?: string | undefined;
     sourceType!: SourceType;
 
-    constructor(data?: IDataSourceResponse) {
+    constructor(data?: IDataSource) {
         super(data);
     }
 
@@ -5681,9 +5682,9 @@ export class DataSourceResponse extends ReplicantEntity implements IDataSourceRe
         }
     }
 
-    static fromJS(data: any): DataSourceResponse {
+    static fromJS(data: any): DataSource {
         data = typeof data === 'object' ? data : {};
-        let result = new DataSourceResponse();
+        let result = new DataSource();
         result.init(data);
         return result;
     }
@@ -5699,7 +5700,7 @@ export class DataSourceResponse extends ReplicantEntity implements IDataSourceRe
     }
 }
 
-export interface IDataSourceResponse extends IReplicantEntity {
+export interface IDataSource extends IReplicantEntity {
     name?: string | undefined;
     description?: string | undefined;
     contactInfo?: string | undefined;
@@ -6175,10 +6176,10 @@ export interface IDatasetSearchByTermRequest extends IDatasetSearchRequest {
     searchTerm?: string | undefined;
 }
 
-export class DatasetLocationResponse implements IDatasetLocationResponse {
+export class DatasetLocation implements IDatasetLocation {
     location?: string | undefined;
 
-    constructor(data?: IDatasetLocationResponse) {
+    constructor(data?: IDatasetLocation) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -6193,9 +6194,9 @@ export class DatasetLocationResponse implements IDatasetLocationResponse {
         }
     }
 
-    static fromJS(data: any): DatasetLocationResponse {
+    static fromJS(data: any): DatasetLocation {
         data = typeof data === 'object' ? data : {};
-        let result = new DatasetLocationResponse();
+        let result = new DatasetLocation();
         result.init(data);
         return result;
     }
@@ -6207,7 +6208,7 @@ export class DatasetLocationResponse implements IDatasetLocationResponse {
     }
 }
 
-export interface IDatasetLocationResponse {
+export interface IDatasetLocation {
     location?: string | undefined;
 }
 
@@ -6251,11 +6252,11 @@ export interface IDatasetLocationRequest {
     hierarchy?: NullableGuidId | undefined;
 }
 
-export class LineageDatasetResponse extends DatasetSummaryResponse implements ILineageDatasetResponse {
-    sourceTransformations?: LineageTransformationResponse[] | undefined;
-    sinkTransformations?: LineageTransformationResponse[] | undefined;
+export class LineageDataset extends DatasetSummary implements ILineageDataset {
+    sourceTransformations?: LineageTransformation[] | undefined;
+    sinkTransformations?: LineageTransformation[] | undefined;
 
-    constructor(data?: ILineageDatasetResponse) {
+    constructor(data?: ILineageDataset) {
         super(data);
     }
 
@@ -6265,19 +6266,19 @@ export class LineageDatasetResponse extends DatasetSummaryResponse implements IL
             if (Array.isArray(_data["sourceTransformations"])) {
                 this.sourceTransformations = [] as any;
                 for (let item of _data["sourceTransformations"])
-                    this.sourceTransformations!.push(LineageTransformationResponse.fromJS(item));
+                    this.sourceTransformations!.push(LineageTransformation.fromJS(item));
             }
             if (Array.isArray(_data["sinkTransformations"])) {
                 this.sinkTransformations = [] as any;
                 for (let item of _data["sinkTransformations"])
-                    this.sinkTransformations!.push(LineageTransformationResponse.fromJS(item));
+                    this.sinkTransformations!.push(LineageTransformation.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): LineageDatasetResponse {
+    static fromJS(data: any): LineageDataset {
         data = typeof data === 'object' ? data : {};
-        let result = new LineageDatasetResponse();
+        let result = new LineageDataset();
         result.init(data);
         return result;
     }
@@ -6299,17 +6300,17 @@ export class LineageDatasetResponse extends DatasetSummaryResponse implements IL
     }
 }
 
-export interface ILineageDatasetResponse extends IDatasetSummaryResponse {
-    sourceTransformations?: LineageTransformationResponse[] | undefined;
-    sinkTransformations?: LineageTransformationResponse[] | undefined;
+export interface ILineageDataset extends IDatasetSummary {
+    sourceTransformations?: LineageTransformation[] | undefined;
+    sinkTransformations?: LineageTransformation[] | undefined;
 }
 
-export class LineageTransformationResponse extends Entity implements ILineageTransformationResponse {
+export class LineageTransformation extends Entity implements ILineageTransformation {
     shortDescription?: string | undefined;
     description?: string | undefined;
-    datasets?: LineageDatasetResponse[] | undefined;
+    datasets?: LineageDataset[] | undefined;
 
-    constructor(data?: ILineageTransformationResponse) {
+    constructor(data?: ILineageTransformation) {
         super(data);
     }
 
@@ -6321,14 +6322,14 @@ export class LineageTransformationResponse extends Entity implements ILineageTra
             if (Array.isArray(_data["datasets"])) {
                 this.datasets = [] as any;
                 for (let item of _data["datasets"])
-                    this.datasets!.push(LineageDatasetResponse.fromJS(item));
+                    this.datasets!.push(LineageDataset.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): LineageTransformationResponse {
+    static fromJS(data: any): LineageTransformation {
         data = typeof data === 'object' ? data : {};
-        let result = new LineageTransformationResponse();
+        let result = new LineageTransformation();
         result.init(data);
         return result;
     }
@@ -6347,19 +6348,19 @@ export class LineageTransformationResponse extends Entity implements ILineageTra
     }
 }
 
-export interface ILineageTransformationResponse extends IEntity {
+export interface ILineageTransformation extends IEntity {
     shortDescription?: string | undefined;
     description?: string | undefined;
-    datasets?: LineageDatasetResponse[] | undefined;
+    datasets?: LineageDataset[] | undefined;
 }
 
-export class DatasetGroupResponse extends Entity implements IDatasetGroupResponse {
+export class DatasetGroup extends Entity implements IDatasetGroup {
     memberId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
-    datasets?: DatasetSummaryResponse[] | undefined;
+    datasets?: DatasetSummary[] | undefined;
 
-    constructor(data?: IDatasetGroupResponse) {
+    constructor(data?: IDatasetGroup) {
         super(data);
     }
 
@@ -6372,14 +6373,14 @@ export class DatasetGroupResponse extends Entity implements IDatasetGroupRespons
             if (Array.isArray(_data["datasets"])) {
                 this.datasets = [] as any;
                 for (let item of _data["datasets"])
-                    this.datasets!.push(DatasetSummaryResponse.fromJS(item));
+                    this.datasets!.push(DatasetSummary.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): DatasetGroupResponse {
+    static fromJS(data: any): DatasetGroup {
         data = typeof data === 'object' ? data : {};
-        let result = new DatasetGroupResponse();
+        let result = new DatasetGroup();
         result.init(data);
         return result;
     }
@@ -6399,11 +6400,11 @@ export class DatasetGroupResponse extends Entity implements IDatasetGroupRespons
     }
 }
 
-export interface IDatasetGroupResponse extends IEntity {
+export interface IDatasetGroup extends IEntity {
     memberId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
-    datasets?: DatasetSummaryResponse[] | undefined;
+    datasets?: DatasetSummary[] | undefined;
 }
 
 export class DatasetGroupCreateRequest implements IDatasetGroupCreateRequest {
@@ -6665,11 +6666,11 @@ export interface IDurationUpdateRequest extends IDurationCreateRequest {
     id: string;
 }
 
-export class EnumResponse implements IEnumResponse {
+export class Enum implements IEnum {
     id!: number;
     description?: string | undefined;
 
-    constructor(data?: IEnumResponse) {
+    constructor(data?: IEnum) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -6685,9 +6686,9 @@ export class EnumResponse implements IEnumResponse {
         }
     }
 
-    static fromJS(data: any): EnumResponse {
+    static fromJS(data: any): Enum {
         data = typeof data === 'object' ? data : {};
-        let result = new EnumResponse();
+        let result = new Enum();
         result.init(data);
         return result;
     }
@@ -6700,7 +6701,7 @@ export class EnumResponse implements IEnumResponse {
     }
 }
 
-export interface IEnumResponse {
+export interface IEnum {
     id: number;
     description?: string | undefined;
 }

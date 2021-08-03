@@ -1,7 +1,6 @@
 import { Component, OnInit, Input} from '@angular/core';
-import { Components } from '../../../../types/dataplatform-api'
-import ICategory = Components.Schemas.ICategory;
 import {animate, keyframes, query, stagger, style, transition, trigger} from "@angular/animations";
+import { ICategory } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-category-list',

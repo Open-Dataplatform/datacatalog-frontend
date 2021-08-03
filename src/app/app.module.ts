@@ -16,6 +16,7 @@ import { GlobalErrorHandler } from "./shared/logging/global-error-handler.servic
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { UserHandlerService } from "./shared/user/user-handler.service";
 import { environment } from '../environments/environment';
+import { API_BASE_URL } from './shared/api/api';
 
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -66,7 +67,7 @@ export function getTranslateConfig() {
       useValue : environment.baseHref 
     },
     {
-      provide  : 'API_BASE_URL', 
+      provide  : API_BASE_URL, 
       useValue : environment.base
     },
     UserHandlerService,

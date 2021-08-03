@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import { HttpErrorResponse} from "@angular/common/http";
 import {EMPTY, Observable, throwError} from "rxjs";
 import { filter } from "rxjs/operators";
-import {environment} from "../../environments/environment";
 
 import { UserHandlerService } from "../shared/user/user-handler.service";
-import { CategoryClient, DatasetAccessClient, DatasetClient, DatasetSearchByCategoryRequest, DatasetSearchByTermRequest, ICategoryResponse, IDatasetAccessListResponse, IDatasetResponse, IDatasetSummaryResponse, ILineageTransformationResponse } from './api/api';
+import { AddDatasetAccessMemberRequestDto, CategoryClient, DatasetAccessClient, DatasetClient, DatasetSearchByCategoryRequest, DatasetSearchByTermRequest, IAdSearchResult, ICategory, IDataAccessEntry, IDatasetAccessList, IDataset, IDatasetSummary, ILineageTransformation, ILineageDataset, GeneralClient, IEnum, DurationClient, IDuration, HierarchyClient, IHierarchy, DataSourceClient, IDataSource, IDatasetLocationRequest, DatasetLocationRequest, IDatasetLocation, TransformationClient, IGuidId, ITransformation, GuidId, MemberGroupClient, IMemberGroup, Dataset, DatasetCreateRequest, IDatasetCreateRequest, IDatasetUpdateRequest, DatasetUpdateRequest } from './api/api';
 
 /*
 This is a service that handles the connection to the api,
@@ -18,30 +17,31 @@ This will then handle error and log them if the backend sends an error.
 })
 export class DataHandlerService {
 
-  categories: ICategoryResponse[];
-  currentTransformation?: ILineageTransformationResponse;
+  categories: ICategory[];
+  currentTransformation?: ILineageTransformation;
   userLoggedIn$ = this.userHandlerService.userLoggedIn$;
 
   constructor(
-    private readonly http: HttpClient,
     private readonly userHandlerService: UserHandlerService,
     private readonly categoryClient: CategoryClient,
     private readonly datasetClient: DatasetClient,
-    private readonly datasetAccessClient: DatasetAccessClient
+    private readonly datasetAccessClient: DatasetAccessClient,
+    private readonly generalClient: GeneralClient,
+    private readonly durationClient: DurationClient,
+    private readonly hierarchyClient: HierarchyClient,
+    private readonly dataSourceClient: DataSourceClient,
+    private readonly transformationClient: TransformationClient,
+    private readonly memberGroupClient: MemberGroupClient,
   ) {
       this.userLoggedIn$.pipe(filter(user => user !== null))
         .subscribe(() => this.getCategoryData().subscribe(response => { this.categories = response; }));
   }
 
-  get urlBase(): string {
-    return environment.base;
-  }
-
-  public getCategoryData(includeEmpty :boolean = false): Observable<ICategoryResponse[]> {
+  public getCategoryData(includeEmpty :boolean = false): Observable<ICategory[]> {
     return this.categoryClient.getAll(includeEmpty);
   }
 
-  public getDataSets(term: string, pageSize?: number, pageIndex?: number): Observable<IDatasetSummaryResponse[]> {
+  public getDataSets(term: string, pageSize?: number, pageIndex?: number): Observable<IDatasetSummary[]> {
     return this.datasetClient.getBySearchTerm(new DatasetSearchByTermRequest(
       {
         sortType: 0,
@@ -53,7 +53,7 @@ export class DataHandlerService {
     ));
   }
 
-  public getCategorySets(categoryId: string, pageSize?: number, pageIndex?: number): Observable<IDatasetSummaryResponse[]> {
+  public getCategorySets(categoryId: string, pageSize?: number, pageIndex?: number): Observable<IDatasetSummary[]> {
       return this.datasetClient.getByCategory(new DatasetSearchByCategoryRequest(
         {
           sortType: 0,
@@ -65,7 +65,7 @@ export class DataHandlerService {
       ));
   }
 
-  public getSearchSuggestions(term): Observable<IDatasetResponse[]> {
+  public getSearchSuggestions(term): Observable<IDataset[]> {
     return this.datasetClient.getNameBySearchTerm(new DatasetSearchByTermRequest(
       {
         take: 5,
@@ -77,15 +77,15 @@ export class DataHandlerService {
     ));
   }
 
-  public getDetailsFromId(id: string): Observable<IDatasetResponse> {
+  public getDetailsFromId(id: string): Observable<IDataset> {
     // const url = `${this.urlBase}/api/dataset/${id}`;
     // return this.http
-    //   .get<IDatasetResponse>(url);
+    //   .get<IDataset>(url);
 
     return this.datasetClient.findById(id);
   }
 
-  public getDatasetAccess(id: string): Observable<IDatasetAccessListResponse> {
+  public getDatasetAccess(id: string): Observable<IDatasetAccessList> {
     // const url = `${this.urlBase}/api/dataset/${id}/access`;
     // return this.http
     //   .get<IDatasetAccessList>(url);
@@ -95,148 +95,91 @@ export class DataHandlerService {
 
   public removeDatasetAccessReader(datasetId: string, memberId: string): Observable<any>
   {
-    const url = `${this.urlBase}/api/dataset/${datasetId}/access/${memberId}/read`;
-    return this.http.delete(url);
+
+    return this.datasetAccessClient.removeReadDataAccessMember(datasetId, memberId);
   }
 
   public removeDatasetAccessWriter(datasetId: string, memberId: string): Observable<any>
   {
-    const url = `${this.urlBase}/api/dataset/${datasetId}/access/${memberId}/write`;
-    return this.http.delete(url);
+    return this.datasetAccessClient.removeWriteDataAccessMember(datasetId, memberId);
   }
 
   public memberSearch(searchString: string): Observable<IAdSearchResult[]>
   {
-    const url = `${this.urlBase}/api/dataset/access?search=${searchString}`;
-    return this.http.get<IAdSearchResult[]>(url);
+    return this.datasetAccessClient.search(searchString);
   }
 
   public addDatasetAccessReader(datasetId: string, memberId: string): Observable<IDataAccessEntry>
   {
-    const url = `${this.urlBase}/api/dataset/${datasetId}/access/read`;
-    return this.http.post<IDataAccessEntry>(url, {
-      MemberId: memberId
-    });
+    const accessMemberDto = { memberId: memberId } as AddDatasetAccessMemberRequestDto;
+    return this.datasetAccessClient.addReadAccessMember(datasetId, accessMemberDto);
   }
 
   public addDatasetAccessWriter(datasetId: string, memberId: string): Observable<IDataAccessEntry>
   {
-    const url = `${this.urlBase}/api/dataset/${datasetId}/access/write`;
-    return this.http.post<IDataAccessEntry>(url, {
-      MemberId: memberId
-    });
+    const accessMemberDto = { memberId: memberId } as AddDatasetAccessMemberRequestDto;
+    return this.datasetAccessClient.addWriteAccessMember(datasetId, accessMemberDto);
   }
 
   public getLineage(id: string): Observable<ILineageDataset> {
-    const url = `${this.urlBase}/api/dataset/lineage/${id}`;
-    return this.http
-      .get<ILineageDataset>(url);
+    return this.datasetClient.getLineage(id);
   }
 
-  public getStarred(): Observable<any> {
-    const url = `${this.urlBase}/api/datasetgroup/`;
-    return this.http
-      .get(url);
-  }
-
-  public updateStarredGroup(dataSets: {id: string}[]): Observable<IDatasetGroup[]> {
-    const url = `${this.urlBase}/api/datasetgroup/`;
-    return this.http
-      .put<IDatasetGroup[]>(url, {
-        name: "Starred",
-        description: "Starred datasets",
-        datasets: dataSets
-      });
-  }
-
-  public createStarredGroup(dataSets: {id: string}[]): Observable<IDatasetGroup[]> {
-    const url = `${this.urlBase}/api/datasetgroup/`;
-    console.log('newpost', {
-      name: "Starred",
-      description: "Starred datasets",
-      datasets: dataSets
-    });
-    return this.http
-      .post<IDatasetGroup[]>(url, {
-        name: "Starred",
-        description: "Starred datasets",
-        datasets: dataSets
-      });
-  }
-
-  public getConfidentiality(): Observable<IConfidentialityEnum[]> {
-    const url = `${this.urlBase}/api/general/confidentiality`;
-    return this.http
-      .get<IConfidentialityEnum[]>(url);
+  public getConfidentiality(): Observable<IEnum[]> {
+    return this.generalClient.getConfidentialities();
   }
 
   public getDurations(): Observable<IDuration[]> {
-    const url = `${this.urlBase}/api/general/duration`;
-    return this.http
-      .get<IDuration[]>(url);
+    return this.durationClient.getAll();
   }
 
-  public getRefinementLevel(): Observable<IRefinementLevel[]> {
-    const url = `${this.urlBase}/api/general/refinementlevel`;
-    return this.http
-      .get<IRefinementLevel[]>(url);
+  public getRefinementLevel(): Observable<IEnum[]> {
+    return this.generalClient.getRefinementLevels();
   }
 
   public getHierarchies(): Observable<IHierarchy[]> {
-    const url = `${this.urlBase}/api/general/hierarchies`;
-    return this.http
-      .get<IHierarchy[]>(url);
+    return this.hierarchyClient.getAll();
   }
 
   public getDataSources(): Observable<IDataSource[]> {
-    const url = `${this.urlBase}/api/datasource`;
-    return this.http
-      .get<IDataSource[]>(url);
+    return this.dataSourceClient.getAll();
   }
 
   public getLocation(locationRequest: IDatasetLocationRequest): Observable<IDatasetLocation> {
-    const url = `${this.urlBase}/api/dataset/location`;
-    return this.http
-      .post<IDatasetLocation>(url, locationRequest);
+    return this.datasetClient.getDatasetLocation(locationRequest as DatasetLocationRequest);
   }
 
-  public getTransformations(ids: ITransformation[]): Observable<ITransformation[]> {
-    const url = `${this.urlBase}/api/transformation/getbydatasets`;
-    return this.http
-      .post<ITransformation[]>(url, ids);
+  public getTransformations(ids: IGuidId[]): Observable<ITransformation[]> {
+    return this.transformationClient.getByDatasets(ids as GuidId[]);
   }
 
   public getMemberGroups(): Observable<IMemberGroup[]> {
-    const url = `${this.urlBase}/api/membergroup`;
-    return this.http
-      .get<IMemberGroup[]>(url);
+    return this.memberGroupClient.getAll();
   }
 
-  public getDataSetStatus(): Observable<IDatasetStatus[]> {
-    const url = `${this.urlBase}/api/general/datasetstatus`;
-    return this.http
-      .get<IDatasetStatus[]>(url);
+  public getDataSetStatus(): Observable<IEnum[]> {
+    return this.generalClient.getDatasetStatusValues();
   }
 
-  public createNewDataSet(dataSet: IDatasetResponse): Observable<IDatasetResponse> {
+  public createNewDataSet(dataSet: IDatasetCreateRequest): Observable<IDataset> {
     if (!dataSet) {
       this.handleError('please fill out data');
       return EMPTY;
     }
-    const url = `${this.urlBase}/api/dataset`;
-    return this.http.post(url, dataSet);
+
+    return this.datasetClient.post(dataSet as DatasetCreateRequest);
   }
 
-  public updateDataSet(dataSet: IDatasetResponse): Observable<IDatasetResponse> {
+  public updateDataSet(dataSet: IDatasetUpdateRequest): Observable<IDataset> {
     if (!dataSet) {
       this.handleError('please fill out data');
       return EMPTY;
     }
-    const url = `${this.urlBase}/api/dataset`;
-    return this.http.put(url, dataSet);
+
+    return this.datasetClient.put(dataSet as DatasetUpdateRequest);
   }
 
-  public setCurrentTransformation(transform: ILineageTransformationResponse[]) {
+  public setCurrentTransformation(transform: ILineageTransformation[]) {
     this.currentTransformation = transform && transform.length ? transform[0]: undefined;
   }
 

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import {DataHandlerService} from "../../shared/data-handler.service";
-import { Components } from '../../../types/dataplatform-api'
-import IDataset = Components.Schemas.IDataset;
 import {Observable} from "rxjs";
+import { Dataset, IDataset } from 'src/app/shared/api/api';
 
 /*
 This is a shared data handler service for the data steward pages,
@@ -31,7 +30,7 @@ export class DataStewardHandlerService {
     if (this.dataSet) {
       return this.dataSet;
     }
-    return {};
+    return new Dataset();
   }
 
   setDataSet(data: IDataset) {

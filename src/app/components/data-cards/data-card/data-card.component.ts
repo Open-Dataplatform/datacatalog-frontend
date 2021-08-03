@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { Components } from '../../../../types/dataplatform-api'
-import IDataset = Components.Schemas.IDataset;
+import { IDataset } from 'src/app/shared/api/api';
 import {UserHandlerService} from "../../../shared/user/user-handler.service";
 
 @Component({

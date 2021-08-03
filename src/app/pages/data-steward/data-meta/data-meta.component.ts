@@ -3,7 +3,7 @@ import {DataHandlerService} from "../../../shared/data-handler.service";
 import {Observable} from "rxjs";
 import {DataStewardHandlerService, IMetaDataInfo} from "../data-steward-handler.service";
 import {Router} from "@angular/router";
-import { ICategoryResponse, IDatasetSummaryResponse } from 'src/app/shared/api/api';
+import { ICategory, IDataset, IDatasetSummary } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-meta',
@@ -16,8 +16,8 @@ export class DataMetaComponent implements OnInit {
   data: IDataset;
   today: Date;
 
-  categories$: Observable<ICategoryResponse[]>;
-  dataset$: Observable<IDatasetSummaryResponse[]>;
+  categories$: Observable<ICategory[]>;
+  dataset$: Observable<IDatasetSummary[]>;
 
   constructor(private readonly dataHandlerService: DataHandlerService,
               private readonly dataStewardHandlerService: DataStewardHandlerService,
@@ -35,7 +35,7 @@ export class DataMetaComponent implements OnInit {
   // get metadata version or initiate a version 1.
   get metadataVersion(): IMetaDataInfo {
     if (this.data && this.data.version) {
-      return {version: this.data.version, changeDate: this.formatTime(this.data.modifiedDate)};
+      return {version: this.data.version, changeDate: this.formatTime(this.data.modifiedDate.toISOString())};
     }
     return {version: 1, changeDate: this.formatTime(this.today.toISOString())};
   };

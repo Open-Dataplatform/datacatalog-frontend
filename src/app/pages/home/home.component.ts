@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {DataHandlerService} from "../../shared/data-handler.service";
 import { UserHandlerService } from "../../shared/user/user-handler.service";
 import { filter, mergeMap } from "rxjs/operators";
-import { ICategoryResponse } from 'src/app/shared/api/api';
+import { ICategory } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +11,7 @@ import { ICategoryResponse } from 'src/app/shared/api/api';
 })
 export class HomeComponent {
 
-  categories: ICategoryResponse[];
+  categories: ICategory[];
   userLoggedIn$ = this.userHandlerService.userLoggedIn$;
 
   constructor(private dataHandlerService: DataHandlerService, private userHandlerService: UserHandlerService ) { 

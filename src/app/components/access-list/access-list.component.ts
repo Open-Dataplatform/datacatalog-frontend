@@ -3,7 +3,7 @@ import {DataHandlerService} from "../../shared/data-handler.service";
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { IDataAccessEntry } from 'src/app/shared/api/api';
+import { IAdSearchResult, IDataAccessEntry } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-access-list',
@@ -103,7 +103,7 @@ export class AccessListComponent implements OnInit {
 })
 export class SearchAdDialog {
 
-  searchResults :IAdSearchResult[];
+  searchResults? :IAdSearchResult[];
   searchString: string;
   selectedSearchResult: IAdSearchResult;
 
