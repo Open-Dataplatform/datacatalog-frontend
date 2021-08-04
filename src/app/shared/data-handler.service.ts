@@ -4,7 +4,7 @@ import {EMPTY, Observable, throwError} from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { UserHandlerService } from "../shared/user/user-handler.service";
-import { AddDatasetAccessMemberRequestDto, CategoryClient, DatasetAccessClient, DatasetClient, DatasetSearchByCategoryRequest, DatasetSearchByTermRequest, IAdSearchResult, ICategory, IDataAccessEntry, IDatasetAccessList, IDataset, IDatasetSummary, ILineageTransformation, ILineageDataset, GeneralClient, IEnum, DurationClient, IDuration, HierarchyClient, IHierarchy, DataSourceClient, IDataSource, IDatasetLocationRequest, DatasetLocationRequest, IDatasetLocation, TransformationClient, IGuidId, ITransformation, GuidId, MemberGroupClient, IMemberGroup, Dataset, DatasetCreateRequest, IDatasetCreateRequest, IDatasetUpdateRequest, DatasetUpdateRequest } from './api/api';
+import { AddDatasetAccessMemberRequestDto, CategoryClient, DatasetAccessClient, DatasetClient, DatasetSearchByCategoryRequest, DatasetSearchByTermRequest, IAdSearchResult, ICategory, IDataAccessEntry, IDatasetAccessList, IDataset, IDatasetSummary, ILineageTransformation, ILineageDataset, GeneralClient, IEnum, DurationClient, IDuration, HierarchyClient, IHierarchy, DataSourceClient, IDataSource, IDatasetLocationRequest, DatasetLocationRequest, IDatasetLocation, TransformationClient, IGuidId, ITransformation, GuidId, MemberGroupClient, IMemberGroup, Dataset, DatasetCreateRequest, IDatasetCreateRequest, IDatasetUpdateRequest, DatasetUpdateRequest, ApiException } from './api/api';
 
 /*
 This is a service that handles the connection to the api,
@@ -78,18 +78,10 @@ export class DataHandlerService {
   }
 
   public getDetailsFromId(id: string): Observable<IDataset> {
-    // const url = `${this.urlBase}/api/dataset/${id}`;
-    // return this.http
-    //   .get<IDataset>(url);
-
     return this.datasetClient.findById(id);
   }
 
   public getDatasetAccess(id: string): Observable<IDatasetAccessList> {
-    // const url = `${this.urlBase}/api/dataset/${id}/access`;
-    // return this.http
-    //   .get<IDatasetAccessList>(url);
-
     return this.datasetAccessClient.getAccessList(id);
   }
 
@@ -167,7 +159,7 @@ export class DataHandlerService {
       return EMPTY;
     }
 
-    return this.datasetClient.post(dataSet as DatasetCreateRequest);
+    return this.datasetClient.post(new DatasetCreateRequest(dataSet))
   }
 
   public updateDataSet(dataSet: IDatasetUpdateRequest): Observable<IDataset> {
@@ -176,7 +168,7 @@ export class DataHandlerService {
       return EMPTY;
     }
 
-    return this.datasetClient.put(dataSet as DatasetUpdateRequest);
+    return this.datasetClient.put(new DatasetUpdateRequest(dataSet));
   }
 
   public setCurrentTransformation(transform: ILineageTransformation[]) {

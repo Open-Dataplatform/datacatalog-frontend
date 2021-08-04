@@ -16,9 +16,7 @@ export class MessageNotifierComponent implements OnInit {
 
   ngOnInit() {
     this.messageNotifierService.getMessageStream().subscribe(message => {
-      if (message.error) {
-        this.message = `${message.error} - ${this.translateService.instant('error.tryAgain')}`
-      } else if (typeof message.message === 'string') {
+      if (typeof message.message === 'string') {
         console.log(message, message.message);
         this.message = message.message;
       } else {

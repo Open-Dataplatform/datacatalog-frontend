@@ -35,20 +35,22 @@ export class DataMetaComponent implements OnInit {
   // get metadata version or initiate a version 1.
   get metadataVersion(): IMetaDataInfo {
     if (this.data && this.data.version) {
-      return {version: this.data.version, changeDate: this.formatTime(this.data.modifiedDate.toISOString())};
+      return {version: this.data.version, changeDate: this.formatTime(this.data.modifiedDate)};
     }
-    return {version: 1, changeDate: this.formatTime(this.today.toISOString())};
+    return {version: 1, changeDate: this.formatTime(this.today)};
   };
 
   // Expects an ISO date and formats it.
-  formatTime(time: string) {
-    const timer = time.split('T')
+  formatTime(dateTime: Date) {
+    const isoString = dateTime.toISOString();
+
+    const timer = isoString.split('T')
       .reverse()
       .shift()
       .split('.')
       .shift();
 
-    const date = time.split('T')
+    const date = isoString.split('T')
       .shift()
       .split('-')
       .reverse()

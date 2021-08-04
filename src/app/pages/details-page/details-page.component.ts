@@ -47,8 +47,8 @@ export class DetailsPageComponent implements OnInit {
   }
 
   // formats an iso date to a readable string.
-  formatDateFromIsoString(isoString: string): string {
-    return isoString
+  formatDateFromIsoString(date?: Date): string {
+    return date?.toISOString()
       .substring(0, 10) // Get the first 10 characters.
       .split("-") // split the string with -
       .reverse() // reverse the string to reverse the dates from YYYYMMDD -> DDMMYYYY
@@ -107,11 +107,11 @@ export class DetailsPageComponent implements OnInit {
     const currentLocation = this.dataSet.name
       .toLocaleLowerCase()
       .replace(" ", "-");
-    
+
     const newLocation = promotedDatasetName
       .toLocaleLowerCase()
       .replace(" ", "-");
-    
+
     this.dataSet.datasetChangeLogs = [];
     this.dataSet.version = 0;
     this.dataSet.refinementLevel = 1; // Promote to stock
