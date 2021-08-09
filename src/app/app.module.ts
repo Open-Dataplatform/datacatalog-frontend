@@ -1,5 +1,4 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_BASE_HREF } from '@angular/common';
 import { ErrorHandler, NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
@@ -61,10 +60,6 @@ export function getTranslateConfig() {
       provide : HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi   : true,
-    },
-    {
-      provide  : APP_BASE_HREF, 
-      useValue : environment.baseHref 
     },
     {
       provide  : API_BASE_URL, 

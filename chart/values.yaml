@@ -19,9 +19,8 @@ deployment:
     initialDelaySeconds: 30
     timeoutSeconds: 2
     periodSeconds: 60
-
+  
   dynamicEnvironment:
-    baseHref: '/'
     base: https://localhost:5000
     production: false
     oidcSettings:
@@ -63,12 +62,11 @@ service:
 ingress:
   enabled: true
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2
     kubernetes.io/ingress.class: nginx
-  hosts:
-    - name: dp-test.com
-      paths:
-      - /
+  
+  host: "dp-test.com"
+  path: "/"
 
   # tls: 
   #   hosts:
@@ -77,4 +75,17 @@ ingress:
   #         - dataplatform.energinet.dk
       
 externalSecret:
-  enable: false
+  enabled: false
+
+  role: dataplatform
+
+  secrets: 
+    - name: tls.crt
+      # The full path of the secret to read, as in `vault read secret/data/hello-service/credentials`
+      key: dataplatform/data/certificates
+      property: tls.crt
+
+    # Vault values are matched individually. If you have several keys in your Vault secret, you will need to add them all separately
+    - name: tls.key
+      key: dataplatform/data/certificates
+      property: tls.key

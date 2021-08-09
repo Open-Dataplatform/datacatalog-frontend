@@ -13,19 +13,17 @@ metadata:
   {{- end }}
 spec:
   rules:
-{{- range .Values.ingress.hosts }}
-  - host: {{ .name }}
+{{- with .Values.ingress }}
+  - host: {{ .host }}
     http:
       paths:
-{{- range .paths }}
-      - path: {{ . }}
+      - path: {{ .path }}
         pathType: ImplementationSpecific
         backend:
           service:
             name: {{ $fullName }}-svc
             port:
               number: 80
-{{- end }}
 {{- end }}
 
 {{ if .Values.ingress.tls }}
