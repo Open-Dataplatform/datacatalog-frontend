@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { Components } from '../../../types/dataplatform-api'
-import IDataField = Components.Schemas.IDataField;
+import { IDataField } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-field-display',

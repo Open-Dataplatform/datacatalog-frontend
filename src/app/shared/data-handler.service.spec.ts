@@ -4,8 +4,6 @@ import { DataHandlerService } from './data-handler.service';
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {TranslateModule} from "@ngx-translate/core";
 import {EMPTY, Observable} from "rxjs";
-import { Components } from '../../types/dataplatform-api'
-import IDataset = Components.Schemas.IDataset;
 import {UserHandlerService} from "./user/user-handler.service";
 import { SharedModule } from './shared.module';
 

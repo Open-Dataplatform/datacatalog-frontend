@@ -14,6 +14,8 @@ import { ErrorInterceptService } from "./shared/error-intercept/error-intercept.
 import { GlobalErrorHandler } from "./shared/logging/global-error-handler.service";
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { UserHandlerService } from "./shared/user/user-handler.service";
+import { environment } from '../environments/environment';
+import { API_BASE_URL } from './shared/api/api';
 
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -58,6 +60,10 @@ export function getTranslateConfig() {
       provide : HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi   : true,
+    },
+    {
+      provide  : API_BASE_URL, 
+      useValue : environment.base
     },
     UserHandlerService,
     { 

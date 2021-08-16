@@ -2,11 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {DataHandlerService} from "../../../shared/data-handler.service";
 import {Observable} from "rxjs";
 import {DataStewardHandlerService} from "../data-steward-handler.service";
-import { Components } from '../../../../types/dataplatform-api'
-import IDataset = Components.Schemas.IDataset;
-import {IConfidentialityEnum} from "../../../../types/dataplatform-enum";
-import IDuration = Components.Schemas.IDuration;
 import {Router} from "@angular/router";
+import { IDataset, IDuration, IEnum, IMemberGroup } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-about',
@@ -17,8 +14,8 @@ export class DataAboutComponent implements OnInit {
 
   data: IDataset;
 
-  contacts$: Observable<any>;
-  confidentiality$: Observable<IConfidentialityEnum[]>;
+  contacts$: Observable<IMemberGroup[]>;
+  confidentiality$: Observable<IEnum[]>;
   durations$: Observable<IDuration[]>;
 
   currentDate: string;
@@ -58,7 +55,7 @@ export class DataAboutComponent implements OnInit {
 
     return date + ' - ' + timer;
   }
-
+  
   isDataExisting() {
     return Object.keys(this.data).length;
   }
