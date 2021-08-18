@@ -46,6 +46,20 @@
       "request": {
         "requested": "Data requested",
         "request": "Request data"
+      },
+      "access": {
+        "title": "Data Access",
+        "python": {
+          "description": "Data can be accessed via the egress API or directly through the Azure Storage. If you are using python, check out these Python examples:",
+          "link": "Python Examples",
+          "servicePrincipal": "For the python program to access data, you need a service principal or an access token. See the following for more info:",
+          "servicePrincipalLink": "Service Principal Information"
+        },
+        "token": {
+          "button": "Get Token",
+          "description": "To obtain an access token for data you have access to, click the button below. Afterwards the access token will be available in your clipboard",
+          "success": "Successfully obtained an access token. Your clipboard now holds the token value"
+        }
       }
     }
   },

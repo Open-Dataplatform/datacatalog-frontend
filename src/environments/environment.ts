@@ -17,6 +17,16 @@ export const environment = Object.assign({
     automaticSilentRenew: true,
     scope: 'openid profile offline_access',
     userStore: new WebStorageStateStore({ store: window.localStorage })
+  },
+  oboOidcSettings: {
+    client_id : 'd9cd520e-2317-4db6-a5ae-77f0949085af',
+    authority: 'https://login.microsoftonline.com/f7619355-6c67-4100-9a78-1847f30742e2/v2.0/',
+    response_type: 'code',
+    loadUserInfo: false,
+    automaticSilentRenew: true,
+    popup_redirect_uri: 'http://localhost:4200/obo-login',
+    scope: 'https://storage.azure.com/user_impersonation',
+    userStore: new WebStorageStateStore({ store: window.localStorage })
   }
 },
   (window as any).dynamicEnvironment);

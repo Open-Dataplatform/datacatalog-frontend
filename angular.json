@@ -54,39 +54,11 @@
                 }
               ]
             },
-            "preprod": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.preprod.ts"
-                }
-              ],
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ]
-            },
             "test": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.test.ts"
-                }
-              ],
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ]
-            },
-            "dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
                 }
               ],
               "budgets": [
@@ -107,14 +79,8 @@
             "prod": {
               "browserTarget": "DataCatalog:build:prod"
             },
-            "preprod": {
-              "browserTarget": "DataCatalog:build:preprod"
-            },
             "test": {
               "browserTarget": "DataCatalog:build:test"
-            },
-            "dev": {
-              "browserTarget": "DataCatalog:build:dev"
             }
           }
         },
