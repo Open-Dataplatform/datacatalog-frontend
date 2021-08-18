@@ -1,11 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {DataStewardHandlerService} from "../../pages/data-steward/data-steward-handler.service";
 import {Observable} from "rxjs";
-import { Components } from '../../../types/dataplatform-api'
-import IDataset = Components.Schemas.IDataset;
 import {DataHandlerService} from "../../shared/data-handler.service";
-import ITransformation = Components.Schemas.ITransformation;
 import {NgSelectComponent} from "@ng-select/ng-select";
+import { GuidId, IDatasetSummary, ITransformation, Transformation } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-transformation-selector',
@@ -18,7 +16,7 @@ export class TransformationSelectorComponent implements OnInit {
   @Input() dataSetTransformation: ITransformation;
   @Output() dataSetTransformationChange = new EventEmitter();
 
-  dataset$: Observable<IDataset[]>;
+  dataset$: Observable<IDatasetSummary[]>;
   transformations: ITransformation[];
   activeTransformation: ITransformation;
 
@@ -30,7 +28,7 @@ export class TransformationSelectorComponent implements OnInit {
   ngOnInit() {
     this.dataset$ = this.dataHandlerService.getDataSets('');
     if (!this.dataSetTransformation) {
-      this.dataSetTransformation = {};
+      this.dataSetTransformation = new Transformation();
     } else {
       this.onDataChange();
       this.activeTransformation = Object.assign({}, this.dataSetTransformation);
@@ -38,7 +36,8 @@ export class TransformationSelectorComponent implements OnInit {
   }
 
   onDataChange() {
-    this.dataHandlerService.getTransformations(this.dataSetTransformation.sourceDatasets).subscribe(response => {
+    const sourceDatasetIds = this.dataSetTransformation.sourceDatasets?.map(foo => new GuidId({ id: foo.id }));
+    this.dataHandlerService.getTransformations(sourceDatasetIds).subscribe(response => {
       this.transformations = response;
       if (this.showCreateNew() && this.dataSetTransformation && this.dataSetTransformation.id) {
         this.clearTransformation();
@@ -81,9 +80,9 @@ export class TransformationSelectorComponent implements OnInit {
 
   // Clear current transformation
   clearTransformation() {
-    this.activeTransformation = {};
+    this.activeTransformation = new Transformation();
     const tempSourceDataSets = this.dataSetTransformation.sourceDatasets;
-    this.dataSetTransformation = {};
+    this.dataSetTransformation = new Transformation();
     this.dataSetTransformation.sourceDatasets = tempSourceDataSets;
     this.emitData();
   }

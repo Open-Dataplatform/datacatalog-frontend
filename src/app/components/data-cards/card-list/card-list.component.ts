@@ -1,9 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {DataHandlerService} from "../../../shared/data-handler.service";
-import { Components } from '../../../../types/dataplatform-api'
-import ICategory = Components.Schemas.ICategory;
-import IDataset = Components.Schemas.IDataset;
 import {animate, keyframes, query, stagger, style, transition, trigger} from "@angular/animations";
+import { ICategory, IDataset } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-card-list',

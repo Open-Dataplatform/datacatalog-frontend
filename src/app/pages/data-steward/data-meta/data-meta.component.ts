@@ -2,10 +2,8 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {DataHandlerService} from "../../../shared/data-handler.service";
 import {Observable} from "rxjs";
 import {DataStewardHandlerService, IMetaDataInfo} from "../data-steward-handler.service";
-import { Components } from '../../../../types/dataplatform-api'
-import ICategory = Components.Schemas.ICategory;
-import IDataset = Components.Schemas.IDataset;
 import {Router} from "@angular/router";
+import { ICategory, IDataset, IDatasetSummary } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-meta',
@@ -19,7 +17,7 @@ export class DataMetaComponent implements OnInit {
   today: Date;
 
   categories$: Observable<ICategory[]>;
-  dataset$: Observable<IDataset[]>;
+  dataset$: Observable<IDatasetSummary[]>;
 
   constructor(private readonly dataHandlerService: DataHandlerService,
               private readonly dataStewardHandlerService: DataStewardHandlerService,
@@ -39,18 +37,20 @@ export class DataMetaComponent implements OnInit {
     if (this.data && this.data.version) {
       return {version: this.data.version, changeDate: this.formatTime(this.data.modifiedDate)};
     }
-    return {version: 1, changeDate: this.formatTime(this.today.toISOString())};
+    return {version: 1, changeDate: this.formatTime(this.today)};
   };
 
   // Expects an ISO date and formats it.
-  formatTime(time: string) {
-    const timer = time.split('T')
+  formatTime(dateTime: Date) {
+    const isoString = dateTime.toISOString();
+
+    const timer = isoString.split('T')
       .reverse()
       .shift()
       .split('.')
       .shift();
 
-    const date = time.split('T')
+    const date = isoString.split('T')
       .shift()
       .split('-')
       .reverse()

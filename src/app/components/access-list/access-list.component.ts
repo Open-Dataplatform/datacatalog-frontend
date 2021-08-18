@@ -1,11 +1,9 @@
 import {Component, OnInit, Input, Inject} from '@angular/core';
-import { Components } from '../../../types/dataplatform-api'
-import IDataAccessEntry = Components.Schemas.IDataAccessEntry;
-import IAdSearchResult = Components.Schemas.IAdSearchResult;
 import {DataHandlerService} from "../../shared/data-handler.service";
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { IAdSearchResult, IDataAccessEntry } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-access-list',
@@ -105,7 +103,7 @@ export class AccessListComponent implements OnInit {
 })
 export class SearchAdDialog {
 
-  searchResults :IAdSearchResult[];
+  searchResults? :IAdSearchResult[];
   searchString: string;
   selectedSearchResult: IAdSearchResult;
 

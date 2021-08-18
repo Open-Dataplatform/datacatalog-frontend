@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { Components } from '../../../types/dataplatform-api'
-import IDataField = Components.Schemas.IDataField;
+import { DataFieldUpsertRequest, IDataFieldUpsertRequest } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-field',
@@ -9,7 +8,7 @@ import IDataField = Components.Schemas.IDataField;
 })
 export class DataFieldComponent implements OnInit {
 
-  @Input() dataFields: IDataField[];
+  @Input() dataFields: IDataFieldUpsertRequest[];
   @Output() dataFieldsChange = new EventEmitter();
 
   constructor() { }
@@ -25,13 +24,13 @@ export class DataFieldComponent implements OnInit {
   }
 
   addField(): void {
-    this.dataFields.push({
+    this.dataFields.push(new DataFieldUpsertRequest({
       name: "New field",
       type: "",
       description: "",
       format: "",
-      validation: ""
-    });
+      validation: "",
+    }));
     this.dataChange();
   }
 
