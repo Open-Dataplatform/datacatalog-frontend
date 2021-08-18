@@ -1,8 +1,8 @@
 import {Component, OnInit, Input, Inject} from '@angular/core';
 import {DataHandlerService} from "../../shared/data-handler.service";
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, timer } from 'rxjs';
+import { mergeMap, retryWhen, switchMap } from 'rxjs/operators';
 import { IAdSearchResult, IDataAccessEntry } from 'src/app/shared/api/api';
 
 @Component({
@@ -17,7 +17,8 @@ export class AccessListComponent implements OnInit {
   readers: IDataAccessEntry[] = []; 
   selectedReaders: IDataAccessEntry[]; 
   writers: IDataAccessEntry[] = []; 
-  selectedWriters: IDataAccessEntry[]; 
+  selectedWriters: IDataAccessEntry[];
+  accessListLoaded: boolean;
 
   constructor(
     private readonly dataHandlerService: DataHandlerService,
@@ -76,13 +77,23 @@ export class AccessListComponent implements OnInit {
     this.selectedWriters = [];
   }
 
-  getAccessList(id: string)
-  {
-    this.dataHandlerService.getDatasetAccess(id).subscribe(res =>
-      {
-        this.readers = res.readAccessList;
-        this.writers = res.writeAccessList;
-      }, error => { console.log('Failed to get members: ' + JSON.stringify(error)) });
+  getAccessList(id: string) {
+    this.dataHandlerService.getDatasetAccess(id).pipe(
+      retryWhen(obs => {
+        return obs.pipe(
+          mergeMap((response, i) => {
+            // Retry if response is 404
+            if (response.status === 404) {
+              return timer(5000);
+            }
+          })
+        )
+      })
+    ).subscribe(res => {
+      this.readers = res.readAccessList;
+      this.writers = res.writeAccessList;
+      this.accessListLoaded = true;
+    });
   }
 
   openSearchDialog(): Observable<IAdSearchResult> {
