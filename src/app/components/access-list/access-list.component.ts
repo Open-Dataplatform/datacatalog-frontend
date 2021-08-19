@@ -1,7 +1,7 @@
-import {Component, OnInit, Input, Inject} from '@angular/core';
+import {Component, OnInit, Input, Inject, OnDestroy} from '@angular/core';
 import {DataHandlerService} from "../../shared/data-handler.service";
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import { Observable, timer } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 import { mergeMap, retryWhen, switchMap } from 'rxjs/operators';
 import { IAdSearchResult, IDataAccessEntry } from 'src/app/shared/api/api';
 
@@ -10,7 +10,7 @@ import { IAdSearchResult, IDataAccessEntry } from 'src/app/shared/api/api';
   templateUrl: './access-list.component.html',
   styleUrls: ['./access-list.component.less']
 })
-export class AccessListComponent implements OnInit {
+export class AccessListComponent implements OnInit, OnDestroy {
 
   @Input()
   datasetId: string;
@@ -19,11 +19,16 @@ export class AccessListComponent implements OnInit {
   writers: IDataAccessEntry[] = []; 
   selectedWriters: IDataAccessEntry[];
   accessListLoaded: boolean;
+  dataAccessSubscription: Subscription;
 
   constructor(
     private readonly dataHandlerService: DataHandlerService,
     private readonly searchDialog: MatDialog)
   {}
+  ngOnDestroy(): void {
+    // Unsubscribe so we don't keep retrying after having left the dataset
+    this.dataAccessSubscription.unsubscribe();
+  }
 
   ngOnInit() { 
     this.getAccessList(this.datasetId);
@@ -78,10 +83,10 @@ export class AccessListComponent implements OnInit {
   }
 
   getAccessList(id: string) {
-    this.dataHandlerService.getDatasetAccess(id).pipe(
+    this.dataAccessSubscription = this.dataHandlerService.getDatasetAccess(id).pipe(
       retryWhen(obs => {
         return obs.pipe(
-          mergeMap((response, i) => {
+          mergeMap((response) => {
             // Retry if response is 404
             if (response.status === 404) {
               return timer(5000);
