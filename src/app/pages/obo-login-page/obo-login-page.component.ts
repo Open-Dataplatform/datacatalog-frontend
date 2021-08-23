@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import { UserManager } from 'oidc-client';
+import { OBO_USER_MANAGER_TOKEN } from 'src/app/app.module';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -8,11 +9,10 @@ import { environment } from '../../../environments/environment';
   templateUrl: './obo-login-page.component.html',
 })
 export class OboLoginPageComponent implements OnInit {
-
-  oboUserManager: UserManager;
-
-  constructor(private readonly router: Router) {
-    console.log('Constructing Obo login class');
+  constructor(private readonly router: Router,
+    @Inject(OBO_USER_MANAGER_TOKEN)
+    private readonly oboUserManager
+  ) {
   }
 
   private isTokenInURL(url: string) {
@@ -20,8 +20,6 @@ export class OboLoginPageComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    console.log('Got into Obo login');
-    this.oboUserManager = new UserManager(environment.oboOidcSettings);
     if (this.isTokenInURL(this.router.url)) {
       await this.oboUserManager.signinPopupCallback(this.router.url);
     }

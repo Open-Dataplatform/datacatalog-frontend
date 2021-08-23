@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataHandlerService } from '../../shared/data-handler.service';
 import { DataStewardHandlerService } from '../data-steward/data-steward-handler.service';
@@ -14,6 +14,7 @@ import {
   IEnum,
   Transformation,
 } from 'src/app/shared/api/api';
+import { OBO_USER_MANAGER_TOKEN } from 'src/app/app.module';
 
 @Component({
   selector: 'app-details-page',
@@ -27,7 +28,6 @@ export class DetailsPageComponent implements OnInit {
   confidentiality: IEnum;
   currentTransformationDescription = '';
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
-  oboUserManager: UserManager;
 
   constructor(private readonly activeRoute: ActivatedRoute,
               private readonly router: Router,
@@ -35,8 +35,10 @@ export class DetailsPageComponent implements OnInit {
               private readonly userHandlerService: UserHandlerService,
               private readonly dataStewardHandlerService: DataStewardHandlerService,
               private readonly messageNotifier: MessageNotifierService,
-              private readonly translator: TranslateService) {
-               }
+              private readonly translator: TranslateService,
+              @Inject(OBO_USER_MANAGER_TOKEN)
+              private readonly oboUserManager) {
+              }
 
   ngOnInit() {
     // Subscribe to navigations
@@ -47,7 +49,6 @@ export class DetailsPageComponent implements OnInit {
         this.dataHandlerService.currentTransformation.description : '';
     });
     this.categories = this.dataHandlerService.categories;
-    this.oboUserManager = new UserManager(environment.oboOidcSettings);
   }
 
   // formats an iso date to a readable string.
@@ -158,9 +159,10 @@ export class DetailsPageComponent implements OnInit {
   }
 
   GetOboToken(): void {
+    debugger;
     this.oboUserManager.signinPopup().then(user => {
       navigator.clipboard.writeText(user.access_token).then(_ =>
-        this.translator.get('details.side.access.token.success').toPromise().then(val => this.messageNotifier.sendMessage(val, false)));
+        this.translator.get('details.side.access.token.success').subscribe(val => this.messageNotifier.sendMessage(val, false)));
     });
   }
 
