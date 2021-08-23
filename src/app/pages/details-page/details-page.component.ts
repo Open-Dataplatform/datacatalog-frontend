@@ -28,6 +28,8 @@ export class DetailsPageComponent implements OnInit {
   confidentiality: IEnum;
   currentTransformationDescription = '';
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
+  oboToken$ = this.userHandlerService.oboToken$;
+
 
   constructor(private readonly activeRoute: ActivatedRoute,
               private readonly router: Router,
@@ -158,10 +160,13 @@ export class DetailsPageComponent implements OnInit {
     });
   }
 
-  GetOboToken(): void {
-    debugger;
-    this.oboUserManager.signinPopup().then(user => {
-      navigator.clipboard.writeText(user.access_token).then(_ =>
+  getOboToken(): void {
+    this.userHandlerService.GetOboToken();
+  }
+
+  copyToClipBoard(): void {
+    this.oboToken$.subscribe(token => {
+      navigator.clipboard.writeText(token).then(_ =>
         this.translator.get('details.side.access.token.success').subscribe(val => this.messageNotifier.sendMessage(val, false)));
     });
   }

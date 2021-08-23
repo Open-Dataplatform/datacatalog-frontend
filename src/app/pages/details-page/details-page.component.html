@@ -165,7 +165,11 @@
     </div>
     <div class="details__master-data">
       <h2>{{ 'details.side.access.title' | translate }}</h2>
-      <p class="master-data-field__comment">{{ 'details.side.access.python.description' | translate }}</p>
+      <p class="master-data-field__comment">
+        {{ 'details.side.access.python.description1' | translate }}
+        <a href="https://dp-prod.westeurope.cloudapp.azure.com/osiris-egress/docs"> egress API.</a>
+        {{ 'details.side.access.python.description2' | translate }}
+      </p>
       <li>
         <a href='https://github.com/Open-Dataplatform/examples'>{{ 'details.side.access.python.link' | translate }}</a>
       </li>
@@ -176,7 +180,18 @@
       </li>
       <br/>
       <p class="master-data-field__comment">{{ 'details.side.access.token.description' | translate }}</p>
-      <button id="getOboTokenButton" class="token__get-token-button" (click)="GetOboToken()">{{ 'details.side.access.token.button' | translate }}</button>
+      <div class="details__token-container" *ngIf="(oboToken$ | async) as token">
+        <textarea matInput 
+                  cdkTextareaAutosize
+                  cdkAutosizeMaxRows="2" 
+                  class="token__textarea" 
+                  value="{{ token }}">
+        </textarea>
+        <button class="mat-icon-button" (click)="copyToClipBoard()" matTooltip="{{ 'details.side.access.token.copyButton' | translate}}">
+          <mat-icon class="token__copy-icon">content_copy</mat-icon>
+        </button>
+      </div>
+      <button id="getOboTokenButton" class="token__get-token-button" (click)="getOboToken()">{{ 'details.side.access.token.getButton' | translate }}</button>
     </div>
   </div>
 

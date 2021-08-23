@@ -11,7 +11,9 @@ import {MatListModule} from '@angular/material/list';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input'
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { MatInputModule } from '@angular/material/input'
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   bootstrap: [AccessListComponent],
   exports: [
