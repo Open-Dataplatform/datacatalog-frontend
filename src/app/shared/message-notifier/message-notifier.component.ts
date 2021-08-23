@@ -10,12 +10,15 @@ import {TranslateService} from "@ngx-translate/core";
 export class MessageNotifierComponent implements OnInit {
 
   message: string;
+  isError: boolean;
 
   constructor(private readonly messageNotifierService: MessageNotifierService,
               private readonly translateService: TranslateService) { }
 
   ngOnInit() {
     this.messageNotifierService.getMessageStream().subscribe(message => {
+      this.isError = message.error;
+
       if (typeof message.message === 'string') {
         console.log(message, message.message);
         this.message = message.message;
@@ -23,8 +26,9 @@ export class MessageNotifierComponent implements OnInit {
         console.log(message);
         this.message = `${this.translateService.instant('error.occured')} - ${this.translateService.instant('error.tryAgain')}`;
       }
+
       setTimeout(() => this.closeMessage(), 10000);
-    })
+    });
   }
 
   closeMessage() {

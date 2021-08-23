@@ -160,7 +160,7 @@ export class DetailsPageComponent implements OnInit {
   GetOboToken(): void {
     this.oboUserManager.signinPopup().then(user => {
       navigator.clipboard.writeText(user.access_token).then(_ =>
-        this.translator.get('details.side.access.token.success').toPromise().then(val => this.messageNotifier.sendMessage(val)));
+        this.translator.get('details.side.access.token.success').toPromise().then(val => this.messageNotifier.sendMessage(val, false)));
     });
   }
 

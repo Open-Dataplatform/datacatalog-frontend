@@ -1,4 +1,4 @@
-<div class="message-notifier__wrapper" *ngIf="message">
+<div class="message-notifier__wrapper" [ngClass]="{'message-notifier__error' : isError}" *ngIf="message">
   <div class="message-notifier__content">
     {{message}}
   </div>

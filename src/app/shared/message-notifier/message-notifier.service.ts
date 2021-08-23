@@ -8,15 +8,13 @@ export class MessageNotifierService {
 
   messageStream$ = new Subject<IMessageObject>();
 
-  message: string = 'what';
-
   constructor() {}
 
   getMessageStream(): Observable<IMessageObject> {
     return this.messageStream$;
   }
 
-  sendMessage(message: string, error: boolean = false) {
+  sendMessage(message: string, error: boolean) {
     const payload: IMessageObject = {
       message: message,
       error: error
@@ -26,6 +24,6 @@ export class MessageNotifierService {
 }
 
 export interface IMessageObject  {
-  message: string,
-  error: boolean
+  message: string;
+  error: boolean;
 }
