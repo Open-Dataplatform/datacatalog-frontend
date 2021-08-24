@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataHandlerService } from '../../shared/data-handler.service';
 import { DataStewardHandlerService } from '../data-steward/data-steward-handler.service';
@@ -18,7 +18,7 @@ import {
   templateUrl: './details-page.component.html',
   styleUrls: ['./details-page.component.less']
 })
-export class DetailsPageComponent implements OnInit {
+export class DetailsPageComponent implements OnInit, OnDestroy {
   id: string;
   categories: ICategory[];
   dataSet: IDataset;
@@ -36,6 +36,9 @@ export class DetailsPageComponent implements OnInit {
               private readonly messageNotifier: MessageNotifierService,
               private readonly translator: TranslateService) {
               }
+  ngOnDestroy(): void {
+    this.userHandlerService.ClearOboToken();
+  }
 
   ngOnInit() {
     // Subscribe to navigations

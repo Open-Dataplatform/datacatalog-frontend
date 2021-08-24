@@ -81,4 +81,8 @@ export class UserHandlerService {
       this.oboToken.next(user.access_token);
     });
   }
+
+  public ClearOboToken(): void {
+    this.oboToken.next('');
+  }
 }
