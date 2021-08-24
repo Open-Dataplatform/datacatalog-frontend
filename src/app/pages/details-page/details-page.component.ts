@@ -37,9 +37,7 @@ export class DetailsPageComponent implements OnInit {
               private readonly userHandlerService: UserHandlerService,
               private readonly dataStewardHandlerService: DataStewardHandlerService,
               private readonly messageNotifier: MessageNotifierService,
-              private readonly translator: TranslateService,
-              @Inject(OBO_USER_MANAGER_TOKEN)
-              private readonly oboUserManager) {
+              private readonly translator: TranslateService) {
               }
 
   ngOnInit() {
