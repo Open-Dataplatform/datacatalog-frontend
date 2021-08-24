@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UserManager, User } from 'oidc-client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IUser, UserClient } from '../api/api';
+import { UserClient } from '../api/api';
+
+export const OBO_USER_MANAGER_TOKEN: InjectionToken<UserManager> = new InjectionToken<UserManager>('OBO_USER_MANAGER_TOKEN');
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +16,14 @@ export class UserHandlerService {
   public userHasDataStewardRole = new BehaviorSubject<boolean>(false);
   public userHasDataStewardRole$ = this.userHasDataStewardRole.asObservable();
 
+  private oboToken = new BehaviorSubject<string>('');
+  public oboToken$ = this.oboToken.asObservable();
+
   constructor(
     private readonly userClient: UserClient,
-    private readonly userManager: UserManager) {
+    private readonly userManager: UserManager,
+    @Inject(OBO_USER_MANAGER_TOKEN)
+    private readonly oboUserManager) {
   }
 
   public async initialize(): Promise<void> {
@@ -66,5 +73,16 @@ export class UserHandlerService {
     this.userManager.events.addSilentRenewError(() => this.logout());
     this.userManager.events.addUserSignedOut(() => this.userLoggedIn.next(null));
     this.userManager.events.addUserUnloaded(() => this.userLoggedIn.next(null));
+  }
+
+  public GetOboToken(): void {
+    this.oboUserManager.signinPopup().then(user => {
+
+      this.oboToken.next(user.access_token);
+    });
+  }
+
+  public ClearOboToken(): void {
+    this.oboToken.next('');
   }
 }

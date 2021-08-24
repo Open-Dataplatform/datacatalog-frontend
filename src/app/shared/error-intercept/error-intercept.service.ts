@@ -25,15 +25,15 @@ export class ErrorInterceptService implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.error instanceof ErrorEvent) {
           // client-side error
-          this.messageNotifierService.sendMessage(`Error: ${error.error.message}`);
+          this.messageNotifierService.sendMessage(`Error: ${error.error.message}`, true);
         } else if (error.error instanceof Blob) {
           // server-side error
           this.blobToText(error.error).subscribe(res => {
-            this.messageNotifierService.sendMessage(res);
+            this.messageNotifierService.sendMessage(res, true);
           });
         } else {
           // Unknown error
-          this.messageNotifierService.sendMessage(error.error);
+          this.messageNotifierService.sendMessage(error.error, true);
         }
 
         return throwError(error);

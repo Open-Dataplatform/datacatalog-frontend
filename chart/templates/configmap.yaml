@@ -20,6 +20,13 @@ data:
           silent_redirect_uri: '{{ .Values.deployment.dynamicEnvironment.oidcSettings.silent_redirect_uri }}',
           automaticSilentRenew: {{ .Values.deployment.dynamicEnvironment.oidcSettings.automaticSilentRenew }},
           scope: '{{ .Values.deployment.dynamicEnvironment.oidcSettings.scope }}',
+        },
+        oboOidcSettings: {
+          client_id : {{ .Values.deployment.dynamicEnvironment.oboOidcSettings.client_id }},
+          authority: {{ .Values.deployment.dynamicEnvironment.oboOidcSettings.authority }},
+          response_type: {{ .Values.deployment.dynamicEnvironment.oboOidcSettings.response_type }},
+          popup_redirect_uri: {{ .Values.deployment.dynamicEnvironment.oboOidcSettings.popup_redirect_uri }},
+          scope: {{ .Values.deployment.dynamicEnvironment.oboOidcSettings.scope }},
         }
       };
     }(this));

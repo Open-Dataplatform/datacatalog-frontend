@@ -46,6 +46,22 @@
       "request": {
         "requested": "Data requested",
         "request": "Request data"
+      },
+      "access": {
+        "title": "Data Access",
+        "python": {
+          "description1": "Data can be accessed via the",
+          "description2": "If you are using python, check out these examples:",
+          "link": "Python Examples",
+          "servicePrincipal": "For the python program to access data, you need a service principal or an access token. See the following for more info about obtaining a service principal:",
+          "servicePrincipalLink": "Service Principal Information"
+        },
+        "token": {
+          "getButton": "Get Token",
+          "description": "To obtain a personal access token for data you have access to, click the button below",
+          "success": "Successfully copied token to clipboard",
+          "copyButton": "Copy to Clipboard"
+        }
       }
     }
   },

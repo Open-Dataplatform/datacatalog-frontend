@@ -6,12 +6,12 @@
   max-width: 40%;
   left: 50%;
   transform: translate(-50%, 0);
-  background-color: @error;
+  background-color: @success;
   color: @white;
   display: flex;
   padding: 2rem;
   border-radius: @borderRadius;
-  box-shadow: 0 1rem 4rem rgba(@error, 0.6);
+  box-shadow: 0 1rem 4rem rgba(@success, 0.6);
   z-index: @z-max;
   word-break: break-word;
 }
@@ -29,5 +29,9 @@
 .message-notifier__close-button {
   background-color: transparent;
   color: @white;
+}
 
+.message-notifier__error {
+  background-color: @error;
+  box-shadow: 0 1rem 4rem rgba(@error, 0.6);
 }

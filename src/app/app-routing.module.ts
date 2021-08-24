@@ -1,13 +1,18 @@
-import {NgModule} from "@angular/core";
-import {PreloadAllModules, Route, RouterModule} from "@angular/router";
-import {HomeComponent} from "./pages/home/home.component";
-import {PageNotFoundComponent} from "./pages/page-not-found/page-not-found.component";
-import {AuthGuard} from "./auth/auth.guard";
+import {NgModule} from '@angular/core';
+import {Route, RouterModule} from '@angular/router';
+import {HomeComponent} from './pages/home/home.component';
+import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
+import {AuthGuard} from './auth/auth.guard';
 
 export const routes: Route[] = [
   {
     path: 'login',
     loadChildren: () => import('./pages/login-page/login-page.module').then(m => m.LoginPageModule),
+    pathMatch: 'full'
+  },
+  {
+    path: 'obo-login',
+    loadChildren: () => import('./pages/obo-login-page/obo-login-page.module').then(m => m.OboLoginPageModule),
     pathMatch: 'full'
   },
   {

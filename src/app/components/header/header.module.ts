@@ -4,7 +4,7 @@ import { HeaderComponent } from "./header.component";
 import { SearchComponent } from "./search/search.component";
 import { SharedModule } from "../../shared/shared.module";
 import { InputElementsModule } from "../input-elements/input-elements.module";
-import {MessageNotifierComponent} from "../../shared/message-notifier/message-notifier.component";
+import { MessageNotifierComponent } from "../../shared/message-notifier/message-notifier.component";
 
 
 

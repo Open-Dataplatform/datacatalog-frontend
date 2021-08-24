@@ -1,47 +1,52 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { DataHandlerService } from "../../shared/data-handler.service";
-import { DataStewardHandlerService } from "../data-steward/data-steward-handler.service";
-import { UserHandlerService } from "../../shared/user/user-handler.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DataHandlerService } from '../../shared/data-handler.service';
+import { DataStewardHandlerService } from '../data-steward/data-steward-handler.service';
+import { UserHandlerService } from '../../shared/user/user-handler.service';
+import {MessageNotifierService} from '../../shared/message-notifier/message-notifier.service';
+import {TranslateService} from '@ngx-translate/core';
 import {
   DatasetSummary,
   ICategory,
   IDataset,
   IEnum,
   Transformation,
-} from "src/app/shared/api/api";
+} from 'src/app/shared/api/api';
 
 @Component({
-  selector: "app-details-page",
-  templateUrl: "./details-page.component.html",
-  styleUrls: ["./details-page.component.less"],
+  selector: 'app-details-page',
+  templateUrl: './details-page.component.html',
+  styleUrls: ['./details-page.component.less']
 })
-export class DetailsPageComponent implements OnInit {
+export class DetailsPageComponent implements OnInit, OnDestroy {
   id: string;
   categories: ICategory[];
   dataSet: IDataset;
   confidentiality: IEnum;
-  currentTransformationDescription: string = "";
+  currentTransformationDescription = '';
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
+  oboToken$ = this.userHandlerService.oboToken$;
 
-  constructor(
-    private readonly activeRoute: ActivatedRoute,
-    private readonly router: Router,
-    private readonly dataHandlerService: DataHandlerService,
-    private readonly userHandlerService: UserHandlerService,
-    private readonly dataStewardHandlerService: DataStewardHandlerService
-  ) {}
+
+  constructor(private readonly activeRoute: ActivatedRoute,
+              private readonly router: Router,
+              private readonly dataHandlerService: DataHandlerService,
+              private readonly userHandlerService: UserHandlerService,
+              private readonly dataStewardHandlerService: DataStewardHandlerService,
+              private readonly messageNotifier: MessageNotifierService,
+              private readonly translator: TranslateService) {
+              }
+  ngOnDestroy(): void {
+    this.userHandlerService.ClearOboToken();
+  }
 
   ngOnInit() {
     // Subscribe to navigations
-    this.activeRoute.paramMap.subscribe((params) => {
-      this.id = params.get("id");
+    this.activeRoute.paramMap.subscribe(params => {
+      this.id = params.get('id');
       this.getDetailsFromId(this.id);
-      this.currentTransformationDescription =
-        this.dataHandlerService.currentTransformation &&
-        this.dataHandlerService.currentTransformation.description
-          ? this.dataHandlerService.currentTransformation.description
-          : "";
+      this.currentTransformationDescription = this.dataHandlerService.currentTransformation && this.dataHandlerService.currentTransformation.description ?
+        this.dataHandlerService.currentTransformation.description : '';
     });
     this.categories = this.dataHandlerService.categories;
   }
@@ -50,15 +55,15 @@ export class DetailsPageComponent implements OnInit {
   formatDateFromIsoString(date?: Date): string {
     return date?.toISOString()
       .substring(0, 10) // Get the first 10 characters.
-      .split("-") // split the string with -
+      .split('-') // split the string with -
       .reverse() // reverse the string to reverse the dates from YYYYMMDD -> DDMMYYYY
-      .join("/"); //join it back to get a readable string,
+      .join('/'); // join it back to get a readable string,
   }
 
   toggleFavorites() {
     this.dataHandlerService
-      .getDetailsFromId("1")
-      .subscribe((res) => console.log("res", res));
+      .getDetailsFromId('1')
+      .subscribe((res) => console.log('res', res));
     // if (this.isFavorite()) {
     //   this.dataHandlerService.removeFromFavorites(this.id).subscribe(fav => {
     //     this.getFavorites();
@@ -79,12 +84,12 @@ export class DetailsPageComponent implements OnInit {
   // Navigate to edit and send dataset data to
   editDataSet() {
     this.dataStewardHandlerService.setDataSet(this.dataSet);
-    this.router.navigate(["/datasteward"]);
+    this.router.navigate(['/datasteward']);
   }
 
   promoteDatasetToStock() {
     this.dataSet.sourceTransformation = new Transformation ({
-      id: "",
+      id: '',
       sourceDatasets: [],
       createdDate: new Date(),
       modifiedDate: new Date()
@@ -103,14 +108,14 @@ export class DetailsPageComponent implements OnInit {
       })
     );
 
-    const promotedDatasetName = "promoted_" + this.dataSet.name;
+    const promotedDatasetName = 'promoted_' + this.dataSet.name;
     const currentLocation = this.dataSet.name
       .toLocaleLowerCase()
-      .replace(" ", "-");
+      .replace(' ', '-');
 
     const newLocation = promotedDatasetName
       .toLocaleLowerCase()
-      .replace(" ", "-");
+      .replace(' ', '-');
 
     this.dataSet.datasetChangeLogs = [];
     this.dataSet.version = 0;
@@ -125,7 +130,7 @@ export class DetailsPageComponent implements OnInit {
     this.dataSet.id = null;
 
     this.dataStewardHandlerService.setDataSet(this.dataSet);
-    this.router.navigate(["/datasteward"]);
+    this.router.navigate(['/datasteward']);
   }
 
   isFavorite(): boolean {
@@ -152,4 +157,16 @@ export class DetailsPageComponent implements OnInit {
       )[0];
     });
   }
+
+  getOboToken(): void {
+    this.userHandlerService.GetOboToken();
+  }
+
+  copyToClipBoard(): void {
+    this.oboToken$.subscribe(token => {
+      navigator.clipboard.writeText(token).then(_ =>
+        this.translator.get('details.side.access.token.success').subscribe(val => this.messageNotifier.sendMessage(val, false)));
+    });
+  }
+
 }
