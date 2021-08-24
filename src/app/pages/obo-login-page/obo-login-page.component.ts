@@ -1,8 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
-import { UserManager } from 'oidc-client';
-import { OBO_USER_MANAGER_TOKEN } from 'src/app/app.module';
-import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+import { OBO_USER_MANAGER_TOKEN } from 'src/app/shared/user/user-handler.service';
 
 @Component({
   selector: 'app-obo-login-page',

@@ -13,7 +13,7 @@ import { HomeModule } from "./pages/home/home.module";
 import { ErrorInterceptService } from "./shared/error-intercept/error-intercept.service";
 import { GlobalErrorHandler } from "./shared/logging/global-error-handler.service";
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { UserHandlerService } from "./shared/user/user-handler.service";
+import { OBO_USER_MANAGER_TOKEN, UserHandlerService } from "./shared/user/user-handler.service";
 import { environment } from '../environments/environment';
 import { API_BASE_URL } from './shared/api/api';
 import { UserManager } from 'oidc-client';
@@ -33,7 +33,6 @@ export function getTranslateConfig() {
   }
 }
 
-export const OBO_USER_MANAGER_TOKEN: InjectionToken<UserManager> = new InjectionToken<UserManager>('OBO_USER_MANAGER_TOKEN');
 
 @NgModule({
   declarations: [

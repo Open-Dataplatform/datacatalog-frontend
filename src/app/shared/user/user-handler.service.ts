@@ -1,10 +1,11 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UserManager, User } from 'oidc-client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IUser, UserClient } from '../api/api';
-import { OBO_USER_MANAGER_TOKEN } from 'src/app/app.module';
+import { UserClient } from '../api/api';
+
+export const OBO_USER_MANAGER_TOKEN: InjectionToken<UserManager> = new InjectionToken<UserManager>('OBO_USER_MANAGER_TOKEN');
 
 @Injectable({
   providedIn: 'root'

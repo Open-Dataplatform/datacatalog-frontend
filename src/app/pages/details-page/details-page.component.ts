@@ -1,10 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataHandlerService } from '../../shared/data-handler.service';
 import { DataStewardHandlerService } from '../data-steward/data-steward-handler.service';
 import { UserHandlerService } from '../../shared/user/user-handler.service';
-import { UserManager } from 'oidc-client';
-import { environment } from '../../../environments/environment';
 import {MessageNotifierService} from '../../shared/message-notifier/message-notifier.service';
 import {TranslateService} from '@ngx-translate/core';
 import {
@@ -14,7 +12,6 @@ import {
   IEnum,
   Transformation,
 } from 'src/app/shared/api/api';
-import { OBO_USER_MANAGER_TOKEN } from 'src/app/app.module';
 
 @Component({
   selector: 'app-details-page',
