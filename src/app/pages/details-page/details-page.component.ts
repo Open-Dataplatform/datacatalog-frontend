@@ -12,6 +12,7 @@ import {
   IEnum,
   Transformation,
 } from 'src/app/shared/api/api';
+import { CategoryService } from 'src/app/shared/services/category.service';
 
 @Component({
   selector: 'app-details-page',
@@ -34,6 +35,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
               private readonly userHandlerService: UserHandlerService,
               private readonly dataStewardHandlerService: DataStewardHandlerService,
               private readonly messageNotifier: MessageNotifierService,
+              private readonly categoryService: CategoryService,
               private readonly translator: TranslateService) {
               }
   ngOnDestroy(): void {
@@ -48,7 +50,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
       this.currentTransformationDescription = this.dataHandlerService.currentTransformation && this.dataHandlerService.currentTransformation.description ?
         this.dataHandlerService.currentTransformation.description : '';
     });
-    this.categories = this.dataHandlerService.categories;
+    
+    this.categoryService.categories$.subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
   // formats an iso date to a readable string.

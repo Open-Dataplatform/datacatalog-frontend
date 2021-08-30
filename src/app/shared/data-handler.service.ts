@@ -17,7 +17,6 @@ This will then handle error and log them if the backend sends an error.
 })
 export class DataHandlerService {
 
-  categories: ICategory[];
   currentTransformation?: ILineageTransformation;
   userLoggedIn$ = this.userHandlerService.userLoggedIn$;
 
@@ -32,10 +31,7 @@ export class DataHandlerService {
     private readonly dataSourceClient: DataSourceClient,
     private readonly transformationClient: TransformationClient,
     private readonly memberGroupClient: MemberGroupClient,
-  ) {
-      this.userLoggedIn$.pipe(filter(user => user !== null))
-        .subscribe(() => this.getCategoryData().subscribe(response => { this.categories = response; }));
-  }
+  ) { }
 
   public getCategoryData(includeEmpty :boolean = false): Observable<ICategory[]> {
     return this.categoryClient.getAll(includeEmpty);
