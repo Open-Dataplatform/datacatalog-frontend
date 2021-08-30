@@ -43,8 +43,8 @@
       <button class="details__actions-edit button" (click)="editDataSet()" *ngIf="(userHasDataStewardRole$ | async)">
         <i class="material-icons-outlined" > edit </i>
       </button>
-      <button class="details__actions-promote-to-stock button" (click)="promoteDatasetToStock()" *ngIf="dataSet.refinementLevel == 0 && (userHasDataStewardRole$ | async)">
-        <i class="material-icons-outlined" > upgrade </i>
+      <button class="button" (click)="deleteDataset()" *ngIf="(userHasDataStewardRole$ | async)">
+        <i class="material-icons-outlined" > delete </i>
       </button>
     </div>
 
@@ -181,10 +181,10 @@
       <br/>
       <p class="master-data-field__comment">{{ 'details.side.access.token.description' | translate }}</p>
       <div class="details__token-container" *ngIf="(oboToken$ | async) as token">
-        <textarea matInput 
+        <textarea matInput
                   cdkTextareaAutosize
-                  cdkAutosizeMaxRows="2" 
-                  class="token__textarea" 
+                  cdkAutosizeMaxRows="2"
+                  class="token__textarea"
                   value="{{ token }}">
         </textarea>
         <button class="mat-icon-button" (click)="copyToClipBoard()" matTooltip="{{ 'details.side.access.token.copyButton' | translate}}">

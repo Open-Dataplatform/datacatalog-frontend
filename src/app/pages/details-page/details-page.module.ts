@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {DetailsPageRoutingModule} from "./details-page-routing.module";
-import {SharedModule} from "../../shared/shared.module";
-import {DetailsPageComponent} from "./details-page.component";
-import {DataCardsModule} from "../../components/data-cards/data-cards.module";
-import {RelationMapperComponent} from "../../components/relation-mapper/relation-mapper.component";
-import {DataFieldDisplayComponent} from "../../components/data-field-display/data-field-display.component";
-import {AccessListComponent, SearchAdDialog} from "../../components/access-list/access-list.component";
+import {DetailsPageRoutingModule} from './details-page-routing.module';
+import {SharedModule} from '../../shared/shared.module';
+import {DetailsPageComponent} from './details-page.component';
+import {DataCardsModule} from '../../components/data-cards/data-cards.module';
+import {RelationMapperComponent} from '../../components/relation-mapper/relation-mapper.component';
+import {DataFieldDisplayComponent} from '../../components/data-field-display/data-field-display.component';
+import {AccessListComponent, SearchAdDialog} from '../../components/access-list/access-list.component';
 import {MatListModule} from '@angular/material/list';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {ConfirmationDialogComponent} from '../../components/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     RelationMapperComponent,
     DataFieldDisplayComponent,
     AccessListComponent,
-    SearchAdDialog
+    SearchAdDialog,
+    ConfirmationDialogComponent
   ],
   entryComponents: [AccessListComponent, SearchAdDialog],
   imports: [
