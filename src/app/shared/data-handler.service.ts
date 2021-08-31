@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse} from "@angular/common/http";
 import {EMPTY, Observable, throwError} from "rxjs";
-import { filter } from "rxjs/operators";
 
 import { UserHandlerService } from "../shared/user/user-handler.service";
-import { AddDatasetAccessMemberRequestDto, CategoryClient, DatasetAccessClient, DatasetClient, DatasetSearchByCategoryRequest, DatasetSearchByTermRequest, IAdSearchResult, ICategory, IDataAccessEntry, IDatasetAccessList, IDataset, IDatasetSummary, ILineageTransformation, ILineageDataset, GeneralClient, IEnum, DurationClient, IDuration, HierarchyClient, IHierarchy, DataSourceClient, IDataSource, IDatasetLocationRequest, DatasetLocationRequest, IDatasetLocation, TransformationClient, IGuidId, ITransformation, GuidId, MemberGroupClient, IMemberGroup, Dataset, DatasetCreateRequest, IDatasetCreateRequest, IDatasetUpdateRequest, DatasetUpdateRequest, ApiException } from './api/api';
+import { AddDatasetAccessMemberRequestDto, CategoryClient, DatasetAccessClient, DatasetClient, DatasetSearchByCategoryRequest, DatasetSearchByTermRequest, IAdSearchResult, ICategory, IDataAccessEntry, IDatasetAccessList, IDataset, IDatasetSummary, ILineageTransformation, ILineageDataset, GeneralClient, IEnum, DurationClient, IDuration, HierarchyClient, IHierarchy, DataSourceClient, IDataSource, IDatasetLocationRequest, DatasetLocationRequest, IDatasetLocation, TransformationClient, IGuidId, ITransformation, GuidId, MemberGroupClient, IMemberGroup, Dataset, DatasetCreateRequest, IDatasetCreateRequest, IDatasetUpdateRequest, DatasetUpdateRequest, ApiException, CategoryCreateRequest, CategoryUpdateRequest, ICategoryUpdateRequest, ICategoryCreateRequest } from './api/api';
 
 /*
 This is a service that handles the connection to the api,
@@ -169,6 +168,14 @@ export class DataHandlerService {
 
   public setCurrentTransformation(transform: ILineageTransformation[]) {
     this.currentTransformation = transform && transform.length ? transform[0]: undefined;
+  }
+
+  public createCategory(createRequest: ICategoryCreateRequest): Observable<ICategory> {
+    return this.categoryClient.post(new CategoryCreateRequest(createRequest));
+  }
+
+  public updateCategory(updateRequest: ICategoryUpdateRequest): Observable<ICategory> {
+    return this.categoryClient.put(new CategoryUpdateRequest(updateRequest));
   }
 
   public handleError(err: HttpErrorResponse | any) {

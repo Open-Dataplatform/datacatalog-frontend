@@ -105,7 +105,7 @@ export class CategoryClient {
      * @param request The category to create
      * @return The created category
      */
-    post(request: CategoryCreateRequest): Observable<string> {
+    post(request: CategoryCreateRequest): Observable<Category> {
         let url_ = this.baseUrl + "/api/Category";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -128,14 +128,14 @@ export class CategoryClient {
                 try {
                     return this.processPost(<any>response_);
                 } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
+                    return <Observable<Category>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<string>><any>_observableThrow(response_);
+                return <Observable<Category>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPost(response: HttpResponseBase): Observable<string> {
+    protected processPost(response: HttpResponseBase): Observable<Category> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -146,7 +146,7 @@ export class CategoryClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            result200 = Category.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -154,7 +154,7 @@ export class CategoryClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<string>(<any>null);
+        return _observableOf<Category>(<any>null);
     }
 
     /**
@@ -162,7 +162,7 @@ export class CategoryClient {
      * @param request The category to update
      * @return The updated category Id
      */
-    put(request: CategoryUpdateRequest): Observable<string> {
+    put(request: CategoryUpdateRequest): Observable<Category> {
         let url_ = this.baseUrl + "/api/Category";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -185,14 +185,14 @@ export class CategoryClient {
                 try {
                     return this.processPut(<any>response_);
                 } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
+                    return <Observable<Category>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<string>><any>_observableThrow(response_);
+                return <Observable<Category>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPut(response: HttpResponseBase): Observable<string> {
+    protected processPut(response: HttpResponseBase): Observable<Category> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -203,7 +203,7 @@ export class CategoryClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            result200 = Category.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -211,7 +211,7 @@ export class CategoryClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<string>(<any>null);
+        return _observableOf<Category>(<any>null);
     }
 
     /**
@@ -1388,14 +1388,13 @@ export class DatasetClient {
 
     /**
      * Delete a dataset
-     * @param request (optional) The id of the dataset to delete
+     * @param request The id of the dataset to delete
      */
-    delete(request: string | undefined): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/Dataset?";
-        if (request === null)
-            throw new Error("The parameter 'request' cannot be null.");
-        else if (request !== undefined)
-            url_ += "request=" + encodeURIComponent("" + request) + "&";
+    delete(request: string): Observable<FileResponse | null> {
+        let url_ = this.baseUrl + "/api/Dataset/{request}";
+        if (request === undefined || request === null)
+            throw new Error("The parameter 'request' must be defined.");
+        url_ = url_.replace("{request}", encodeURIComponent("" + request));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3650,63 +3649,6 @@ export class MemberGroupClient {
     }
 
     /**
-     * Create a new member group
-     * @param request The member group to create
-     * @return The created member group
-     */
-    post(request: MemberGroupCreateRequest): Observable<string> {
-        let url_ = this.baseUrl + "/api/MemberGroup";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPost(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPost(<any>response_);
-                } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<string>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPost(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<string>(<any>null);
-    }
-
-    /**
      * Delete a data source
      * @param id (optional) The id of the data source to delete
      */
@@ -3899,6 +3841,63 @@ export class MemberGroupClient {
             }));
         }
         return _observableOf<MemberGroup[]>(<any>null);
+    }
+
+    /**
+     * Create a new member group
+     * @param request The member group to create
+     * @return The created member group
+     */
+    post(request: MemberGroupCreateRequest): Observable<string> {
+        let url_ = this.baseUrl + "/api/MemberGroup/create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPost(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPost(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
     }
 
     /**
@@ -4814,6 +4813,7 @@ export enum DatasetStatus {
     Draft = 0,
     Published = 1,
     Archived = 2,
+    Source = 3,
 }
 
 export class DataContractCreateRequest implements IDataContractCreateRequest {

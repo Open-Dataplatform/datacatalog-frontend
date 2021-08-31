@@ -27,6 +27,14 @@
             [routerLink]="['datasteward']">
       <i class="material-icons-outlined"> add </i>
     </button>
+    <button class="nav-category"
+            href="#"
+            *ngIf="userLoggedIn$ | async"
+            (click)="newDataSet()"
+            [hidden]="!(userHasDataStewardRole$ | async)"
+            [routerLink]="['category']">
+      <i class="material-icons-outlined"> close </i>
+    </button>
   </div>
 
 </header>
