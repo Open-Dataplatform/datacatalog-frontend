@@ -43,7 +43,7 @@ export const routes: Route[] = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'category',
+    path: 'category/:term/:cat/edit',
     loadChildren: () => import('./pages/create-category-page/create-category-page.module').then(m => m.CreateCategoryPageModule),
     canActivate: [AuthGuard],
   },

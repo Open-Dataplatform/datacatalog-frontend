@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Category, ICategory, ICategoryUpdateRequest } from '../api/api';
+import { EMPTY_GUID } from '../constants';
 import { DataHandlerService } from '../data-handler.service';
 import { UserHandlerService } from '../user/user-handler.service';
 
@@ -11,8 +12,6 @@ export class CategoryService {
     public categories$ = this.categories.asObservable();
 
     private userLoggedIn$ = this.userHandlerService.userLoggedIn$;
-
-    private category: ICategory;
 
     constructor(
         private readonly userHandlerService: UserHandlerService,
@@ -26,21 +25,22 @@ export class CategoryService {
         });
     }
 
-    getCategoryForEditing() {
-        if (this.category) {
-            return this.category;
+    getCategoryById(id: string): ICategory {
+
+        const category = this.categories.getValue().find(cat => cat.id === id);
+        
+        if (category !== undefined) {
+            return category;
         }
 
         return new Category();
     }
 
-    setCategoryForEditing(category: ICategory) {
-        this.category = category;
-    }
+    upsertCategory(category: ICategoryUpdateRequest): Observable<ICategory> {
 
-    upsertCategory(category: ICategoryUpdateRequest) {
-        if (category.id !== undefined) { // Update
-            this.dataHandlerService.updateCategory(category).subscribe(response => {
+        if (category.id !== undefined && category.id !== EMPTY_GUID) { // Update
+            const category$ = this.dataHandlerService.updateCategory(category);
+            category$.subscribe(response => {
                 const oldCategories = this.categories.getValue();
                 const indexOfUpdatedCategory = oldCategories.findIndex(x => x.id == category.id);
                 
@@ -49,12 +49,11 @@ export class CategoryService {
                 
                 // Update Subject with new category list
                 this.categories.next(oldCategories);
-            })
-        } else { // Insert
-            this.dataHandlerService.createCategory(category).subscribe(response => {
-                // Push new category to categories and update subject
-                this.categories.next([...this.categories.getValue(), response]);
             });
+
+            return category$;
+        } else { // Insert
+            return this.dataHandlerService.createCategory(category);
         }
     }
 }

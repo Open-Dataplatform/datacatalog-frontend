@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import { Dataset } from 'src/app/shared/api/api';
+import { EMPTY_GUID } from 'src/app/shared/constants';
 import {DataStewardHandlerService} from "../../pages/data-steward/data-steward-handler.service";
 import {UserHandlerService} from "../../shared/user/user-handler.service";
 
@@ -13,6 +14,7 @@ export class HeaderComponent implements OnInit{
 
   dataSteward: boolean;
   login: boolean;
+  category: boolean;
   userLoggedIn$ = this.userHandlerService.userLoggedIn$;
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
 
@@ -28,6 +30,8 @@ export class HeaderComponent implements OnInit{
         this.dataSteward = regex.test(event.url);
         const loginRegExp = RegExp('login');
         this.login = loginRegExp.test(event.url);
+        const categoryRegExp = RegExp('category');
+        this.category = categoryRegExp.test(event.url);
       }
     });
   }
@@ -39,5 +43,9 @@ export class HeaderComponent implements OnInit{
   logout() {
     this.userHandlerService.logout();
     this.router.navigate(['login']);
+  }
+
+  editCategory() {
+    this.router.navigate(['/category', EMPTY_GUID, true, 'edit'])
   }
 }

@@ -15,7 +15,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-material-components/color-picker": "^5.0.0",
     "@angular/animations": "11.1.2",
     "@angular/cdk": "~11.1.1",
     "@angular/common": "11.1.2",
@@ -37,6 +36,7 @@
     "dtsgenerator": "^2.6.0",
     "jquery": "3.4.1",
     "microsoft-adal-angular6": "^1.3.0",
+    "ngx-color-picker": "^11.0.0",
     "oidc-client": "^1.11.5",
     "particles.js": "^2.0.0",
     "popper.js": "^1.16.0",

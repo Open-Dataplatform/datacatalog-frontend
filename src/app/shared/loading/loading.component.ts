@@ -10,6 +10,7 @@ export class LoadingComponent implements OnInit {
   @Input() showLoading: boolean;
   @Input() size: number = 2;
   @Input() state: 'loading' | 'saving' = 'loading';
+  @Input() overlay: boolean = false;
 
   constructor() { }
 

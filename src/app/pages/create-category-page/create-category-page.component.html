@@ -1,6 +1,4 @@
-<div class="create-category-container">
-  <h2>Create Category</h2>
-  
+<form-wrapper>
   <div class="data-container">
     <h3>{{'createCategory.name.heading' | translate }}</h3>
     <app-text-input placeholderText="{{'createCategory.name.placeholder' | translate}}"
@@ -8,16 +6,14 @@
                   (change)="onDataChange()"></app-text-input>
   </div>
 
-  <h3>{{'createCategory.name.heading' | translate }}</h3>
-  <mat-form-field>
-    <input matInput [ngxMatColorPicker]="picker" [formControl]="colorCtr" placeholder="Color code">
-    <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
-    <ngx-mat-color-picker #picker [color]="color"></ngx-mat-color-picker>
-  </mat-form-field>
-
-  <div class="steward-actions">
-    <button class="button" [ngClass]="{'disabled': !isDataValid()}" (click)="publishCategory()">{{'createCategory.save' | translate}}</button>
+  <div class="data-container">
+    <h3>{{'createCategory.color.heading' | translate }}</h3>
+    <input class="input-text" [(colorPicker)]="category.colour" [style.background]="category.colour" [value]="category.colour" placeholder="{{'createCategory.color.placeholder' | translate}}">
   </div>
 
-  
-</div>
+  <div class="form-actions">
+    <button class="form-actions__save" [ngClass]="{'disabled': !isDataValid()}" (click)="publishCategory()" [disabled]="!isDataValid()">{{'createCategory.save' | translate}}</button>
+  </div>
+</form-wrapper>
+
+<app-loading [showLoading]="saving" [state]="'saving'" [overlay]="true"></app-loading>

@@ -6,5 +6,7 @@
     <li routerLink="/datasteward/dataabout" [routerLinkActive]="['tab-active']">{{'dataSteward.tabs.about' | translate}}</li>
   </ul>
 
-  <router-outlet></router-outlet>
+  <form-wrapper>
+    <router-outlet></router-outlet>
+  </form-wrapper>
 </div>

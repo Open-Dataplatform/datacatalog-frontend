@@ -28,12 +28,10 @@
       <i class="material-icons-outlined"> add </i>
     </button>
     <button class="nav-category"
-            href="#"
-            *ngIf="userLoggedIn$ | async"
-            (click)="newDataSet()"
-            [hidden]="!(userHasDataStewardRole$ | async)"
-            [routerLink]="['category']">
-      <i class="material-icons-outlined"> close </i>
+            *ngIf="category"
+            (click)="editCategory()"
+            [hidden]="!(userHasDataStewardRole$ | async)">
+      <i class="material-icons-outlined"> edit </i>
     </button>
   </div>
 

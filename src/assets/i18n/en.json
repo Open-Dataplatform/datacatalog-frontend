@@ -229,5 +229,20 @@
   "error": {
     "tryAgain": "Reload page and try again",
     "occured": "Error occured"
+  },
+  "createCategory": {
+    "name": {
+      "heading": "Name",
+      "placeholder": "Name the category"
+    },
+    "color": {
+      "heading": "Color",
+      "placeholder": "Pick a color"
+    },
+    "save": "Save",
+    "delete": "Delete",
+    "message": {
+      "success": "Category successfully updated"
+    }
   }
 }

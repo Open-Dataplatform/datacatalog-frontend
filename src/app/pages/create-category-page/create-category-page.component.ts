@@ -1,39 +1,52 @@
-import { Color } from '@angular-material-components/color-picker';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, Validators } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
-import { CategoryUpdateRequest, ICategory } from 'src/app/shared/api/api';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { ICategory } from 'src/app/shared/api/api';
+import { MessageNotifierService } from 'src/app/shared/message-notifier/message-notifier.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 
 @Component({
-    selector: 'create-category-page',
-    templateUrl: './create-category-page.component.html',
-    styleUrls: ['./create-category-page.component.less']
+  selector: 'create-category-page',
+  templateUrl: './create-category-page.component.html',
+  styleUrls: ['./create-category-page.component.less']
 })
 
 export class CreateCategoryPageComponent implements OnInit {
-    category: ICategory;
-    colorCtr: AbstractControl = new FormControl(null, [Validators.required]);
-    color: ThemePalette = 'primary';
+  category: ICategory;
+  saving = false;
+  categoryId: string;
 
-    constructor(
-        private categoryService: CategoryService
-    ) { }
+  constructor(
+    private categoryService: CategoryService,
+    private readonly router: Router,
+    private readonly messageNotifierService: MessageNotifierService,
+  private readonly translateService: TranslateService,
+    private readonly activeRoute: ActivatedRoute
+  ) { }
 
-    ngOnInit() {
-        this.category = this.categoryService.getCategoryForEditing();
-    }
+  ngOnInit() {
+    this.activeRoute.paramMap.subscribe(params => {
+      this.categoryId = params.get('term');
+      this.category = this.categoryService.getCategoryById(this.categoryId);
+    });
 
-    onDataChange() {
-    }
+  }
 
-    publishCategory() {
-        debugger;
-        this.category.colour = `#${this.colorCtr.value?.hex}`;
-        this.categoryService.upsertCategory(this.category);
-    }
+  onDataChange() {
+  }
 
-    isDataValid(): boolean {
-        return !this.colorCtr.invalid && this.category.name !== undefined && this.category.name !== '';
-    }
+  publishCategory() {
+      this.saving = true;
+      this.categoryService.upsertCategory(this.category).subscribe(resp => {
+          this.saving = false;
+          this.messageNotifierService.sendMessage(this.translateService.instant('createCategory.message.success'), false)
+          this.router.navigate(['/']);
+      }, error => {
+          this.saving = false;
+      });
+  }
+
+  isDataValid(): boolean {
+      return this.category.name !== undefined && this.category.name !== '';
+  }
 }

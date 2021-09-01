@@ -10,6 +10,7 @@ import { LoadingComponent } from './loading/loading.component';
 import {InfiniteScrollComponent} from './infinity-scroll/infinity-scroll.component';
 import { UserManager } from 'oidc-client';
 import { environment } from "../../environments/environment";
+import { FormWrapper } from './form-wrapper/form-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { environment } from "../../environments/environment";
     PageNotFoundComponent,
     LoadingComponent,
     InfiniteScrollComponent,
+    FormWrapper,
   ],
   imports: [
     CommonModule,
@@ -31,6 +33,7 @@ import { environment } from "../../environments/environment";
     RouterModule,
     LoadingComponent,
     InfiniteScrollComponent,
+    FormWrapper,
   ],
   providers: [
     {

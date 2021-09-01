@@ -4,10 +4,10 @@ import { InputElementsModule } from 'src/app/components/input-elements/input-ele
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CreateCategoryPageRoutingModule } from './create-category-page-routing.module';
 import { CreateCategoryPageComponent } from './create-category-page.component';
-import { MAT_COLOR_FORMATS, NgxMatColorPickerModule, NGX_MAT_COLOR_FORMATS } from '@angular-material-components/color-picker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
     declarations: [CreateCategoryPageComponent],
@@ -16,14 +16,13 @@ import { MatInputModule } from '@angular/material/input';
         CommonModule,
         SharedModule,
         InputElementsModule,
-        NgxMatColorPickerModule,
         MatFormFieldModule,
         ReactiveFormsModule,
-        MatInputModule
+        MatInputModule,
+        ColorPickerModule
     ],
     exports: [CreateCategoryPageComponent],
     providers: [
-        { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS }
     ],
 })
 export class CreateCategoryPageModule { }

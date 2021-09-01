@@ -16,6 +16,10 @@
   <app-loading [showLoading]="!dataCards"></app-loading>
 </div>
 
+<div class="category_edit" *ngIf="isCategory">
+  <button (click)="editCategory()">edit</button>
+</div>
+
 <div clasS="category__empty" *ngIf="dataCards && !dataCards.length">
   <p>{{'categories.empty.noResult' | translate}}</p>
   <p>{{'categories.empty.suggestions' | translate}}</p>
