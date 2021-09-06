@@ -8,7 +8,14 @@
 
   <div class="data-container">
     <h3>{{'createCategory.color.heading' | translate }}</h3>
-    <input class="input-text" [(colorPicker)]="category.colour" [style.background]="category.colour" [value]="category.colour" placeholder="{{'createCategory.color.placeholder' | translate}}">
+    <input 
+      class="input-text" 
+      [(colorPicker)]="category.colour" 
+      [style.background]="category.colour" 
+      [value]="category.colour" 
+      [cpOutputFormat]="'hex'"
+      [cpPosition]="'bottom'"
+      placeholder="{{'createCategory.color.placeholder' | translate}}">
   </div>
 
   <div class="form-actions">

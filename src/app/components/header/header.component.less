@@ -32,11 +32,39 @@ a.navbar-brand {
   color: @primaryBlue;
 }
 
-.nav-data-steward {
+.nav-button-container {
+  button {
+    width: 4.5rem;
+    height: 4.5rem;
+    position: absolute;
+    top: 5.1rem;
+    border-radius: 50%;
+    background-color: @white;
+    border: 1px @lightGreyInterface solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      box-shadow: 0 3px 4px @primaryShadow;
+      color: @primaryColor;
+    }
+  }
+
+  .data-steward-button {
+    right: 1.5rem;
+  }
+
+  .category-button {
+    right: 7rem;
+  }
+}
+
+.nav-category {
   width: 4.5rem;
   height: 4.5rem;
   position: absolute;
-  right: 1.5rem;
+  right: 7rem;
   top: 5.1rem;
   border-radius: 50%;
   background-color: @white;

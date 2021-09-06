@@ -1,5 +1,5 @@
 <div class="category-card"
-     *ngIf="category"
+     *ngIf="category && category.id !== newCategoryId"
      [routerLink]="['/category', category.id, true]"
      [routerLinkActive]="['link-active']"
      [style.background-image]="getBackgroundImage()"
@@ -8,4 +8,14 @@
        [style.background-color]="category.colour">
     <h4>{{ category.name }}</h4>
   </div>
+</div>
+
+<div class="category-card category-card--new"
+     *ngIf="category && category.id === newCategoryId"
+     [routerLink]="['/category', category.id, true, 'edit']"
+     [routerLinkActive]="['link-active']"
+     [style.border]="">
+  <i class="material-icons-outlined">
+    add
+  </i>
 </div>

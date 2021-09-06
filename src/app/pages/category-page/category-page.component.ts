@@ -18,7 +18,6 @@ export class CategoryPageComponent implements OnInit {
   constructor(
     private readonly activeRoute: ActivatedRoute,
     private readonly dataHandlerService: DataHandlerService,
-    private readonly router: Router
   ) { }
 
   ngOnInit() {
@@ -53,9 +52,5 @@ export class CategoryPageComponent implements OnInit {
         this.pageIndex++;
       });
     }
-  }
-
-  editCategory() {
-    this.router.navigate(['/category', this.term, true, 'edit'])
   }
 }
