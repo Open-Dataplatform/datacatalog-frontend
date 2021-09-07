@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { Category, ICategory } from 'src/app/shared/api/api';
-import { DataHandlerService } from 'src/app/shared/data-handler.service';
 import { MessageNotifierService } from 'src/app/shared/message-notifier/message-notifier.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 
@@ -28,7 +27,6 @@ export class CreateCategoryPageComponent implements OnInit {
     private readonly messageNotifierService: MessageNotifierService,
     private readonly translateService: TranslateService,
     private readonly activeRoute: ActivatedRoute,
-    private readonly dataHandlerService: DataHandlerService,
     private readonly messageNotifier: MessageNotifierService,
     private readonly dialog: MatDialog
   ) {
@@ -80,8 +78,8 @@ export class CreateCategoryPageComponent implements OnInit {
     });
     confirmDialog.afterClosed().subscribe(result => {
       if (result === true) {
-        this.dataHandlerService.deleteCategory(this.category.id).subscribe((response) => {
-          this.messageNotifier.sendMessage(this.translateService.instant('createCategory.message.deleteSuccess '), false);
+        this.categoryService.deleteCategory(this.category).subscribe(_ => {
+          this.messageNotifier.sendMessage(this.translateService.instant('createCategory.message.deleteSuccess'), false);
           this.router.navigate(['/']);
         });
       }

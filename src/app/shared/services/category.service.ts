@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { ICategory, ICategoryUpdateRequest } from '../api/api';
+import { filter, shareReplay } from 'rxjs/operators';
+import { FileResponse, ICategory, ICategoryUpdateRequest } from '../api/api';
 import { EMPTY_GUID } from '../constants';
 import { DataHandlerService } from '../data-handler.service';
 import { UserHandlerService } from '../user/user-handler.service';
@@ -32,7 +32,9 @@ export class CategoryService {
         let result$: Observable<ICategory>;
 
         if (category.id !== undefined && category.id !== EMPTY_GUID) { // Update
-            result$ = this.dataHandlerService.updateCategory(category);
+            result$ = this.dataHandlerService.updateCategory(category)
+                .pipe(shareReplay(1)); // Make sure that subscribing multiple times doesn't repeat the API call
+
             result$.subscribe(response => {
                 const oldCategories = this.categories.getValue();
                 const indexOfUpdatedCategory = oldCategories.findIndex(x => x.id == category.id);
@@ -44,7 +46,8 @@ export class CategoryService {
                 this.categories.next(oldCategories);
             });
         } else { // Insert
-            result$ = this.dataHandlerService.createCategory(category);
+            result$ = this.dataHandlerService.createCategory(category)
+                .pipe(shareReplay(1)); // Make sure that subscribing multiple times doesn't repeat the API call
 
             result$.subscribe(response => {
                 this.categories.next([...this.categories.getValue(), response])
@@ -52,4 +55,16 @@ export class CategoryService {
         }
         return result$;
     }
+
+    deleteCategory(category: ICategory): Observable<FileResponse> {
+        const result$ = this.dataHandlerService.deleteCategory(category.id)
+            .pipe(shareReplay(1));
+        
+        result$.subscribe(_ => {
+            // Remove the deleted category from local list of categories
+            this.categories.next(this.categories.getValue().filter(cat => cat.id !== category.id))
+        })
+
+        return result$;
+    }   
 }
