@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { ICategory } from 'src/app/shared/api/api';
 import { EMPTY_GUID } from 'src/app/shared/constants';
+import { UserHandlerService } from 'src/app/shared/user/user-handler.service';
 
 @Component({
   selector: 'app-category-card',
@@ -13,8 +14,12 @@ export class CategoryCardComponent implements OnInit {
   category: ICategory;
 
   newCategoryId: string = EMPTY_GUID;
+  userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
 
-  constructor() { }
+
+  constructor(
+    private readonly userHandlerService: UserHandlerService
+  ) { }
 
   ngOnInit() {
 

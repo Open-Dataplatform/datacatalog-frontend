@@ -3,6 +3,7 @@ import {Route, RouterModule} from '@angular/router';
 import {HomeComponent} from './pages/home/home.component';
 import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
 import {AuthGuard} from './auth/auth.guard';
+import { DataStewardGuard } from './auth/data-steward.guard';
 
 export const routes: Route[] = [
   {
@@ -45,7 +46,7 @@ export const routes: Route[] = [
   {
     path: 'category/:term/:cat/edit',
     loadChildren: () => import('./pages/create-category-page/create-category-page.module').then(m => m.CreateCategoryPageModule),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, DataStewardGuard],
   },
   {
     path: '**',

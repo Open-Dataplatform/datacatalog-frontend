@@ -5,7 +5,7 @@ import { CreateCategoryPageComponent } from './create-category-page.component';
 export const routes: Routes = [
     {
         path: '',
-        component: CreateCategoryPageComponent
+        component: CreateCategoryPageComponent,
     }
 ];
 

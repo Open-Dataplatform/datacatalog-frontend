@@ -60,7 +60,7 @@ export class CreateCategoryPageComponent implements OnInit {
   }
 
   isDataValid(): boolean {
-    const colorRegExp = RegExp('^#[0-9a-f]{6}');
+    const colorRegExp = RegExp('^#[0-9a-fA-F]{6}');
 
     return this.category.name !== undefined && this.category.name !== '' && colorRegExp.test(this.category.colour);
   }

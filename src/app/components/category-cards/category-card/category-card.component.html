@@ -11,7 +11,7 @@
 </div>
 
 <div class="category-card category-card--new"
-     *ngIf="category && category.id === newCategoryId"
+     *ngIf="category && category.id === newCategoryId && (userHasDataStewardRole$ | async)"
      [routerLink]="['/category', category.id, true, 'edit']"
      [routerLinkActive]="['link-active']"
      [style.border]="">
