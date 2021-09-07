@@ -1387,7 +1387,7 @@ export class DatasetClient {
     }
 
     /**
-     * Delete a dataset
+     * (Soft) Delete a dataset
      * @param request The id of the dataset to delete
      */
     delete(request: string): Observable<FileResponse | null> {

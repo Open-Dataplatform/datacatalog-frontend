@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataHandlerService } from '../../shared/data-handler.service';
 import { DataStewardHandlerService } from '../data-steward/data-steward-handler.service';
 import { UserHandlerService } from '../../shared/user/user-handler.service';
-import {MessageNotifierService} from '../../shared/message-notifier/message-notifier.service';
-import {TranslateService} from '@ngx-translate/core';
+import { MessageNotifierService } from '../../shared/message-notifier/message-notifier.service';
+import { TranslateService } from '@ngx-translate/core';
 import {
-  DatasetSummary,
   ICategory,
   IDataset,
-  IEnum,
-  Transformation,
+  IEnum
 } from 'src/app/shared/api/api';
 import { CategoryService } from 'src/app/shared/services/category.service';
 
@@ -36,7 +36,8 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
               private readonly dataStewardHandlerService: DataStewardHandlerService,
               private readonly messageNotifier: MessageNotifierService,
               private readonly categoryService: CategoryService,
-              private readonly translator: TranslateService) {
+              private readonly translator: TranslateService,
+              private dialog: MatDialog) {
               }
   ngOnDestroy(): void {
     this.userHandlerService.ClearOboToken();
@@ -47,7 +48,8 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     this.activeRoute.paramMap.subscribe(params => {
       this.id = params.get('id');
       this.getDetailsFromId(this.id);
-      this.currentTransformationDescription = this.dataHandlerService.currentTransformation && this.dataHandlerService.currentTransformation.description ?
+      this.currentTransformationDescription = this.dataHandlerService.currentTransformation
+      && this.dataHandlerService.currentTransformation.description ?
         this.dataHandlerService.currentTransformation.description : '';
     });
     
@@ -65,85 +67,27 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
       .join('/'); // join it back to get a readable string,
   }
 
-  toggleFavorites() {
-    this.dataHandlerService
-      .getDetailsFromId('1')
-      .subscribe((res) => console.log('res', res));
-    // if (this.isFavorite()) {
-    //   this.dataHandlerService.removeFromFavorites(this.id).subscribe(fav => {
-    //     this.getFavorites();
-    //   });
-    // } else {
-    //   this.dataHandlerService.addToFavorites(this.id).subscribe(fav => {
-    //     this.getFavorites();
-    //   });
-    // }
-  }
-
-  getFavorites() {
-    // this.dataHandlerService.getFavorites().subscribe(favorites => {
-    // this.dataHandlerService.favorites = favorites;
-    // });
-  }
-
   // Navigate to edit and send dataset data to
   editDataSet() {
     this.dataStewardHandlerService.setDataSet(this.dataSet);
     this.router.navigate(['/datasteward']);
   }
 
-  promoteDatasetToStock() {
-    this.dataSet.sourceTransformation = new Transformation ({
-      id: '',
-      sourceDatasets: [],
-      createdDate: new Date(),
-      modifiedDate: new Date()
+  deleteDataset() {
+    const confirmDialog = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Confirm dataset deletion',
+        message: 'You are about to delete the dataset ' + this.dataSet.name
+      }
     });
-
-    this.dataSet.sourceTransformation.sourceDatasets.push(
-      new DatasetSummary({
-        name: this.dataSet.name,
-        description: this.dataSet.description,
-        status: this.dataSet.status,
-        confidentiality: this.dataSet.confidentiality,
-        categories: this.dataSet.categories,
-        id: this.dataSet.id,
-        createdDate: this.dataSet.createdDate,
-        modifiedDate: this.dataSet.modifiedDate,
-      })
-    );
-
-    const promotedDatasetName = 'promoted_' + this.dataSet.name;
-    const currentLocation = this.dataSet.name
-      .toLocaleLowerCase()
-      .replace(' ', '-');
-
-    const newLocation = promotedDatasetName
-      .toLocaleLowerCase()
-      .replace(' ', '-');
-
-    this.dataSet.datasetChangeLogs = [];
-    this.dataSet.version = 0;
-    this.dataSet.refinementLevel = 1; // Promote to stock
-    this.dataSet.location = this.dataSet.location.replace(
-      currentLocation,
-      newLocation
-    );
-
-    this.dataSet.dataFields.forEach((datafield) => (datafield.id = null));
-    this.dataSet.name = promotedDatasetName;
-    this.dataSet.id = null;
-
-    this.dataStewardHandlerService.setDataSet(this.dataSet);
-    this.router.navigate(['/datasteward']);
-  }
-
-  isFavorite(): boolean {
-    // if (this.dataHandlerService && this.dataHandlerService.favorites) {
-    //   return this.dataHandlerService.favorites.some(fav => fav.id === this.dataCard.id);
-    // }
-
-    return false;
+    confirmDialog.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.dataHandlerService.deleteDataset(this.dataSet.id).subscribe((response) => {
+          this.messageNotifier.sendMessage('Successfully deleted the dataset', false);
+          this.router.navigate(['/']);
+        });
+      }
+    });
   }
 
   // Get data set data from server, from id.
