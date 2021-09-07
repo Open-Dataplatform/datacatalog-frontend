@@ -13,12 +13,16 @@ export class HeaderComponent implements OnInit{
 
   dataSteward: boolean;
   login: boolean;
+  category: boolean;
   userLoggedIn$ = this.userHandlerService.userLoggedIn$;
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
+  categoryId: string;
+
 
   constructor(private readonly router: Router,
               private readonly userHandlerService: UserHandlerService,
-              private readonly dataStewardHandlerService: DataStewardHandlerService) {
+              private readonly dataStewardHandlerService: DataStewardHandlerService
+    ) {
   }
 
   ngOnInit() {
@@ -28,6 +32,12 @@ export class HeaderComponent implements OnInit{
         this.dataSteward = regex.test(event.url);
         const loginRegExp = RegExp('login');
         this.login = loginRegExp.test(event.url);
+        const categoryRegExp = RegExp('category/.*/true$');
+        this.category = categoryRegExp.test(event.url);
+        
+        // Get the category Id from the URL. This is kind of a hack but we cannot use ActivatedRoute og paramMap here
+        if (this.category)
+          this.categoryId = event.url.split('/')[2];
       }
     });
   }
@@ -39,5 +49,9 @@ export class HeaderComponent implements OnInit{
   logout() {
     this.userHandlerService.logout();
     this.router.navigate(['login']);
+  }
+
+  editCategory() {
+    this.router.navigate(['/category', this.categoryId, true, 'edit'])
   }
 }

@@ -1,0 +1,31 @@
+<form-wrapper>
+  <div class="delete-container">
+    <div class="data-container">
+      <h3>{{'createCategory.name.heading' | translate }}</h3>
+      <app-text-input placeholderText="{{'createCategory.name.placeholder' | translate}}"
+                    [(value)]="category.name"
+                    (change)="onDataChange()"></app-text-input>
+    </div>
+    <button class="button" (click)="deleteCategory()">
+      <i class="material-icons-outlined" > delete </i>
+    </button>
+  </div>
+
+  <div class="data-container">
+    <h3>{{'createCategory.color.heading' | translate }}</h3>
+    <input 
+      class="input-text" 
+      [(colorPicker)]="category.colour" 
+      [style.background]="category.colour" 
+      [value]="category.colour" 
+      [cpOutputFormat]="'hex'"
+      [cpPosition]="'bottom'"
+      placeholder="{{'createCategory.color.placeholder' | translate}}">
+  </div>
+
+  <div class="form-actions">
+    <button class="form-actions__save" [ngClass]="{'disabled': !isDataValid()}" (click)="publishCategory()" [disabled]="!isDataValid()">{{'createCategory.save' | translate}}</button>
+  </div>
+</form-wrapper>
+
+<app-loading [showLoading]="saving" [state]="'saving'" [overlay]="true"></app-loading>

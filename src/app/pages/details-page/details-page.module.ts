@@ -15,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {ConfirmationDialogComponent} from '../../components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogModule } from 'src/app/components/confirmation-dialog/confirmation-dialog.module';
 
 @NgModule({
   declarations: [
@@ -23,8 +23,7 @@ import {ConfirmationDialogComponent} from '../../components/confirmation-dialog/
     RelationMapperComponent,
     DataFieldDisplayComponent,
     AccessListComponent,
-    SearchAdDialog,
-    ConfirmationDialogComponent
+    SearchAdDialog
   ],
   entryComponents: [AccessListComponent, SearchAdDialog],
   imports: [
@@ -38,7 +37,8 @@ import {ConfirmationDialogComponent} from '../../components/confirmation-dialog/
     MatInputModule,
     MatIconModule,
     MatTooltipModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ConfirmationDialogModule
   ],
   bootstrap: [AccessListComponent],
   exports: [

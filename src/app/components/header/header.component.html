@@ -19,14 +19,24 @@
   <div class="container header-extra position-relative">
     <app-search></app-search>
 
-    <button class="nav-data-steward"
-            href="#"
-            *ngIf="userLoggedIn$ | async"
-            (click)="newDataSet()"
-            [hidden]="!(userHasDataStewardRole$ | async)"
-            [routerLink]="['datasteward']">
-      <i class="material-icons-outlined"> add </i>
-    </button>
+    <div class="nav-button-container">
+      <button class="data-steward-button"
+              href="#"
+              *ngIf="userLoggedIn$ | async"
+              (click)="newDataSet()"
+              [hidden]="!(userHasDataStewardRole$ | async)"
+              [routerLink]="['datasteward']">
+        <i class="material-icons-outlined"> add </i>
+      </button>
+    </div>
+    <div class="nav-button-container">
+      <button class="category-button"
+              *ngIf="category"
+              (click)="editCategory()"
+              [hidden]="!(userHasDataStewardRole$ | async)">
+        <i class="material-icons-outlined"> edit </i>
+      </button>
+    </div>
   </div>
 
 </header>

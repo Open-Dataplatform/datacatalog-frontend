@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DataHandlerService} from "../../shared/data-handler.service";
 import { IDatasetSummary } from 'src/app/shared/api/api';
 
@@ -15,7 +15,10 @@ export class CategoryPageComponent implements OnInit {
   pageSize: number = 50;
   pageIndex: number = 0;
 
-  constructor(private readonly activeRoute: ActivatedRoute, private readonly dataHandlerService: DataHandlerService) { }
+  constructor(
+    private readonly activeRoute: ActivatedRoute,
+    private readonly dataHandlerService: DataHandlerService,
+  ) { }
 
   ngOnInit() {
     this.activeRoute.paramMap.subscribe(params => {

@@ -65,12 +65,8 @@
 </div>
 
 
-<div class="steward-actions">
-  <button class="steward-actions__save" [ngClass]="{'disabled': !isDataExisting()}" (click)="publishDataSet()">{{'dataSteward.save' | translate}}</button>
+<div class="form-actions">
+  <button class="form-actions__save" [ngClass]="{'disabled': !isDataExisting()}" (click)="publishDataSet()">{{'dataSteward.save' | translate}}</button>
 </div>
 
-<div *ngIf="saving" class="saving-background"></div>
-
-<div *ngIf="saving" class="saving-container">
-  <app-loading [showLoading]="saving" [state]="'saving'"></app-loading>
-</div>
+<app-loading [showLoading]="saving" [state]="'saving'" [overlay]="true"></app-loading>

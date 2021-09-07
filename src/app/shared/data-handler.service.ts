@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse} from '@angular/common/http';
 import {EMPTY, Observable, throwError} from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 import { UserHandlerService } from '../shared/user/user-handler.service';
 import {
@@ -42,7 +41,11 @@ import {
   IDatasetUpdateRequest,
   DatasetUpdateRequest,
   ApiException,
-  FileResponse
+  FileResponse,
+  ICategoryCreateRequest,
+  CategoryCreateRequest,
+  ICategoryUpdateRequest,
+  CategoryUpdateRequest
 } from './api/api';
 
 /*
@@ -56,7 +59,6 @@ This will then handle errors and log them if the backend sends an error.
 })
 export class DataHandlerService {
 
-  categories: ICategory[];
   currentTransformation?: ILineageTransformation;
   userLoggedIn$ = this.userHandlerService.userLoggedIn$;
 
@@ -71,10 +73,7 @@ export class DataHandlerService {
     private readonly dataSourceClient: DataSourceClient,
     private readonly transformationClient: TransformationClient,
     private readonly memberGroupClient: MemberGroupClient,
-  ) {
-      this.userLoggedIn$.pipe(filter(user => user !== null))
-        .subscribe(() => this.getCategoryData().subscribe(response => { this.categories = response; }));
-  }
+  ) { }
 
   public getCategoryData(includeEmpty: boolean = false): Observable<ICategory[]> {
     return this.categoryClient.getAll(includeEmpty);
@@ -211,6 +210,18 @@ export class DataHandlerService {
 
   public setCurrentTransformation(transform: ILineageTransformation[]) {
     this.currentTransformation = transform && transform.length ? transform[0] : undefined;
+  }
+
+  public createCategory(createRequest: ICategoryCreateRequest): Observable<ICategory> {
+    return this.categoryClient.post(new CategoryCreateRequest(createRequest));
+  }
+
+  public updateCategory(updateRequest: ICategoryUpdateRequest): Observable<ICategory> {
+    return this.categoryClient.put(new CategoryUpdateRequest(updateRequest));
+  }
+
+  public deleteCategory(id: string): Observable<FileResponse> {
+    return this.categoryClient.delete(id);
   }
 
   public handleError(err: HttpErrorResponse | any) {
