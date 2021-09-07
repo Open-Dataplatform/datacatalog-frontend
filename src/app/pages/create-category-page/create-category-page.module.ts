@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ConfirmationDialogModule } from 'src/app/components/confirmation-dialog/confirmation-dialog.module';
 
 @NgModule({
     declarations: [CreateCategoryPageComponent],
@@ -19,7 +20,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
         MatFormFieldModule,
         ReactiveFormsModule,
         MatInputModule,
-        ColorPickerModule
+        ColorPickerModule,
+        ConfirmationDialogModule
     ],
     exports: [CreateCategoryPageComponent],
     providers: [

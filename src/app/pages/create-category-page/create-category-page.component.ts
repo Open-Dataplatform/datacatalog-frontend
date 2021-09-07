@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
+import { ConfirmationDialogComponent } from 'src/app/components/confirmation-dialog/confirmation-dialog.component';
 import { Category, ICategory } from 'src/app/shared/api/api';
+import { DataHandlerService } from 'src/app/shared/data-handler.service';
 import { MessageNotifierService } from 'src/app/shared/message-notifier/message-notifier.service';
 import { CategoryService } from 'src/app/shared/services/category.service';
 
@@ -24,7 +27,10 @@ export class CreateCategoryPageComponent implements OnInit {
     private readonly router: Router,
     private readonly messageNotifierService: MessageNotifierService,
     private readonly translateService: TranslateService,
-    private readonly activeRoute: ActivatedRoute
+    private readonly activeRoute: ActivatedRoute,
+    private readonly dataHandlerService: DataHandlerService,
+    private readonly messageNotifier: MessageNotifierService,
+    private readonly dialog: MatDialog
   ) {
     this.category = new Category();
     this.category.colour = ''
@@ -63,5 +69,22 @@ export class CreateCategoryPageComponent implements OnInit {
     const colorRegExp = RegExp('^#[0-9a-fA-F]{6}');
 
     return this.category.name !== undefined && this.category.name !== '' && colorRegExp.test(this.category.colour);
+  }
+
+  deleteCategory() {
+    const confirmDialog = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Confirm category deletion',
+        message: 'You are about to delete the category ' + this.category.name
+      }
+    });
+    confirmDialog.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.dataHandlerService.deleteCategory(this.category.id).subscribe((response) => {
+          this.messageNotifier.sendMessage('Successfully deleted the category', false);
+          this.router.navigate(['/']);
+        });
+      }
+    });
   }
 }

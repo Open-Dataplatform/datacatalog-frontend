@@ -1,9 +1,14 @@
 <form-wrapper>
-  <div class="data-container">
-    <h3>{{'createCategory.name.heading' | translate }}</h3>
-    <app-text-input placeholderText="{{'createCategory.name.placeholder' | translate}}"
-                  [(value)]="category.name"
-                  (change)="onDataChange()"></app-text-input>
+  <div class="delete-container">
+    <div class="data-container">
+      <h3>{{'createCategory.name.heading' | translate }}</h3>
+      <app-text-input placeholderText="{{'createCategory.name.placeholder' | translate}}"
+                    [(value)]="category.name"
+                    (change)="onDataChange()"></app-text-input>
+    </div>
+    <button class="button" (click)="deleteCategory()">
+      <i class="material-icons-outlined" > delete </i>
+    </button>
   </div>
 
   <div class="data-container">

@@ -220,6 +220,10 @@ export class DataHandlerService {
     return this.categoryClient.put(new CategoryUpdateRequest(updateRequest));
   }
 
+  public deleteCategory(id: string): Observable<FileResponse> {
+    return this.categoryClient.delete(id);
+  }
+
   public handleError(err: HttpErrorResponse | any) {
     console.error('An error occurred', err);
     return throwError(err.message || err);
