@@ -34,7 +34,7 @@
     "bootstrap": "^4.5.0",
     "core-js": "^3.3.3",
     "dtsgenerator": "^2.6.0",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "microsoft-adal-angular6": "^1.3.0",
     "ngx-color-picker": "^11.0.0",
     "oidc-client": "^1.11.5",
