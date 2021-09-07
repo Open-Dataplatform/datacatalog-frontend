@@ -1,15 +1,54 @@
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse} from "@angular/common/http";
-import {EMPTY, Observable, throwError} from "rxjs";
-import { filter } from "rxjs/operators";
+import { HttpErrorResponse} from '@angular/common/http';
+import {EMPTY, Observable, throwError} from 'rxjs';
+import { filter } from 'rxjs/operators';
 
-import { UserHandlerService } from "../shared/user/user-handler.service";
-import { AddDatasetAccessMemberRequestDto, CategoryClient, DatasetAccessClient, DatasetClient, DatasetSearchByCategoryRequest, DatasetSearchByTermRequest, IAdSearchResult, ICategory, IDataAccessEntry, IDatasetAccessList, IDataset, IDatasetSummary, ILineageTransformation, ILineageDataset, GeneralClient, IEnum, DurationClient, IDuration, HierarchyClient, IHierarchy, DataSourceClient, IDataSource, IDatasetLocationRequest, DatasetLocationRequest, IDatasetLocation, TransformationClient, IGuidId, ITransformation, GuidId, MemberGroupClient, IMemberGroup, Dataset, DatasetCreateRequest, IDatasetCreateRequest, IDatasetUpdateRequest, DatasetUpdateRequest, ApiException } from './api/api';
+import { UserHandlerService } from '../shared/user/user-handler.service';
+import {
+  AddDatasetAccessMemberRequestDto,
+  CategoryClient,
+  DatasetAccessClient,
+  DatasetClient,
+  DatasetSearchByCategoryRequest,
+  DatasetSearchByTermRequest,
+  IAdSearchResult,
+  ICategory,
+  IDataAccessEntry,
+  IDatasetAccessList,
+  IDataset,
+  IDatasetSummary,
+  ILineageTransformation,
+  ILineageDataset,
+  GeneralClient,
+  IEnum,
+  DurationClient,
+  IDuration,
+  HierarchyClient,
+  IHierarchy,
+  DataSourceClient,
+  IDataSource,
+  IDatasetLocationRequest,
+  DatasetLocationRequest,
+  IDatasetLocation,
+  TransformationClient,
+  IGuidId,
+  ITransformation,
+  GuidId,
+  MemberGroupClient,
+  IMemberGroup,
+  Dataset,
+  DatasetCreateRequest,
+  IDatasetCreateRequest,
+  IDatasetUpdateRequest,
+  DatasetUpdateRequest,
+  ApiException,
+  FileResponse
+} from './api/api';
 
 /*
 This is a service that handles the connection to the api,
-most of call to the api can be subscribe to through this service,
-This will then handle error and log them if the backend sends an error.
+most of the calls to the api can be subscribed to through this service,
+This will then handle errors and log them if the backend sends an error.
  */
 
 @Injectable({
@@ -37,7 +76,7 @@ export class DataHandlerService {
         .subscribe(() => this.getCategoryData().subscribe(response => { this.categories = response; }));
   }
 
-  public getCategoryData(includeEmpty :boolean = false): Observable<ICategory[]> {
+  public getCategoryData(includeEmpty: boolean = false): Observable<ICategory[]> {
     return this.categoryClient.getAll(includeEmpty);
   }
 
@@ -85,30 +124,25 @@ export class DataHandlerService {
     return this.datasetAccessClient.getAccessList(id);
   }
 
-  public removeDatasetAccessReader(datasetId: string, memberId: string): Observable<any>
-  {
+  public removeDatasetAccessReader(datasetId: string, memberId: string): Observable<any> {
 
     return this.datasetAccessClient.removeReadDataAccessMember(datasetId, memberId);
   }
 
-  public removeDatasetAccessWriter(datasetId: string, memberId: string): Observable<any>
-  {
+  public removeDatasetAccessWriter(datasetId: string, memberId: string): Observable<any> {
     return this.datasetAccessClient.removeWriteDataAccessMember(datasetId, memberId);
   }
 
-  public memberSearch(searchString: string): Observable<IAdSearchResult[]>
-  {
+  public memberSearch(searchString: string): Observable<IAdSearchResult[]> {
     return this.datasetAccessClient.search(searchString);
   }
 
-  public addDatasetAccessReader(datasetId: string, memberId: string): Observable<IDataAccessEntry>
-  {
+  public addDatasetAccessReader(datasetId: string, memberId: string): Observable<IDataAccessEntry> {
     const accessMemberDto = { memberId: memberId } as AddDatasetAccessMemberRequestDto;
     return this.datasetAccessClient.addReadAccessMember(datasetId, accessMemberDto);
   }
 
-  public addDatasetAccessWriter(datasetId: string, memberId: string): Observable<IDataAccessEntry>
-  {
+  public addDatasetAccessWriter(datasetId: string, memberId: string): Observable<IDataAccessEntry> {
     const accessMemberDto = { memberId: memberId } as AddDatasetAccessMemberRequestDto;
     return this.datasetAccessClient.addWriteAccessMember(datasetId, accessMemberDto);
   }
@@ -159,7 +193,7 @@ export class DataHandlerService {
       return EMPTY;
     }
 
-    return this.datasetClient.post(new DatasetCreateRequest(dataSet))
+    return this.datasetClient.post(new DatasetCreateRequest(dataSet));
   }
 
   public updateDataSet(dataSet: IDatasetUpdateRequest): Observable<IDataset> {
@@ -171,8 +205,12 @@ export class DataHandlerService {
     return this.datasetClient.put(new DatasetUpdateRequest(dataSet));
   }
 
+  public deleteDataset(id: string): Observable<FileResponse> {
+    return this.datasetClient.delete(id);
+  }
+
   public setCurrentTransformation(transform: ILineageTransformation[]) {
-    this.currentTransformation = transform && transform.length ? transform[0]: undefined;
+    this.currentTransformation = transform && transform.length ? transform[0] : undefined;
   }
 
   public handleError(err: HttpErrorResponse | any) {
