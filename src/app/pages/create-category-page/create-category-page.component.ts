@@ -58,7 +58,7 @@ export class CreateCategoryPageComponent implements OnInit {
     this.saving = true;
     this.categoryService.upsertCategory(this.category).subscribe(resp => {
       this.saving = false;
-      this.messageNotifierService.sendMessage(this.translateService.instant('createCategory.message.success'), false)
+      this.messageNotifierService.sendMessage(this.translateService.instant('createCategory.message.createSuccess'), false)
       this.router.navigate(['/']);
     }, error => {
         this.saving = false;
@@ -74,14 +74,14 @@ export class CreateCategoryPageComponent implements OnInit {
   deleteCategory() {
     const confirmDialog = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Confirm category deletion',
-        message: 'You are about to delete the category ' + this.category.name
+        title: this.translateService.instant('createCategory.dialog.title'),
+        message: `${this.translateService.instant('createCategory.dialog.message')} '${this.category.name}'`
       }
     });
     confirmDialog.afterClosed().subscribe(result => {
       if (result === true) {
         this.dataHandlerService.deleteCategory(this.category.id).subscribe((response) => {
-          this.messageNotifier.sendMessage('Successfully deleted the category', false);
+          this.messageNotifier.sendMessage(this.translateService.instant('createCategory.message.deleteSuccess '), false);
           this.router.navigate(['/']);
         });
       }

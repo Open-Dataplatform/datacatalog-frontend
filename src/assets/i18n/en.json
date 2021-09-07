@@ -242,7 +242,12 @@
     "save": "Save",
     "delete": "Delete",
     "message": {
-      "success": "Category successfully updated"
+      "createSuccess": "Category Successfully Updated",
+      "deleteSuccess": "Successfully Deleted the Category"
+    },
+    "dialog": {
+      "title": "Confirm Category Deletion",
+      "message": "You are about to delete the category "
     }
   }
 }
