@@ -22,25 +22,18 @@ import {
   IEnum,
   DurationClient,
   IDuration,
-  HierarchyClient,
-  IHierarchy,
   DataSourceClient,
   IDataSource,
-  IDatasetLocationRequest,
-  DatasetLocationRequest,
-  IDatasetLocation,
   TransformationClient,
   IGuidId,
   ITransformation,
   GuidId,
   MemberGroupClient,
   IMemberGroup,
-  Dataset,
   DatasetCreateRequest,
   IDatasetCreateRequest,
   IDatasetUpdateRequest,
   DatasetUpdateRequest,
-  ApiException,
   FileResponse,
   ICategoryCreateRequest,
   CategoryCreateRequest,
@@ -69,7 +62,6 @@ export class DataHandlerService {
     private readonly datasetAccessClient: DatasetAccessClient,
     private readonly generalClient: GeneralClient,
     private readonly durationClient: DurationClient,
-    private readonly hierarchyClient: HierarchyClient,
     private readonly dataSourceClient: DataSourceClient,
     private readonly transformationClient: TransformationClient,
     private readonly memberGroupClient: MemberGroupClient,
@@ -158,20 +150,8 @@ export class DataHandlerService {
     return this.durationClient.getAll();
   }
 
-  public getRefinementLevel(): Observable<IEnum[]> {
-    return this.generalClient.getRefinementLevels();
-  }
-
-  public getHierarchies(): Observable<IHierarchy[]> {
-    return this.hierarchyClient.getAll();
-  }
-
   public getDataSources(): Observable<IDataSource[]> {
     return this.dataSourceClient.getAll();
-  }
-
-  public getLocation(locationRequest: IDatasetLocationRequest): Observable<IDatasetLocation> {
-    return this.datasetClient.getDatasetLocation(locationRequest as DatasetLocationRequest);
   }
 
   public getTransformations(ids: IGuidId[]): Observable<ITransformation[]> {

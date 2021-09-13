@@ -1664,74 +1664,6 @@ export class DatasetClient {
     }
 
     /**
-     * Get the location path for a dataset
-     * @param request The location request
-     * @return The location path
-     */
-    getDatasetLocation(request: DatasetLocationRequest): Observable<DatasetLocation> {
-        let url_ = this.baseUrl + "/api/Dataset/location";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetDatasetLocation(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetDatasetLocation(<any>response_);
-                } catch (e) {
-                    return <Observable<DatasetLocation>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<DatasetLocation>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetDatasetLocation(response: HttpResponseBase): Observable<DatasetLocation> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetLocation.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<DatasetLocation>(<any>null);
-    }
-
-    /**
      * Get the lineage of a dataset
      * @param id The id of the dataset
      * @return A lineage model with source and sink transformations
@@ -1796,62 +1728,6 @@ export class DatasetClient {
             }));
         }
         return _observableOf<LineageDataset>(<any>null);
-    }
-
-    /**
-     * Given an id of a dataset in raw, this endpoint will return an unsaved copy almost ready for stock
-     * @param id Id for dataset in raw
-     * @return The stock copy
-     */
-    copyDatasetInRaw(id: string): Observable<Dataset> {
-        let url_ = this.baseUrl + "/api/Dataset/promote/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCopyDatasetInRaw(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCopyDatasetInRaw(<any>response_);
-                } catch (e) {
-                    return <Observable<Dataset>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Dataset>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCopyDatasetInRaw(response: HttpResponseBase): Observable<Dataset> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Dataset.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Dataset>(<any>null);
     }
 }
 
@@ -3029,67 +2905,8 @@ export class GeneralClient {
     }
 
     /**
-     * Get refinement levels
-     * @return A list of refinement levels
-     */
-    getRefinementLevels(): Observable<Enum[]> {
-        let url_ = this.baseUrl + "/api/General/refinementlevel";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetRefinementLevels(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetRefinementLevels(<any>response_);
-                } catch (e) {
-                    return <Observable<Enum[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Enum[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetRefinementLevels(response: HttpResponseBase): Observable<Enum[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Enum.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Enum[]>(<any>null);
-    }
-
-    /**
      * Get source types
-     * @return A list of refinement levels
+     * @return A list of source types
      */
     getSourceTypes(): Observable<Enum[]> {
         let url_ = this.baseUrl + "/api/General/sourcetypes";
@@ -3204,374 +3021,6 @@ export class GeneralClient {
             }));
         }
         return _observableOf<Duration[]>(<any>null);
-    }
-
-    /**
-     * Get hierarchies
-     * @return A list of hierarchies with their child hierarchies
-     * @deprecated
-     */
-    getHierarchies(): Observable<Hierarchy[]> {
-        let url_ = this.baseUrl + "/api/General/hierarchies";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetHierarchies(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetHierarchies(<any>response_);
-                } catch (e) {
-                    return <Observable<Hierarchy[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Hierarchy[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetHierarchies(response: HttpResponseBase): Observable<Hierarchy[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Hierarchy.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Hierarchy[]>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class HierarchyClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
-    }
-
-    /**
-     * Get all hierarchies
-     * @return A list of all hierarchies
-     */
-    getAll(): Observable<Hierarchy[]> {
-        let url_ = this.baseUrl + "/api/Hierarchy";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAll(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAll(<any>response_);
-                } catch (e) {
-                    return <Observable<Hierarchy[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Hierarchy[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetAll(response: HttpResponseBase): Observable<Hierarchy[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Hierarchy.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Hierarchy[]>(<any>null);
-    }
-
-    /**
-     * Create a new hierarchy
-     * @param request The hierarchy to create
-     * @return The created hierarchy
-     */
-    post(request: HierarchyCreateRequest): Observable<string> {
-        let url_ = this.baseUrl + "/api/Hierarchy";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPost(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPost(<any>response_);
-                } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<string>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPost(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<string>(<any>null);
-    }
-
-    /**
-     * Update hierarchy
-     * @param request The hierarchy to create
-     * @return The created hierarchy
-     */
-    put(request: HierarchyUpdateRequest): Observable<string> {
-        let url_ = this.baseUrl + "/api/Hierarchy";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPut(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPut(<any>response_);
-                } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<string>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPut(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<string>(<any>null);
-    }
-
-    /**
-     * Delete a data source
-     * @param id (optional) The id of the hierarchy to delete
-     */
-    delete(id: string | undefined): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/Hierarchy?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<FileResponse | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse | null>(<any>null);
-    }
-
-    /**
-     * Get a hierarchy by id
-     * @param id The id of the hierarchy to get
-     * @return The hierarchy
-     */
-    get(id: string): Observable<Hierarchy> {
-        let url_ = this.baseUrl + "/api/Hierarchy/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(<any>response_);
-                } catch (e) {
-                    return <Observable<Hierarchy>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Hierarchy>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<Hierarchy> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Hierarchy.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Hierarchy>(<any>null);
     }
 }
 
@@ -5076,13 +4525,10 @@ export class Dataset extends ReplicantEntity implements IDataset {
     owner?: string | undefined;
     status!: DatasetStatus;
     confidentiality!: Confidentiality;
-    refinementLevel!: RefinementLevel;
-    location?: string | undefined;
     contact?: MemberGroup | undefined;
     frequency?: Duration | undefined;
     resolution?: Duration | undefined;
     sourceTransformation?: Transformation | undefined;
-    hierarchy?: Hierarchy | undefined;
     dataFields?: DataField[] | undefined;
     categories?: Category[] | undefined;
     datasetChangeLogs?: DatasetChangeLog[] | undefined;
@@ -5104,13 +4550,10 @@ export class Dataset extends ReplicantEntity implements IDataset {
             this.owner = _data["owner"];
             this.status = _data["status"];
             this.confidentiality = _data["confidentiality"];
-            this.refinementLevel = _data["refinementLevel"];
-            this.location = _data["location"];
             this.contact = _data["contact"] ? MemberGroup.fromJS(_data["contact"]) : <any>undefined;
             this.frequency = _data["frequency"] ? Duration.fromJS(_data["frequency"]) : <any>undefined;
             this.resolution = _data["resolution"] ? Duration.fromJS(_data["resolution"]) : <any>undefined;
             this.sourceTransformation = _data["sourceTransformation"] ? Transformation.fromJS(_data["sourceTransformation"]) : <any>undefined;
-            this.hierarchy = _data["hierarchy"] ? Hierarchy.fromJS(_data["hierarchy"]) : <any>undefined;
             if (Array.isArray(_data["dataFields"])) {
                 this.dataFields = [] as any;
                 for (let item of _data["dataFields"])
@@ -5152,13 +4595,10 @@ export class Dataset extends ReplicantEntity implements IDataset {
         data["owner"] = this.owner;
         data["status"] = this.status;
         data["confidentiality"] = this.confidentiality;
-        data["refinementLevel"] = this.refinementLevel;
-        data["location"] = this.location;
         data["contact"] = this.contact ? this.contact.toJSON() : <any>undefined;
         data["frequency"] = this.frequency ? this.frequency.toJSON() : <any>undefined;
         data["resolution"] = this.resolution ? this.resolution.toJSON() : <any>undefined;
         data["sourceTransformation"] = this.sourceTransformation ? this.sourceTransformation.toJSON() : <any>undefined;
-        data["hierarchy"] = this.hierarchy ? this.hierarchy.toJSON() : <any>undefined;
         if (Array.isArray(this.dataFields)) {
             data["dataFields"] = [];
             for (let item of this.dataFields)
@@ -5194,13 +4634,10 @@ export interface IDataset extends IReplicantEntity {
     owner?: string | undefined;
     status: DatasetStatus;
     confidentiality: Confidentiality;
-    refinementLevel: RefinementLevel;
-    location?: string | undefined;
     contact?: MemberGroup | undefined;
     frequency?: Duration | undefined;
     resolution?: Duration | undefined;
     sourceTransformation?: Transformation | undefined;
-    hierarchy?: Hierarchy | undefined;
     dataFields?: DataField[] | undefined;
     categories?: Category[] | undefined;
     datasetChangeLogs?: DatasetChangeLog[] | undefined;
@@ -5213,12 +4650,6 @@ export enum Confidentiality {
     Internal = 1,
     Confidential = 2,
     StrictlyConfidential = 3,
-}
-
-export enum RefinementLevel {
-    Raw = 0,
-    Stock = 1,
-    Refined = 2,
 }
 
 export class MemberGroup extends Entity implements IMemberGroup {
@@ -5477,59 +4908,6 @@ export interface IDatasetSummary extends IEntity {
     categories?: Category[] | undefined;
 }
 
-export class Hierarchy extends Entity implements IHierarchy {
-    name?: string | undefined;
-    description?: string | undefined;
-    parentHierarchyId?: string | undefined;
-    childHierarchies?: Hierarchy[] | undefined;
-
-    constructor(data?: IHierarchy) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.parentHierarchyId = _data["parentHierarchyId"];
-            if (Array.isArray(_data["childHierarchies"])) {
-                this.childHierarchies = [] as any;
-                for (let item of _data["childHierarchies"])
-                    this.childHierarchies!.push(Hierarchy.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Hierarchy {
-        data = typeof data === 'object' ? data : {};
-        let result = new Hierarchy();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["parentHierarchyId"] = this.parentHierarchyId;
-        if (Array.isArray(this.childHierarchies)) {
-            data["childHierarchies"] = [];
-            for (let item of this.childHierarchies)
-                data["childHierarchies"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IHierarchy extends IEntity {
-    name?: string | undefined;
-    description?: string | undefined;
-    parentHierarchyId?: string | undefined;
-    childHierarchies?: Hierarchy[] | undefined;
-}
-
 export class DataField extends Entity implements IDataField {
     name?: string | undefined;
     type?: string | undefined;
@@ -5724,10 +5102,7 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
     owner?: string | undefined;
     status!: DatasetStatus;
     confidentiality!: Confidentiality;
-    refinementLevel!: RefinementLevel;
-    location?: string | undefined;
     contact?: GuidId | undefined;
-    hierarchy?: GuidId | undefined;
     categories?: GuidId[] | undefined;
     dataSources?: GuidId[] | undefined;
     frequency?: DurationUpsertRequest | undefined;
@@ -5753,10 +5128,7 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
             this.owner = _data["owner"];
             this.status = _data["status"];
             this.confidentiality = _data["confidentiality"];
-            this.refinementLevel = _data["refinementLevel"];
-            this.location = _data["location"];
             this.contact = _data["contact"] ? GuidId.fromJS(_data["contact"]) : <any>undefined;
-            this.hierarchy = _data["hierarchy"] ? GuidId.fromJS(_data["hierarchy"]) : <any>undefined;
             if (Array.isArray(_data["categories"])) {
                 this.categories = [] as any;
                 for (let item of _data["categories"])
@@ -5794,10 +5166,7 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
         data["owner"] = this.owner;
         data["status"] = this.status;
         data["confidentiality"] = this.confidentiality;
-        data["refinementLevel"] = this.refinementLevel;
-        data["location"] = this.location;
         data["contact"] = this.contact ? this.contact.toJSON() : <any>undefined;
-        data["hierarchy"] = this.hierarchy ? this.hierarchy.toJSON() : <any>undefined;
         if (Array.isArray(this.categories)) {
             data["categories"] = [];
             for (let item of this.categories)
@@ -5828,10 +5197,7 @@ export interface IDatasetCreateRequest {
     owner?: string | undefined;
     status: DatasetStatus;
     confidentiality: Confidentiality;
-    refinementLevel: RefinementLevel;
-    location?: string | undefined;
     contact?: GuidId | undefined;
-    hierarchy?: GuidId | undefined;
     categories?: GuidId[] | undefined;
     dataSources?: GuidId[] | undefined;
     frequency?: DurationUpsertRequest | undefined;
@@ -6171,82 +5537,6 @@ export class DatasetSearchByTermRequest extends DatasetSearchRequest implements 
 
 export interface IDatasetSearchByTermRequest extends IDatasetSearchRequest {
     searchTerm?: string | undefined;
-}
-
-export class DatasetLocation implements IDatasetLocation {
-    location?: string | undefined;
-
-    constructor(data?: IDatasetLocation) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.location = _data["location"];
-        }
-    }
-
-    static fromJS(data: any): DatasetLocation {
-        data = typeof data === 'object' ? data : {};
-        let result = new DatasetLocation();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["location"] = this.location;
-        return data; 
-    }
-}
-
-export interface IDatasetLocation {
-    location?: string | undefined;
-}
-
-export class DatasetLocationRequest implements IDatasetLocationRequest {
-    name?: string | undefined;
-    hierarchy?: NullableGuidId | undefined;
-
-    constructor(data?: IDatasetLocationRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.hierarchy = _data["hierarchy"] ? NullableGuidId.fromJS(_data["hierarchy"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): DatasetLocationRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new DatasetLocationRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["hierarchy"] = this.hierarchy ? this.hierarchy.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IDatasetLocationRequest {
-    name?: string | undefined;
-    hierarchy?: NullableGuidId | undefined;
 }
 
 export class LineageDataset extends DatasetSummary implements ILineageDataset {
@@ -6701,83 +5991,6 @@ export class Enum implements IEnum {
 export interface IEnum {
     id: number;
     description?: string | undefined;
-}
-
-export class HierarchyCreateRequest implements IHierarchyCreateRequest {
-    name?: string | undefined;
-    description?: string | undefined;
-    parentHierarchyId?: string | undefined;
-
-    constructor(data?: IHierarchyCreateRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.parentHierarchyId = _data["parentHierarchyId"];
-        }
-    }
-
-    static fromJS(data: any): HierarchyCreateRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new HierarchyCreateRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["parentHierarchyId"] = this.parentHierarchyId;
-        return data; 
-    }
-}
-
-export interface IHierarchyCreateRequest {
-    name?: string | undefined;
-    description?: string | undefined;
-    parentHierarchyId?: string | undefined;
-}
-
-export class HierarchyUpdateRequest extends HierarchyCreateRequest implements IHierarchyUpdateRequest {
-    id!: string;
-
-    constructor(data?: IHierarchyUpdateRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): HierarchyUpdateRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new HierarchyUpdateRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IHierarchyUpdateRequest extends IHierarchyCreateRequest {
-    id: string;
 }
 
 export class MemberGroupCreateRequest implements IMemberGroupCreateRequest {
