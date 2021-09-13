@@ -27,19 +27,21 @@
   <ng-select [items]="durations$ | async"
              placeholder="{{'dataSteward.about.resolution.resolution' | translate}}"
              [ngClass]="{'filled': data.resolution}"
-             bindLabel="code"
+             bindLabel="description"
              (change)="onChange()"
              [(ngModel)]="data.resolution"></ng-select>
 </div>
 
 <div class="data-container">
   <h3>{{'dataSteward.about.updateFrequency.heading' | translate}}</h3>
-  <ng-select [items]="durations$ | async"
-             placeholder="{{'dataSteward.about.updateFrequency.frequency' | translate}}"
-             [ngClass]="{'filled': data.frequency}"
-             bindLabel="code"
-             (change)="onChange()"
-             [(ngModel)]="data.frequency"></ng-select>
+  <ng-select 
+    [items]="durations$ | async"
+    placeholder="{{'dataSteward.about.updateFrequency.frequency' | translate}}"
+    [ngClass]="{'filled': data.frequency}"
+    bindLabel="description"
+    (change)="onChange()"
+    [(ngModel)]="data.frequency">
+  </ng-select>
 </div>
 
 <div class="data-container">
