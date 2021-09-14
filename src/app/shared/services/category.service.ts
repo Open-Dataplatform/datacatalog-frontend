@@ -20,10 +20,13 @@ export class CategoryService {
 
     ) {
         this.userHandlerService.userHasDataStewardRole$.subscribe(x => this.hasDataStewardAccess = x);
-        
+
         this.userLoggedIn$.pipe(filter(user => user !== null)).subscribe(() => {
-            this.dataHandlerService.getCategoryData(this.hasDataStewardAccess).subscribe(response => {
+            // Ensure that user info is up to date as the role is otherwise not set correctly
+            this.userHandlerService.getUserInfo().subscribe(() => {
+              this.dataHandlerService.getCategoryData(this.hasDataStewardAccess).subscribe(response => {
                 this.categories.next(response);
+              });
             });
         });
     }
@@ -38,10 +41,10 @@ export class CategoryService {
             result$.subscribe(response => {
                 const oldCategories = this.categories.getValue();
                 const indexOfUpdatedCategory = oldCategories.findIndex(x => x.id == category.id);
-                
+
                 // Replace the updated category in the list of categories
                 oldCategories.splice(indexOfUpdatedCategory, 1, response);
-                
+
                 // Update Subject with new category list
                 this.categories.next(oldCategories);
             });
@@ -59,12 +62,12 @@ export class CategoryService {
     deleteCategory(category: ICategory): Observable<FileResponse> {
         const result$ = this.dataHandlerService.deleteCategory(category.id)
             .pipe(shareReplay(1));
-        
+
         result$.subscribe(_ => {
             // Remove the deleted category from local list of categories
             this.categories.next(this.categories.getValue().filter(cat => cat.id !== category.id))
-        })
+        });
 
         return result$;
-    }   
+    }
 }
