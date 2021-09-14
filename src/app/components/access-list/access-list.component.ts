@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Inject, OnDestroy} from '@angular/core';
+import {Component, Input, Inject, OnDestroy, OnChanges, SimpleChanges} from '@angular/core';
 import {DataHandlerService} from "../../shared/data-handler.service";
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { Observable, Subscription, timer } from 'rxjs';
@@ -10,7 +10,7 @@ import { IAdSearchResult, IDataAccessEntry } from 'src/app/shared/api/api';
   templateUrl: './access-list.component.html',
   styleUrls: ['./access-list.component.less']
 })
-export class AccessListComponent implements OnInit, OnDestroy {
+export class AccessListComponent implements OnDestroy, OnChanges  {
 
   @Input()
   datasetId: string;
@@ -25,13 +25,21 @@ export class AccessListComponent implements OnInit, OnDestroy {
     private readonly dataHandlerService: DataHandlerService,
     private readonly searchDialog: MatDialog)
   {}
+  ngOnChanges(changes: SimpleChanges): void {
+    // Fetch new access list if datasetId has changed
+    if (changes.datasetId.previousValue !== changes.datasetId.currentValue) {
+      // Unsubscribe current subscription if one already exist.
+      if (this.dataAccessSubscription !== undefined) {
+        this.dataAccessSubscription.unsubscribe();
+      }
+
+      this.getAccessList(this.datasetId);
+    }
+  }
+
   ngOnDestroy(): void {
     // Unsubscribe so we don't keep retrying after having left the dataset
     this.dataAccessSubscription.unsubscribe();
-  }
-
-  ngOnInit() { 
-    this.getAccessList(this.datasetId);
   }
 
   addReader() {
