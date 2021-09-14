@@ -164,7 +164,7 @@
         "heading": "Fields",
         "addField": "Add Field",
         "name": "name",
-        "namePlaceholder": "Enter the fieldname",
+        "namePlaceholder": "Enter the field name",
         "description": "description",
         "descriptionPlaceholder": "Enter a description of the data in this field",
         "type": "type",
@@ -174,7 +174,8 @@
         "validation": "validation",
         "validationPlaceholder": "validation",
         "confidentiality": "confidentiality",
-        "confidentialityPlaceholder": "Select confidentiality level"
+        "confidentialityPlaceholder": "Select confidentiality level",
+        "newField": "New field"
       },
       "metadataVersion": {
         "heading": "Version"

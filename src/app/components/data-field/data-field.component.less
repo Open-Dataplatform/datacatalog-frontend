@@ -18,6 +18,10 @@
   margin: 0;
   padding: 1rem;
   width: 100%;
+
+  &::placeholder {
+    color: @grey;
+  }
 }
 
 table {
@@ -60,6 +64,20 @@ table {
 
 .data-field__table-description {
   padding: 0;
+  
+}
+
+.ng-select-data-field ::ng-deep {
+  margin-bottom: 0;
+  background-color: transparent;
+
+  .ng-select-container {
+    padding: 1rem;
+    
+    .ng-input {
+      padding-left: 1rem;
+    }
+  }
 }
 
 tr {

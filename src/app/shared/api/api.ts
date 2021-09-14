@@ -4914,6 +4914,7 @@ export class DataField extends Entity implements IDataField {
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
+    unit?: string | undefined;
 
     constructor(data?: IDataField) {
         super(data);
@@ -4927,6 +4928,7 @@ export class DataField extends Entity implements IDataField {
             this.description = _data["description"];
             this.format = _data["format"];
             this.validation = _data["validation"];
+            this.unit = _data["unit"];
         }
     }
 
@@ -4944,6 +4946,7 @@ export class DataField extends Entity implements IDataField {
         data["description"] = this.description;
         data["format"] = this.format;
         data["validation"] = this.validation;
+        data["unit"] = this.unit;
         super.toJSON(data);
         return data; 
     }
@@ -4955,6 +4958,7 @@ export interface IDataField extends IEntity {
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
+    unit?: string | undefined;
 }
 
 export class DatasetChangeLog extends Created implements IDatasetChangeLog {
@@ -5337,10 +5341,11 @@ export interface ISourceTransformationUpsertRequest {
 
 export class DataFieldUpsertRequest extends NullableGuidId implements IDataFieldUpsertRequest {
     name?: string | undefined;
-    type?: string | undefined;
+    type?: DataFieldType | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
+    unit?: number | undefined;
 
     constructor(data?: IDataFieldUpsertRequest) {
         super(data);
@@ -5354,6 +5359,7 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
             this.description = _data["description"];
             this.format = _data["format"];
             this.validation = _data["validation"];
+            this.unit = _data["unit"];
         }
     }
 
@@ -5371,6 +5377,7 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
         data["description"] = this.description;
         data["format"] = this.format;
         data["validation"] = this.validation;
+        data["unit"] = this.unit;
         super.toJSON(data);
         return data; 
     }
@@ -5378,10 +5385,21 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
 
 export interface IDataFieldUpsertRequest extends INullableGuidId {
     name?: string | undefined;
-    type?: string | undefined;
+    type?: DataFieldType | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
+    unit?: number | undefined;
+}
+
+export enum DataFieldType {
+    Boolean = 0,
+    Date = 1,
+    Datetime = 2,
+    Integer = 3,
+    Number = 4,
+    String = 5,
+    Time = 6,
 }
 
 export class DatasetUpdateRequest extends DatasetCreateRequest implements IDatasetUpdateRequest {
