@@ -19,15 +19,11 @@ export class CategoryService {
         private readonly dataHandlerService: DataHandlerService
 
     ) {
-        this.userHandlerService.userHasDataStewardRole$.subscribe(x => this.hasDataStewardAccess = x);
-
-        this.userLoggedIn$.pipe(filter(user => user !== null)).subscribe(() => {
-            // Ensure that user info is up to date as the role is otherwise not set correctly
-            this.userHandlerService.getUserInfo().subscribe(() => {
-              this.dataHandlerService.getCategoryData(this.hasDataStewardAccess).subscribe(response => {
-                this.categories.next(response);
-              });
-            });
+        this.userHandlerService.userHasDataStewardRole$.subscribe(x => {
+          this.hasDataStewardAccess = x;
+          this.dataHandlerService.getCategoryData(this.hasDataStewardAccess).subscribe(response => {
+            this.categories.next(response);
+          });
         });
     }
 
