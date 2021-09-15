@@ -176,7 +176,8 @@
         "confidentiality": "confidentiality",
         "confidentialityPlaceholder": "Select confidentiality level",
         "newField": "New field",
-        "unit": "Unit"
+        "unit": "unit",
+        "unitPlaceholder": "Enter the data unit"
       },
       "metadataVersion": {
         "heading": "Version"

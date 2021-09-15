@@ -8,7 +8,7 @@
       <tbody>
       <tr>
         <td class="data-field__table-name">
-          <label for="data-field-name-{{i}}">{{'dataSteward.meta.metadata.name' | translate}} *</label>
+          <label for="data-field-name-{{i}}">{{'dataSteward.meta.metadata.name' | translate}}</label>
         </td>
         <td class="data-field__table-description">
           <textarea id="data-field-name-{{i}}" 
@@ -16,7 +16,7 @@
                     appAutosize 
                     class="data-field__table-input" 
                     type="text"
-                    placeholder="{{'dataSteward.meta.metadata.namePlaceholder' | translate}}"
+                    placeholder="{{'dataSteward.meta.metadata.namePlaceholder' | translate}} *"
                     (keyup)="dataChange()" 
                     [(ngModel)]="dataField.name"></textarea>
         </td>
@@ -57,12 +57,12 @@
       </tr>
       <tr>
         <td class="data-field__table-name">
-          <label for="data-field-type-{{i}}">{{'dataSteward.meta.metadata.type' | translate}} *</label>
+          <label for="data-field-type-{{i}}">{{'dataSteward.meta.metadata.type' | translate}}</label>
         </td>
         <td class="data-field__table-description">
             <ng-select [items]="dataTypes"
                        class="ng-select-data-field"
-                       placeholder="{{'dataSteward.meta.metadata.typePlaceholder' | translate}}"
+                       placeholder="{{'dataSteward.meta.metadata.typePlaceholder' | translate}} *"
                        bindLabel="description"
                        bindValue="id"
                        (change)="dataChange()"
