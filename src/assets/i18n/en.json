@@ -175,7 +175,8 @@
         "validationPlaceholder": "validation",
         "confidentiality": "confidentiality",
         "confidentialityPlaceholder": "Select confidentiality level",
-        "newField": "New field"
+        "newField": "New field",
+        "unit": "Unit"
       },
       "metadataVersion": {
         "heading": "Version"
@@ -250,5 +251,43 @@
       "title": "Confirm Category Deletion",
       "message": "You are about to delete the category "
     }
-  }
+  },
+  "Unit_Percent": "%",
+  "Unit_DegreesCelsius": "°C",
+  "Unit_Coded": "Coded",
+  "Unit_Days": "Days",
+  "Unit_DKK": "DKK",
+  "Unit_DKKPerHour": "DKK per hour",
+  "Unit_DKKPerkWh": "DKK per kWh",
+  "Unit_DKKPerMWh": "DKK per MWh",
+  "Unit_DKKPerMWhPerHour": "DKK per MWh/h",
+  "Unit_EUR": "EUR",
+  "Unit_EURPerHour": "EUR per hour",
+  "Unit_EURPerMWh": "EUR per MWh",
+  "Unit_EURPerMWhPerHour": "EUR per MWh/h",
+  "Unit_gPerkWh": "g/kWh",
+  "Unit_GWs": "GWs",
+  "Unit_kgPerGJ": "kg/GJ",
+  "Unit_kgPerNm3": "kg/Nm³",
+  "Unit_kWh": "kWh",
+  "Unit_kWhPerh": "kWh/h",
+  "Unit_kWhPerNm3": "kWh/Nm³",
+  "Unit_mgPerkWh": "mg/kWh",
+  "Unit_mgPerNm3": "mg/Nm³",
+  "Unit_MJPerNm3": "MJ/Nm³",
+  "Unit_MolePercentage": "mole - %",
+  "Unit_Months": "Months",
+  "Unit_MW": "MW",
+  "Unit_MWh": "MWh",
+  "Unit_MWhPerh": "MWh/h",
+  "Unit_MWhPerDay": "MWh/day",
+  "Unit_MWs": "MWs",
+  "Unit_Number": "Number",
+  "Unit_Text": "Text",
+  "Unit_TJ": "TJ",
+  "Unit_Years": "Years",
+  "Unit_mgPerkg": "mg/kg",
+  "Unit_mgKOHPerg": "mgKOH/g",
+  "Unit_mNPerm": "mN/m",
+  "Unit_uLPerL": "µL/L"
 }

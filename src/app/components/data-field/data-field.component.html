@@ -38,6 +38,25 @@
       </tr>
       <tr>
         <td class="data-field__table-name">
+          <label for="data-field-type-{{i}}">{{'dataSteward.meta.metadata.unit' | translate}}</label>
+        </td>
+        <td class="data-field__table-description">
+            <ng-select [items]="dataUnits"
+                       class="ng-select-data-field"
+                       placeholder="{{'dataSteward.meta.metadata.unitPlaceholder' | translate}}"
+                       (change)="dataChange()"
+                       [(ngModel)]="dataField.unit">
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                {{item | translate}}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-clear="clear">
+                {{item | translate}}
+              </ng-template>
+            </ng-select>
+        </td>
+      </tr>
+      <tr>
+        <td class="data-field__table-name">
           <label for="data-field-type-{{i}}">{{'dataSteward.meta.metadata.type' | translate}} *</label>
         </td>
         <td class="data-field__table-description">

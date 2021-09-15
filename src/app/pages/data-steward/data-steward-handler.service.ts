@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {DataHandlerService} from "../../shared/data-handler.service";
 import {Observable} from "rxjs";
-import { DataFieldType, DataFieldUpsertRequest, Dataset, DatasetUpdateRequest, IDataset } from 'src/app/shared/api/api';
+import { DataFieldType, DataFieldUnit, DataFieldUpsertRequest, Dataset, DatasetUpdateRequest, IDataset } from 'src/app/shared/api/api';
 import { EMPTY_GUID } from 'src/app/shared/constants';
 
 /*
@@ -47,7 +47,7 @@ export class DataStewardHandlerService {
         ?.map(df => new DataFieldUpsertRequest({
           ...df,
           type: DataFieldType[df.type],
-          unit: 0
+          unit: DataFieldUnit[df.unit]
         }))
     });
     

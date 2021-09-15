@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { DataField, IDataField } from 'src/app/shared/api/api';
-import { DataFieldTypes, EMPTY_GUID } from 'src/app/shared/constants';
+import { DataFieldTypes, DataFieldUnits, EMPTY_GUID } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-data-field',
@@ -12,6 +12,7 @@ export class DataFieldComponent implements OnInit {
   @Input() dataFields: IDataField[];
   @Output() dataFieldsChange = new EventEmitter();
   dataTypes = DataFieldTypes;
+  dataUnits = DataFieldUnits;
 
   constructor() { }
 

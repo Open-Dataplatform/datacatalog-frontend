@@ -5345,7 +5345,7 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
-    unit?: number | undefined;
+    unit?: DataFieldUnit | undefined;
 
     constructor(data?: IDataFieldUpsertRequest) {
         super(data);
@@ -5389,7 +5389,7 @@ export interface IDataFieldUpsertRequest extends INullableGuidId {
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
-    unit?: number | undefined;
+    unit?: DataFieldUnit | undefined;
 }
 
 export enum DataFieldType {
@@ -5400,6 +5400,47 @@ export enum DataFieldType {
     Number = 4,
     String = 5,
     Time = 6,
+}
+
+export enum DataFieldUnit {
+    Unit_Percent = 0,
+    Unit_DegreesCelsius = 1,
+    Unit_Coded = 2,
+    Unit_Days = 3,
+    Unit_DKK = 4,
+    Unit_DKKPerHour = 5,
+    Unit_DKKPerkWh = 6,
+    Unit_DKKPerMWh = 7,
+    Unit_DKKPerMWhPerHour = 8,
+    Unit_EUR = 9,
+    Unit_EURPerHour = 10,
+    Unit_EURPerMWh = 11,
+    Unit_EURPerMWhPerHour = 12,
+    Unit_gPerkWh = 13,
+    Unit_GWs = 14,
+    Unit_kgPerGJ = 15,
+    Unit_kgPerNm3 = 16,
+    Unit_kWh = 17,
+    Unit_kWhPerh = 18,
+    Unit_kWhPerNm3 = 19,
+    Unit_mgPerkWh = 20,
+    Unit_mgPerNm3 = 21,
+    Unit_MJPerNm3 = 22,
+    Unit_MolePercentage = 23,
+    Unit_Months = 24,
+    Unit_MW = 25,
+    Unit_MWh = 26,
+    Unit_MWhPerh = 27,
+    Unit_MWhPerDay = 28,
+    Unit_MWs = 29,
+    Unit_Number = 30,
+    Unit_Text = 31,
+    Unit_TJ = 32,
+    Unit_Years = 33,
+    Unit_mgPerkg = 34,
+    Unit_mgKOHPerg = 35,
+    Unit_mNPerm = 36,
+    Unit_uLPerL = 37,
 }
 
 export class DatasetUpdateRequest extends DatasetCreateRequest implements IDatasetUpdateRequest {
