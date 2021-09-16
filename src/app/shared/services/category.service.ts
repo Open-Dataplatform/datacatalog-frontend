@@ -10,8 +10,6 @@ import { UserHandlerService } from '../user/user-handler.service';
 export class CategoryService {
     private categories = new BehaviorSubject<ICategory[]>([]);
     public categories$ = this.categories.asObservable();
-
-    private userLoggedIn$ = this.userHandlerService.userLoggedIn$;
     private hasDataStewardAccess: boolean;
 
     constructor(
@@ -19,7 +17,7 @@ export class CategoryService {
         private readonly dataHandlerService: DataHandlerService
 
     ) {
-        this.userHandlerService.userHasDataStewardRole$.subscribe(x => {
+        this.userHandlerService.userHasDataStewardRole$.pipe(filter(hasAccess => hasAccess !== null)).subscribe(x => {
           this.hasDataStewardAccess = x;
           this.dataHandlerService.getCategoryData(this.hasDataStewardAccess).subscribe(response => {
             this.categories.next(response);
@@ -49,7 +47,7 @@ export class CategoryService {
                 .pipe(shareReplay(1)); // Make sure that subscribing multiple times doesn't repeat the API call
 
             result$.subscribe(response => {
-                this.categories.next([...this.categories.getValue(), response])
+                this.categories.next([...this.categories.getValue(), response]);
             });
         }
         return result$;
@@ -61,7 +59,7 @@ export class CategoryService {
 
         result$.subscribe(_ => {
             // Remove the deleted category from local list of categories
-            this.categories.next(this.categories.getValue().filter(cat => cat.id !== category.id))
+            this.categories.next(this.categories.getValue().filter(cat => cat.id !== category.id));
         });
 
         return result$;

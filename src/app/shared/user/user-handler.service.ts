@@ -13,7 +13,7 @@ export const OBO_USER_MANAGER_TOKEN: InjectionToken<UserManager> = new Injection
 export class UserHandlerService {
   private userLoggedIn = new BehaviorSubject<User>(null);
   public userLoggedIn$ = this.userLoggedIn.asObservable();
-  public userHasDataStewardRole = new BehaviorSubject<boolean>(false);
+  public userHasDataStewardRole = new BehaviorSubject<boolean>(null);
   public userHasDataStewardRole$ = this.userHasDataStewardRole.asObservable();
 
   private oboToken = new BehaviorSubject<string>('');
