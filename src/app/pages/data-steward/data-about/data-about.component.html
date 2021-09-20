@@ -46,17 +46,13 @@
 
 <div class="data-container">
   <h3>{{'dataSteward.about.sla.heading' | translate}}</h3>
-  <app-text-input placeholderText="{{'dataSteward.about.sla.describe' | translate}}"
-                  inputType="text-area"
-                  (change)="onChange()"
-                  [(value)]="data.slaDescription"></app-text-input>
-</div>
-
-<div class="data-container">
-  <h3>{{'dataSteward.about.slaLink.heading' | translate}}</h3>
-  <app-text-input placeholderText="{{'dataSteward.about.slaLink.addSlaLink' | translate}}"
-                  (change)="onChange()"
-                  [(value)]="data.slaLink"></app-text-input>
+  <ng-select 
+    [items]="serviceLevelAgreements"
+    [ngClass]="{'filled': data.serviceLevelAgreement}"
+    bindLabel="name"
+    (change)="onChange()"
+    [(ngModel)]="data.serviceLevelAgreement">
+  </ng-select>
 </div>
 
 <div class="data-container">

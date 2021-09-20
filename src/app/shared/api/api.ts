@@ -3460,6 +3460,79 @@ export class MemberGroupClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ServiceLevelAgreementClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
+    }
+
+    /**
+     * Get all SLA's
+     * @return A list of SLA's
+     */
+    getAll(): Observable<ServiceLevelAgreement[]> {
+        let url_ = this.baseUrl + "/api/ServiceLevelAgreement";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceLevelAgreement[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceLevelAgreement[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ServiceLevelAgreement[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ServiceLevelAgreement.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceLevelAgreement[]>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class TransformationClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -4534,6 +4607,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
     datasetChangeLogs?: DatasetChangeLog[] | undefined;
     dataSources?: DataSource[] | undefined;
     provisionStatus!: ProvisionDatasetStatusEnum;
+    serviceLevelAgreement?: ServiceLevelAgreement | undefined;
 
     constructor(data?: IDataset) {
         super(data);
@@ -4575,6 +4649,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
                     this.dataSources!.push(DataSource.fromJS(item));
             }
             this.provisionStatus = _data["provisionStatus"];
+            this.serviceLevelAgreement = _data["serviceLevelAgreement"] ? ServiceLevelAgreement.fromJS(_data["serviceLevelAgreement"]) : <any>undefined;
         }
     }
 
@@ -4620,6 +4695,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
                 data["dataSources"].push(item.toJSON());
         }
         data["provisionStatus"] = this.provisionStatus;
+        data["serviceLevelAgreement"] = this.serviceLevelAgreement ? this.serviceLevelAgreement.toJSON() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
@@ -4643,6 +4719,7 @@ export interface IDataset extends IReplicantEntity {
     datasetChangeLogs?: DatasetChangeLog[] | undefined;
     dataSources?: DataSource[] | undefined;
     provisionStatus: ProvisionDatasetStatusEnum;
+    serviceLevelAgreement?: ServiceLevelAgreement | undefined;
 }
 
 export enum Confidentiality {
@@ -5098,6 +5175,47 @@ export enum ProvisionDatasetStatusEnum {
     Failed = 2,
 }
 
+export class ServiceLevelAgreement extends Entity implements IServiceLevelAgreement {
+    name?: string | undefined;
+    description?: string | undefined;
+    link?: string | undefined;
+
+    constructor(data?: IServiceLevelAgreement) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.link = _data["link"];
+        }
+    }
+
+    static fromJS(data: any): ServiceLevelAgreement {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceLevelAgreement();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["link"] = this.link;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IServiceLevelAgreement extends IEntity {
+    name?: string | undefined;
+    description?: string | undefined;
+    link?: string | undefined;
+}
+
 export class DatasetCreateRequest implements IDatasetCreateRequest {
     name?: string | undefined;
     description?: string | undefined;
@@ -5113,6 +5231,7 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
     resolution?: DurationUpsertRequest | undefined;
     sourceTransformation?: SourceTransformationUpsertRequest | undefined;
     dataFields?: DataFieldUpsertRequest[] | undefined;
+    serviceLevelAgreement?: GuidId | undefined;
 
     constructor(data?: IDatasetCreateRequest) {
         if (data) {
@@ -5151,6 +5270,7 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
                 for (let item of _data["dataFields"])
                     this.dataFields!.push(DataFieldUpsertRequest.fromJS(item));
             }
+            this.serviceLevelAgreement = _data["serviceLevelAgreement"] ? GuidId.fromJS(_data["serviceLevelAgreement"]) : <any>undefined;
         }
     }
 
@@ -5189,6 +5309,7 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
             for (let item of this.dataFields)
                 data["dataFields"].push(item.toJSON());
         }
+        data["serviceLevelAgreement"] = this.serviceLevelAgreement ? this.serviceLevelAgreement.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -5208,6 +5329,7 @@ export interface IDatasetCreateRequest {
     resolution?: DurationUpsertRequest | undefined;
     sourceTransformation?: SourceTransformationUpsertRequest | undefined;
     dataFields?: DataFieldUpsertRequest[] | undefined;
+    serviceLevelAgreement?: GuidId | undefined;
 }
 
 export class NullableGuidId implements INullableGuidId {

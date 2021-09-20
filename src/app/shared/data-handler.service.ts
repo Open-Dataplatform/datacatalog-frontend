@@ -38,7 +38,9 @@ import {
   ICategoryCreateRequest,
   CategoryCreateRequest,
   ICategoryUpdateRequest,
-  CategoryUpdateRequest
+  CategoryUpdateRequest,
+  ServiceLevelAgreementClient,
+  IServiceLevelAgreement
 } from './api/api';
 
 /*
@@ -65,6 +67,7 @@ export class DataHandlerService {
     private readonly dataSourceClient: DataSourceClient,
     private readonly transformationClient: TransformationClient,
     private readonly memberGroupClient: MemberGroupClient,
+    private readonly serviceLevelAgreementClient: ServiceLevelAgreementClient,
   ) { }
 
   public getCategoryData(includeEmpty: boolean = false): Observable<ICategory[]> {
@@ -202,6 +205,10 @@ export class DataHandlerService {
 
   public deleteCategory(id: string): Observable<FileResponse> {
     return this.categoryClient.delete(id);
+  }
+
+  public getServiceLevelAgreements(): Observable<IServiceLevelAgreement[]> {
+    return this.serviceLevelAgreementClient.getAll();
   }
 
   public handleError(err: HttpErrorResponse | any) {

@@ -84,23 +84,23 @@
           </div>
         </li>
 
-        <li class="master-data" *ngIf="dataSet.slaDescription">
+        <li class="master-data" *ngIf="dataSet.slaDescription || dataSet.serviceLevelAgreement?.name">
           <div class="master-data-field__container">
             <i class="material-icons-outlined"> assignment </i>
             <div class="master-data-field__comment">{{ 'details.side.slaDescription' | translate }}</div>
           </div>
           <div class="master-data__data">
-          {{dataSet.slaDescription}}
+            {{dataSet.slaDescription ? dataSet.slaDescription : dataSet.serviceLevelAgreement.name}}
           </div>
         </li>
 
-        <li class="master-data" *ngIf="dataSet.slaLink">
+        <li class="master-data" *ngIf="dataSet.slaLink || dataSet.serviceLevelAgreement?.link">
           <div class="master-data-field__container">
             <i class="material-icons-outlined"> link </i>
             <div class="master-data-field__comment">{{ 'details.side.slaLink' | translate }}</div>
           </div>
           <div class="master-data__data">
-            {{dataSet.slaLink}}
+            {{dataSet.slaLink ? dataSet.slaLink : dataSet.serviceLevelAgreement.link}}
           </div>
         </li>
 
