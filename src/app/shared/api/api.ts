@@ -4468,6 +4468,7 @@ export interface IDatasetAccessList {
 export class DataAccessEntry implements IDataAccessEntry {
     id?: string | undefined;
     name?: string | undefined;
+    mail?: string | undefined;
     memberType?: string | undefined;
 
     constructor(data?: IDataAccessEntry) {
@@ -4483,6 +4484,7 @@ export class DataAccessEntry implements IDataAccessEntry {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.mail = _data["mail"];
             this.memberType = _data["memberType"];
         }
     }
@@ -4498,6 +4500,7 @@ export class DataAccessEntry implements IDataAccessEntry {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["mail"] = this.mail;
         data["memberType"] = this.memberType;
         return data; 
     }
@@ -4506,6 +4509,7 @@ export class DataAccessEntry implements IDataAccessEntry {
 export interface IDataAccessEntry {
     id?: string | undefined;
     name?: string | undefined;
+    mail?: string | undefined;
     memberType?: string | undefined;
 }
 
@@ -4548,6 +4552,7 @@ export interface IAddDatasetAccessMemberRequestDto {
 export class AdSearchResult implements IAdSearchResult {
     id?: string | undefined;
     displayName?: string | undefined;
+    mail?: string | undefined;
     type?: string | undefined;
 
     constructor(data?: IAdSearchResult) {
@@ -4563,6 +4568,7 @@ export class AdSearchResult implements IAdSearchResult {
         if (_data) {
             this.id = _data["id"];
             this.displayName = _data["displayName"];
+            this.mail = _data["mail"];
             this.type = _data["type"];
         }
     }
@@ -4578,6 +4584,7 @@ export class AdSearchResult implements IAdSearchResult {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["displayName"] = this.displayName;
+        data["mail"] = this.mail;
         data["type"] = this.type;
         return data; 
     }
@@ -4586,6 +4593,7 @@ export class AdSearchResult implements IAdSearchResult {
 export interface IAdSearchResult {
     id?: string | undefined;
     displayName?: string | undefined;
+    mail?: string | undefined;
     type?: string | undefined;
 }
 
