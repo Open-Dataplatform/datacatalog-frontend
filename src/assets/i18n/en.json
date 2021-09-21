@@ -186,11 +186,6 @@
       }
     },
     "about": {
-      "contact": {
-        "heading": "Contact",
-        "whoToContact": "Select who to contact about this dataset *",
-        "contactInfo": "Add contact information *"
-      },
       "confidentiality": {
         "heading": "Confidentiality",
         "securityLevel": "Select confidentiality level"

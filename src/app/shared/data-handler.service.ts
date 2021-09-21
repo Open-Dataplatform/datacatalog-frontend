@@ -33,14 +33,10 @@ import {
   IGuidId,
   ITransformation,
   GuidId,
-  MemberGroupClient,
-  IMemberGroup,
-  Dataset,
   DatasetCreateRequest,
   IDatasetCreateRequest,
   IDatasetUpdateRequest,
   DatasetUpdateRequest,
-  ApiException,
   FileResponse,
   ICategoryCreateRequest,
   CategoryCreateRequest,
@@ -72,7 +68,6 @@ export class DataHandlerService {
     private readonly hierarchyClient: HierarchyClient,
     private readonly dataSourceClient: DataSourceClient,
     private readonly transformationClient: TransformationClient,
-    private readonly memberGroupClient: MemberGroupClient,
   ) { }
 
   public getCategoryData(includeEmpty: boolean = false): Observable<ICategory[]> {
@@ -176,10 +171,6 @@ export class DataHandlerService {
 
   public getTransformations(ids: IGuidId[]): Observable<ITransformation[]> {
     return this.transformationClient.getByDatasets(ids as GuidId[]);
-  }
-
-  public getMemberGroups(): Observable<IMemberGroup[]> {
-    return this.memberGroupClient.getAll();
   }
 
   public getDataSetStatus(): Observable<IEnum[]> {
