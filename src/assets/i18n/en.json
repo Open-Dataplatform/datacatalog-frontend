@@ -37,6 +37,7 @@
       "frequency": "frequency",
       "version": "version",
       "id": "Id",
+      "contactLink": "ServiceNow",
       "status": {
         "title": "status",
         "draft": "draft",

@@ -50,7 +50,7 @@
 
     <div class="details__master-data">
       <h2>{{ 'details.side.about' | translate }}</h2>
-
+  
       <ul class="details__data-list">
         <li class="master-data" *ngIf="dataSet.contact">
           <div class="master-data-field__container">
@@ -59,7 +59,9 @@
           </div>
           <ul class="details__data-list">
             <li>{{dataSet.contact.name}}</li>
-            <li>{{dataSet.contact.link}}</li>
+            <li>
+              <a [href]="dataSet.contact.link">{{ 'details.side.contactLink' | translate}}</a>
+            </li>
             <li>{{dataSet.contact.email}}</li>
           </ul>
         </li>
