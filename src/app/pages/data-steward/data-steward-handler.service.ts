@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {DataHandlerService} from "../../shared/data-handler.service";
 import {Observable} from "rxjs";
-import { Dataset, IDataset } from 'src/app/shared/api/api';
+import { DataFieldType, DataFieldUnit, DataFieldUpsertRequest, Dataset, DatasetUpdateRequest, IDataset } from 'src/app/shared/api/api';
+import { EMPTY_GUID } from 'src/app/shared/constants';
 
 /*
 This is a shared data handler service for the data steward pages,
@@ -38,10 +39,22 @@ export class DataStewardHandlerService {
   }
 
   publishDataSet(): Observable<IDataset> {
-    if (this.dataSet && this.dataSet.id) {
-      return this.dataHandlerService.updateDataSet(this.dataSet);
+    // Convert Dataset to DatasetUpdateRequest.
+    //To do this we need to convert DataFields to DataFieldUpsertRequests which again requires converting type and unit from strings to enums
+    const updateRequest = new DatasetUpdateRequest({
+      ...this.dataSet,
+      dataFields: this.dataSet.dataFields
+        ?.map(df => new DataFieldUpsertRequest({
+          ...df,
+          type: DataFieldType[df.type],
+          unit: DataFieldUnit[df.unit]
+        }))
+    });
+    
+    if (updateRequest.id && updateRequest.id !== EMPTY_GUID) {
+      return this.dataHandlerService.updateDataSet(updateRequest);
     } else {
-      return this.dataHandlerService.createNewDataSet(this.dataSet);
+      return this.dataHandlerService.createNewDataSet(updateRequest);
     }
   }
 }

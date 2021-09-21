@@ -84,43 +84,43 @@
           </div>
         </li>
 
-        <li class="master-data" *ngIf="dataSet.slaDescription">
+        <li class="master-data" *ngIf="dataSet.slaDescription || dataSet.serviceLevelAgreement?.name">
           <div class="master-data-field__container">
             <i class="material-icons-outlined"> assignment </i>
             <div class="master-data-field__comment">{{ 'details.side.slaDescription' | translate }}</div>
           </div>
           <div class="master-data__data">
-          {{dataSet.slaDescription}}
+            {{dataSet.slaDescription ? dataSet.slaDescription : dataSet.serviceLevelAgreement.name}}
           </div>
         </li>
 
-        <li class="master-data" *ngIf="dataSet.slaLink">
+        <li class="master-data" *ngIf="dataSet.slaLink || dataSet.serviceLevelAgreement?.link">
           <div class="master-data-field__container">
             <i class="material-icons-outlined"> link </i>
             <div class="master-data-field__comment">{{ 'details.side.slaLink' | translate }}</div>
           </div>
           <div class="master-data__data">
-            {{dataSet.slaLink}}
+            {{dataSet.slaLink ? dataSet.slaLink : dataSet.serviceLevelAgreement.link}}
           </div>
         </li>
 
-        <li class="master-data" *ngIf="dataSet.resolution" [title]="dataSet.resolution.description">
+        <li class="master-data" *ngIf="dataSet.resolution" [title]="dataSet.resolution.code">
           <div class="master-data-field__container">
             <i class="material-icons-outlined"> timer </i>
             <div class="master-data-field__comment">{{ 'details.side.resolution' | translate }}</div>
           </div>
           <div class="master-data__data">
-          {{dataSet.resolution.code}}
+          {{dataSet.resolution.description}}
           </div>
         </li>
 
-        <li class="master-data" *ngIf="dataSet.frequency"  [title]="dataSet.frequency.description">
+        <li class="master-data" *ngIf="dataSet.frequency"  [title]="dataSet.frequency.code">
           <div class="master-data-field__container">
             <i class="material-icons-outlined"> av_timer </i>
             <div class="master-data-field__comment">{{ 'details.side.frequency' | translate }}</div>
           </div>
           <div class="master-data__data">
-          {{dataSet.frequency.code}}
+          {{dataSet.frequency.description}}
           </div>
         </li>
 

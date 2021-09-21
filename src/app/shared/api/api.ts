@@ -1664,74 +1664,6 @@ export class DatasetClient {
     }
 
     /**
-     * Get the location path for a dataset
-     * @param request The location request
-     * @return The location path
-     */
-    getDatasetLocation(request: DatasetLocationRequest): Observable<DatasetLocation> {
-        let url_ = this.baseUrl + "/api/Dataset/location";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetDatasetLocation(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetDatasetLocation(<any>response_);
-                } catch (e) {
-                    return <Observable<DatasetLocation>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<DatasetLocation>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetDatasetLocation(response: HttpResponseBase): Observable<DatasetLocation> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DatasetLocation.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<DatasetLocation>(<any>null);
-    }
-
-    /**
      * Get the lineage of a dataset
      * @param id The id of the dataset
      * @return A lineage model with source and sink transformations
@@ -1796,62 +1728,6 @@ export class DatasetClient {
             }));
         }
         return _observableOf<LineageDataset>(<any>null);
-    }
-
-    /**
-     * Given an id of a dataset in raw, this endpoint will return an unsaved copy almost ready for stock
-     * @param id Id for dataset in raw
-     * @return The stock copy
-     */
-    copyDatasetInRaw(id: string): Observable<Dataset> {
-        let url_ = this.baseUrl + "/api/Dataset/promote/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCopyDatasetInRaw(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCopyDatasetInRaw(<any>response_);
-                } catch (e) {
-                    return <Observable<Dataset>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Dataset>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCopyDatasetInRaw(response: HttpResponseBase): Observable<Dataset> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Dataset.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Dataset>(<any>null);
     }
 }
 
@@ -3102,67 +2978,8 @@ export class GeneralClient {
     }
 
     /**
-     * Get refinement levels
-     * @return A list of refinement levels
-     */
-    getRefinementLevels(): Observable<Enum[]> {
-        let url_ = this.baseUrl + "/api/General/refinementlevel";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetRefinementLevels(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetRefinementLevels(<any>response_);
-                } catch (e) {
-                    return <Observable<Enum[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Enum[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetRefinementLevels(response: HttpResponseBase): Observable<Enum[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Enum.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Enum[]>(<any>null);
-    }
-
-    /**
      * Get source types
-     * @return A list of refinement levels
+     * @return A list of source types
      */
     getSourceTypes(): Observable<Enum[]> {
         let url_ = this.baseUrl + "/api/General/sourcetypes";
@@ -3278,72 +3095,12 @@ export class GeneralClient {
         }
         return _observableOf<Duration[]>(<any>null);
     }
-
-    /**
-     * Get hierarchies
-     * @return A list of hierarchies with their child hierarchies
-     * @deprecated
-     */
-    getHierarchies(): Observable<Hierarchy[]> {
-        let url_ = this.baseUrl + "/api/General/hierarchies";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetHierarchies(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetHierarchies(<any>response_);
-                } catch (e) {
-                    return <Observable<Hierarchy[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Hierarchy[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetHierarchies(response: HttpResponseBase): Observable<Hierarchy[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Hierarchy.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Hierarchy[]>(<any>null);
-    }
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class HierarchyClient {
+export class ServiceLevelAgreementClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -3354,11 +3111,11 @@ export class HierarchyClient {
     }
 
     /**
-     * Get all hierarchies
-     * @return A list of all hierarchies
+     * Get all SLA's
+     * @return A list of SLA's
      */
-    getAll(): Observable<Hierarchy[]> {
-        let url_ = this.baseUrl + "/api/Hierarchy";
+    getAll(): Observable<ServiceLevelAgreement[]> {
+        let url_ = this.baseUrl + "/api/ServiceLevelAgreement";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3376,14 +3133,14 @@ export class HierarchyClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<Hierarchy[]>><any>_observableThrow(e);
+                    return <Observable<ServiceLevelAgreement[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<Hierarchy[]>><any>_observableThrow(response_);
+                return <Observable<ServiceLevelAgreement[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<Hierarchy[]> {
+    protected processGetAll(response: HttpResponseBase): Observable<ServiceLevelAgreement[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3397,7 +3154,7 @@ export class HierarchyClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(Hierarchy.fromJS(item));
+                    result200!.push(ServiceLevelAgreement.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -3409,242 +3166,7 @@ export class HierarchyClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<Hierarchy[]>(<any>null);
-    }
-
-    /**
-     * Create a new hierarchy
-     * @param request The hierarchy to create
-     * @return The created hierarchy
-     */
-    post(request: HierarchyCreateRequest): Observable<string> {
-        let url_ = this.baseUrl + "/api/Hierarchy";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPost(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPost(<any>response_);
-                } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<string>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPost(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<string>(<any>null);
-    }
-
-    /**
-     * Update hierarchy
-     * @param request The hierarchy to create
-     * @return The created hierarchy
-     */
-    put(request: HierarchyUpdateRequest): Observable<string> {
-        let url_ = this.baseUrl + "/api/Hierarchy";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPut(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPut(<any>response_);
-                } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<string>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPut(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<string>(<any>null);
-    }
-
-    /**
-     * Delete a data source
-     * @param id (optional) The id of the hierarchy to delete
-     */
-    delete(id: string | undefined): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/Hierarchy?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<FileResponse | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse | null>(<any>null);
-    }
-
-    /**
-     * Get a hierarchy by id
-     * @param id The id of the hierarchy to get
-     * @return The hierarchy
-     */
-    get(id: string): Observable<Hierarchy> {
-        let url_ = this.baseUrl + "/api/Hierarchy/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(<any>response_);
-                } catch (e) {
-                    return <Observable<Hierarchy>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<Hierarchy>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<Hierarchy> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Hierarchy.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Hierarchy>(<any>null);
+        return _observableOf<ServiceLevelAgreement[]>(<any>null);
     }
 }
 
@@ -4724,18 +4246,16 @@ export class Dataset extends ReplicantEntity implements IDataset {
     owner?: string | undefined;
     status!: DatasetStatus;
     confidentiality!: Confidentiality;
-    refinementLevel!: RefinementLevel;
-    location?: string | undefined;
     contact?: ContactInfo | undefined;
     frequency?: Duration | undefined;
     resolution?: Duration | undefined;
     sourceTransformation?: Transformation | undefined;
-    hierarchy?: Hierarchy | undefined;
     dataFields?: DataField[] | undefined;
     categories?: Category[] | undefined;
     datasetChangeLogs?: DatasetChangeLog[] | undefined;
     dataSources?: DataSource[] | undefined;
     provisionStatus!: ProvisionDatasetStatusEnum;
+    serviceLevelAgreement?: ServiceLevelAgreement | undefined;
 
     constructor(data?: IDataset) {
         super(data);
@@ -4752,13 +4272,10 @@ export class Dataset extends ReplicantEntity implements IDataset {
             this.owner = _data["owner"];
             this.status = _data["status"];
             this.confidentiality = _data["confidentiality"];
-            this.refinementLevel = _data["refinementLevel"];
-            this.location = _data["location"];
             this.contact = _data["contact"] ? ContactInfo.fromJS(_data["contact"]) : <any>undefined;
             this.frequency = _data["frequency"] ? Duration.fromJS(_data["frequency"]) : <any>undefined;
             this.resolution = _data["resolution"] ? Duration.fromJS(_data["resolution"]) : <any>undefined;
             this.sourceTransformation = _data["sourceTransformation"] ? Transformation.fromJS(_data["sourceTransformation"]) : <any>undefined;
-            this.hierarchy = _data["hierarchy"] ? Hierarchy.fromJS(_data["hierarchy"]) : <any>undefined;
             if (Array.isArray(_data["dataFields"])) {
                 this.dataFields = [] as any;
                 for (let item of _data["dataFields"])
@@ -4780,6 +4297,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
                     this.dataSources!.push(DataSource.fromJS(item));
             }
             this.provisionStatus = _data["provisionStatus"];
+            this.serviceLevelAgreement = _data["serviceLevelAgreement"] ? ServiceLevelAgreement.fromJS(_data["serviceLevelAgreement"]) : <any>undefined;
         }
     }
 
@@ -4800,13 +4318,10 @@ export class Dataset extends ReplicantEntity implements IDataset {
         data["owner"] = this.owner;
         data["status"] = this.status;
         data["confidentiality"] = this.confidentiality;
-        data["refinementLevel"] = this.refinementLevel;
-        data["location"] = this.location;
         data["contact"] = this.contact ? this.contact.toJSON() : <any>undefined;
         data["frequency"] = this.frequency ? this.frequency.toJSON() : <any>undefined;
         data["resolution"] = this.resolution ? this.resolution.toJSON() : <any>undefined;
         data["sourceTransformation"] = this.sourceTransformation ? this.sourceTransformation.toJSON() : <any>undefined;
-        data["hierarchy"] = this.hierarchy ? this.hierarchy.toJSON() : <any>undefined;
         if (Array.isArray(this.dataFields)) {
             data["dataFields"] = [];
             for (let item of this.dataFields)
@@ -4828,6 +4343,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
                 data["dataSources"].push(item.toJSON());
         }
         data["provisionStatus"] = this.provisionStatus;
+        data["serviceLevelAgreement"] = this.serviceLevelAgreement ? this.serviceLevelAgreement.toJSON() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
@@ -4842,18 +4358,16 @@ export interface IDataset extends IReplicantEntity {
     owner?: string | undefined;
     status: DatasetStatus;
     confidentiality: Confidentiality;
-    refinementLevel: RefinementLevel;
-    location?: string | undefined;
     contact?: ContactInfo | undefined;
     frequency?: Duration | undefined;
     resolution?: Duration | undefined;
     sourceTransformation?: Transformation | undefined;
-    hierarchy?: Hierarchy | undefined;
     dataFields?: DataField[] | undefined;
     categories?: Category[] | undefined;
     datasetChangeLogs?: DatasetChangeLog[] | undefined;
     dataSources?: DataSource[] | undefined;
     provisionStatus: ProvisionDatasetStatusEnum;
+    serviceLevelAgreement?: ServiceLevelAgreement | undefined;
 }
 
 export enum Confidentiality {
@@ -4861,12 +4375,6 @@ export enum Confidentiality {
     Internal = 1,
     Confidential = 2,
     StrictlyConfidential = 3,
-}
-
-export enum RefinementLevel {
-    Raw = 0,
-    Stock = 1,
-    Refined = 2,
 }
 
 export class ContactInfo implements IContactInfo {
@@ -5068,65 +4576,13 @@ export interface IDatasetSummary extends IEntity {
     categories?: Category[] | undefined;
 }
 
-export class Hierarchy extends Entity implements IHierarchy {
-    name?: string | undefined;
-    description?: string | undefined;
-    parentHierarchyId?: string | undefined;
-    childHierarchies?: Hierarchy[] | undefined;
-
-    constructor(data?: IHierarchy) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.parentHierarchyId = _data["parentHierarchyId"];
-            if (Array.isArray(_data["childHierarchies"])) {
-                this.childHierarchies = [] as any;
-                for (let item of _data["childHierarchies"])
-                    this.childHierarchies!.push(Hierarchy.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Hierarchy {
-        data = typeof data === 'object' ? data : {};
-        let result = new Hierarchy();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["parentHierarchyId"] = this.parentHierarchyId;
-        if (Array.isArray(this.childHierarchies)) {
-            data["childHierarchies"] = [];
-            for (let item of this.childHierarchies)
-                data["childHierarchies"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IHierarchy extends IEntity {
-    name?: string | undefined;
-    description?: string | undefined;
-    parentHierarchyId?: string | undefined;
-    childHierarchies?: Hierarchy[] | undefined;
-}
-
 export class DataField extends Entity implements IDataField {
     name?: string | undefined;
     type?: string | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
+    unit?: string | undefined;
 
     constructor(data?: IDataField) {
         super(data);
@@ -5140,6 +4596,7 @@ export class DataField extends Entity implements IDataField {
             this.description = _data["description"];
             this.format = _data["format"];
             this.validation = _data["validation"];
+            this.unit = _data["unit"];
         }
     }
 
@@ -5157,6 +4614,7 @@ export class DataField extends Entity implements IDataField {
         data["description"] = this.description;
         data["format"] = this.format;
         data["validation"] = this.validation;
+        data["unit"] = this.unit;
         super.toJSON(data);
         return data; 
     }
@@ -5168,6 +4626,7 @@ export interface IDataField extends IEntity {
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
+    unit?: string | undefined;
 }
 
 export class DatasetChangeLog extends Created implements IDatasetChangeLog {
@@ -5307,6 +4766,47 @@ export enum ProvisionDatasetStatusEnum {
     Failed = 2,
 }
 
+export class ServiceLevelAgreement extends Entity implements IServiceLevelAgreement {
+    name?: string | undefined;
+    description?: string | undefined;
+    link?: string | undefined;
+
+    constructor(data?: IServiceLevelAgreement) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.link = _data["link"];
+        }
+    }
+
+    static fromJS(data: any): ServiceLevelAgreement {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceLevelAgreement();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["link"] = this.link;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IServiceLevelAgreement extends IEntity {
+    name?: string | undefined;
+    description?: string | undefined;
+    link?: string | undefined;
+}
+
 export class DatasetCreateRequest implements IDatasetCreateRequest {
     name?: string | undefined;
     description?: string | undefined;
@@ -5315,15 +4815,13 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
     owner?: string | undefined;
     status!: DatasetStatus;
     confidentiality!: Confidentiality;
-    refinementLevel!: RefinementLevel;
-    location?: string | undefined;
-    hierarchy?: GuidId | undefined;
     categories?: GuidId[] | undefined;
     dataSources?: GuidId[] | undefined;
     frequency?: DurationUpsertRequest | undefined;
     resolution?: DurationUpsertRequest | undefined;
     sourceTransformation?: SourceTransformationUpsertRequest | undefined;
     dataFields?: DataFieldUpsertRequest[] | undefined;
+    serviceLevelAgreement?: GuidId | undefined;
 
     constructor(data?: IDatasetCreateRequest) {
         if (data) {
@@ -5343,9 +4841,6 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
             this.owner = _data["owner"];
             this.status = _data["status"];
             this.confidentiality = _data["confidentiality"];
-            this.refinementLevel = _data["refinementLevel"];
-            this.location = _data["location"];
-            this.hierarchy = _data["hierarchy"] ? GuidId.fromJS(_data["hierarchy"]) : <any>undefined;
             if (Array.isArray(_data["categories"])) {
                 this.categories = [] as any;
                 for (let item of _data["categories"])
@@ -5364,6 +4859,7 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
                 for (let item of _data["dataFields"])
                     this.dataFields!.push(DataFieldUpsertRequest.fromJS(item));
             }
+            this.serviceLevelAgreement = _data["serviceLevelAgreement"] ? GuidId.fromJS(_data["serviceLevelAgreement"]) : <any>undefined;
         }
     }
 
@@ -5383,9 +4879,6 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
         data["owner"] = this.owner;
         data["status"] = this.status;
         data["confidentiality"] = this.confidentiality;
-        data["refinementLevel"] = this.refinementLevel;
-        data["location"] = this.location;
-        data["hierarchy"] = this.hierarchy ? this.hierarchy.toJSON() : <any>undefined;
         if (Array.isArray(this.categories)) {
             data["categories"] = [];
             for (let item of this.categories)
@@ -5404,6 +4897,7 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
             for (let item of this.dataFields)
                 data["dataFields"].push(item.toJSON());
         }
+        data["serviceLevelAgreement"] = this.serviceLevelAgreement ? this.serviceLevelAgreement.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -5416,15 +4910,13 @@ export interface IDatasetCreateRequest {
     owner?: string | undefined;
     status: DatasetStatus;
     confidentiality: Confidentiality;
-    refinementLevel: RefinementLevel;
-    location?: string | undefined;
-    hierarchy?: GuidId | undefined;
     categories?: GuidId[] | undefined;
     dataSources?: GuidId[] | undefined;
     frequency?: DurationUpsertRequest | undefined;
     resolution?: DurationUpsertRequest | undefined;
     sourceTransformation?: SourceTransformationUpsertRequest | undefined;
     dataFields?: DataFieldUpsertRequest[] | undefined;
+    serviceLevelAgreement?: GuidId | undefined;
 }
 
 export class GuidId implements IGuidId {
@@ -5594,10 +5086,11 @@ export interface ISourceTransformationUpsertRequest {
 
 export class DataFieldUpsertRequest extends NullableGuidId implements IDataFieldUpsertRequest {
     name?: string | undefined;
-    type?: string | undefined;
+    type?: DataFieldType | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
+    unit?: DataFieldUnit | undefined;
 
     constructor(data?: IDataFieldUpsertRequest) {
         super(data);
@@ -5611,6 +5104,7 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
             this.description = _data["description"];
             this.format = _data["format"];
             this.validation = _data["validation"];
+            this.unit = _data["unit"];
         }
     }
 
@@ -5628,6 +5122,7 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
         data["description"] = this.description;
         data["format"] = this.format;
         data["validation"] = this.validation;
+        data["unit"] = this.unit;
         super.toJSON(data);
         return data; 
     }
@@ -5635,10 +5130,62 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
 
 export interface IDataFieldUpsertRequest extends INullableGuidId {
     name?: string | undefined;
-    type?: string | undefined;
+    type?: DataFieldType | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
+    unit?: DataFieldUnit | undefined;
+}
+
+export enum DataFieldType {
+    Boolean = 0,
+    Date = 1,
+    Datetime = 2,
+    Integer = 3,
+    Number = 4,
+    String = 5,
+    Time = 6,
+}
+
+export enum DataFieldUnit {
+    Unit_Percent = 0,
+    Unit_DegreesCelsius = 1,
+    Unit_Coded = 2,
+    Unit_Days = 3,
+    Unit_DKK = 4,
+    Unit_DKKPerHour = 5,
+    Unit_DKKPerkWh = 6,
+    Unit_DKKPerMWh = 7,
+    Unit_DKKPerMWhPerHour = 8,
+    Unit_EUR = 9,
+    Unit_EURPerHour = 10,
+    Unit_EURPerMWh = 11,
+    Unit_EURPerMWhPerHour = 12,
+    Unit_gPerkWh = 13,
+    Unit_GWs = 14,
+    Unit_kgPerGJ = 15,
+    Unit_kgPerNm3 = 16,
+    Unit_kWh = 17,
+    Unit_kWhPerh = 18,
+    Unit_kWhPerNm3 = 19,
+    Unit_mgPerkWh = 20,
+    Unit_mgPerNm3 = 21,
+    Unit_MJPerNm3 = 22,
+    Unit_MolePercentage = 23,
+    Unit_Months = 24,
+    Unit_MW = 25,
+    Unit_MWh = 26,
+    Unit_MWhPerh = 27,
+    Unit_MWhPerDay = 28,
+    Unit_MWs = 29,
+    Unit_Number = 30,
+    Unit_Text = 31,
+    Unit_TJ = 32,
+    Unit_Years = 33,
+    Unit_mgPerkg = 34,
+    Unit_mgKOHPerg = 35,
+    Unit_mNPerm = 36,
+    Unit_uLPerL = 37,
 }
 
 export class DatasetUpdateRequest extends DatasetCreateRequest implements IDatasetUpdateRequest {
@@ -5794,82 +5341,6 @@ export class DatasetSearchByTermRequest extends DatasetSearchRequest implements 
 
 export interface IDatasetSearchByTermRequest extends IDatasetSearchRequest {
     searchTerm?: string | undefined;
-}
-
-export class DatasetLocation implements IDatasetLocation {
-    location?: string | undefined;
-
-    constructor(data?: IDatasetLocation) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.location = _data["location"];
-        }
-    }
-
-    static fromJS(data: any): DatasetLocation {
-        data = typeof data === 'object' ? data : {};
-        let result = new DatasetLocation();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["location"] = this.location;
-        return data; 
-    }
-}
-
-export interface IDatasetLocation {
-    location?: string | undefined;
-}
-
-export class DatasetLocationRequest implements IDatasetLocationRequest {
-    name?: string | undefined;
-    hierarchy?: NullableGuidId | undefined;
-
-    constructor(data?: IDatasetLocationRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.hierarchy = _data["hierarchy"] ? NullableGuidId.fromJS(_data["hierarchy"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): DatasetLocationRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new DatasetLocationRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["hierarchy"] = this.hierarchy ? this.hierarchy.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IDatasetLocationRequest {
-    name?: string | undefined;
-    hierarchy?: NullableGuidId | undefined;
 }
 
 export class LineageDataset extends DatasetSummary implements ILineageDataset {
@@ -6364,83 +5835,6 @@ export class Enum implements IEnum {
 export interface IEnum {
     id: number;
     description?: string | undefined;
-}
-
-export class HierarchyCreateRequest implements IHierarchyCreateRequest {
-    name?: string | undefined;
-    description?: string | undefined;
-    parentHierarchyId?: string | undefined;
-
-    constructor(data?: IHierarchyCreateRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.parentHierarchyId = _data["parentHierarchyId"];
-        }
-    }
-
-    static fromJS(data: any): HierarchyCreateRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new HierarchyCreateRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["parentHierarchyId"] = this.parentHierarchyId;
-        return data; 
-    }
-}
-
-export interface IHierarchyCreateRequest {
-    name?: string | undefined;
-    description?: string | undefined;
-    parentHierarchyId?: string | undefined;
-}
-
-export class HierarchyUpdateRequest extends HierarchyCreateRequest implements IHierarchyUpdateRequest {
-    id!: string;
-
-    constructor(data?: IHierarchyUpdateRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): HierarchyUpdateRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new HierarchyUpdateRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IHierarchyUpdateRequest extends IHierarchyCreateRequest {
-    id: string;
 }
 
 export class TransformationCreateRequest implements ITransformationCreateRequest {

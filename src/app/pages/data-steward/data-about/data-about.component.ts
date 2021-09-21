@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {DataHandlerService} from '../../../shared/data-handler.service';
-import {Observable} from 'rxjs';
-import {DataStewardHandlerService} from '../data-steward-handler.service';
-import {Router} from '@angular/router';
-import { IDataset, IDuration, IEnum } from 'src/app/shared/api/api';
+import {DataHandlerService} from "../../../shared/data-handler.service";
+import {Observable} from "rxjs";
+import {DataStewardHandlerService} from "../data-steward-handler.service";
+import {Router} from "@angular/router";
+import { IDataset, IDuration, IEnum, IServiceLevelAgreement, ServiceLevelAgreement } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-about',
@@ -16,6 +16,7 @@ export class DataAboutComponent implements OnInit {
 
   confidentiality$: Observable<IEnum[]>;
   durations$: Observable<IDuration[]>;
+  serviceLevelAgreements: IServiceLevelAgreement[] = [];
 
   currentDate: string;
 
@@ -31,6 +32,11 @@ export class DataAboutComponent implements OnInit {
 
     this.currentDate = this.dataStewardHandlerService.currentDate;
     this.data = this.dataStewardHandlerService.getDataSet();
+
+    this.dataHandlerService.getServiceLevelAgreements().subscribe(agreements => {
+      this.serviceLevelAgreements = agreements;
+      this.data.serviceLevelAgreement = new ServiceLevelAgreement(agreements[0]);
+    });
   }
 
   onChange() {

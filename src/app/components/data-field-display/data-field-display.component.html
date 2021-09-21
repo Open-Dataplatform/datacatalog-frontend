@@ -20,6 +20,14 @@
         {{dataField.description}}
       </td>
     </tr>
+    <tr *ngIf="dataField.unit">
+      <td class="data-field__table-name">
+        {{'dataSteward.meta.metadata.unit' | translate}}
+      </td>
+      <td class="data-field__table-description">
+        {{dataField.unit | translate}}
+      </td>
+    </tr>
     <tr *ngIf="dataField.type">
       <td class="data-field__table-name">
         {{'dataSteward.meta.metadata.type' | translate}}
