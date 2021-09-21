@@ -3,7 +3,7 @@ import {DataHandlerService} from "../../../shared/data-handler.service";
 import {Observable} from "rxjs";
 import {DataStewardHandlerService} from "../data-steward-handler.service";
 import {Router} from "@angular/router";
-import { IDataset, IDuration, IEnum, IMemberGroup, IServiceLevelAgreement, ServiceLevelAgreement } from 'src/app/shared/api/api';
+import { IDataset, IDuration, IEnum, IServiceLevelAgreement, ServiceLevelAgreement } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-data-about',
@@ -14,7 +14,6 @@ export class DataAboutComponent implements OnInit {
 
   data: IDataset;
 
-  contacts$: Observable<IMemberGroup[]>;
   confidentiality$: Observable<IEnum[]>;
   durations$: Observable<IDuration[]>;
   serviceLevelAgreements: IServiceLevelAgreement[] = [];
@@ -28,7 +27,6 @@ export class DataAboutComponent implements OnInit {
               private readonly router: Router) { }
 
   ngOnInit() {
-    this.contacts$ = this.dataHandlerService.getMemberGroups();
     this.confidentiality$ = this.dataHandlerService.getConfidentiality();
     this.durations$ = this.dataHandlerService.getDurations();
 
@@ -61,7 +59,7 @@ export class DataAboutComponent implements OnInit {
 
     return date + ' - ' + timer;
   }
-  
+
   isDataExisting() {
     return Object.keys(this.data).length;
   }
@@ -74,7 +72,7 @@ export class DataAboutComponent implements OnInit {
           .subscribe(resp => {
             this.saving = false;
             this.router.navigate(['/detail', resp.id]);
-          },error => {
+          }, error => {
             this.saving = false;
           });
     }

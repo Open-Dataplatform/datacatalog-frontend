@@ -28,8 +28,6 @@ import {
   IGuidId,
   ITransformation,
   GuidId,
-  MemberGroupClient,
-  IMemberGroup,
   DatasetCreateRequest,
   IDatasetCreateRequest,
   IDatasetUpdateRequest,
@@ -66,7 +64,6 @@ export class DataHandlerService {
     private readonly durationClient: DurationClient,
     private readonly dataSourceClient: DataSourceClient,
     private readonly transformationClient: TransformationClient,
-    private readonly memberGroupClient: MemberGroupClient,
     private readonly serviceLevelAgreementClient: ServiceLevelAgreementClient,
   ) { }
 
@@ -159,10 +156,6 @@ export class DataHandlerService {
 
   public getTransformations(ids: IGuidId[]): Observable<ITransformation[]> {
     return this.transformationClient.getByDatasets(ids as GuidId[]);
-  }
-
-  public getMemberGroups(): Observable<IMemberGroup[]> {
-    return this.memberGroupClient.getAll();
   }
 
   public getDataSetStatus(): Observable<IEnum[]> {

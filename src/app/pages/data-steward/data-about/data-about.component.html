@@ -1,15 +1,3 @@
-
-<div class="data-container">
-  <h3>{{'dataSteward.about.contact.heading' | translate}}</h3>
-  <ng-select [items]="contacts$ | async"
-             placeholder="{{'dataSteward.about.contact.whoToContact' | translate}}"
-             [ngClass]="{'filled': data.contact}"
-             bindLabel="name"
-             (change)="onChange()"
-             [(ngModel)]="data.contact">
-  </ng-select>
-
-</div>
 <div class="data-container">
   <h3>{{'dataSteward.about.confidentiality.heading' | translate}}</h3>
   <ng-select [items]="confidentiality$ | async"

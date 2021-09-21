@@ -2042,6 +2042,79 @@ export class DatasetGroupClient {
 @Injectable({
     providedIn: 'root'
 })
+export class DatasetMapClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
+    }
+
+    /**
+     * Get all datasets
+     * @return A list of dataset summaries
+     */
+    getDatasetMap(): Observable<DatasetMap[]> {
+        let url_ = this.baseUrl + "/api/DatasetMap";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDatasetMap(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDatasetMap(<any>response_);
+                } catch (e) {
+                    return <Observable<DatasetMap[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DatasetMap[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDatasetMap(response: HttpResponseBase): Observable<DatasetMap[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DatasetMap.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DatasetMap[]>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class DataSourceClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -3021,439 +3094,6 @@ export class GeneralClient {
             }));
         }
         return _observableOf<Duration[]>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class MemberGroupClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
-    }
-
-    /**
-     * Get all member groups
-     * @return A list of all member groups
-     */
-    getAll(): Observable<MemberGroup[]> {
-        let url_ = this.baseUrl + "/api/MemberGroup";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAll(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAll(<any>response_);
-                } catch (e) {
-                    return <Observable<MemberGroup[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<MemberGroup[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetAll(response: HttpResponseBase): Observable<MemberGroup[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(MemberGroup.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<MemberGroup[]>(<any>null);
-    }
-
-    /**
-     * Delete a data source
-     * @param id (optional) The id of the data source to delete
-     */
-    delete(id: string | undefined): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/MemberGroup?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<FileResponse | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse | null>(<any>null);
-    }
-
-    /**
-     * Get a member group by id
-     * @param id The id of the member group to get
-     * @return The member group
-     */
-    get(id: string): Observable<MemberGroup> {
-        let url_ = this.baseUrl + "/api/MemberGroup/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(<any>response_);
-                } catch (e) {
-                    return <Observable<MemberGroup>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<MemberGroup>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<MemberGroup> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = MemberGroup.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<MemberGroup>(<any>null);
-    }
-
-    /**
-     * Get the groups that the current member is a member of
-     * @param id The id of the member
-     * @return The member groups
-     */
-    getMemberGroups(id: string): Observable<MemberGroup[]> {
-        let url_ = this.baseUrl + "/api/MemberGroup/membergroups/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetMemberGroups(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetMemberGroups(<any>response_);
-                } catch (e) {
-                    return <Observable<MemberGroup[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<MemberGroup[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetMemberGroups(response: HttpResponseBase): Observable<MemberGroup[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(MemberGroup.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<MemberGroup[]>(<any>null);
-    }
-
-    /**
-     * Create a new member group
-     * @param request The member group to create
-     * @return The created member group
-     */
-    post(request: MemberGroupCreateRequest): Observable<string> {
-        let url_ = this.baseUrl + "/api/MemberGroup/create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPost(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPost(<any>response_);
-                } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<string>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPost(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<string>(<any>null);
-    }
-
-    /**
-     * Add member to member group
-     * @param request The member group and member to match
-     */
-    addMember(request: MemberGroupAddRequest): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/MemberGroup/AddMember";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddMember(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddMember(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processAddMember(response: HttpResponseBase): Observable<FileResponse | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse | null>(<any>null);
-    }
-
-    /**
-     * Remove member from member group
-     * @param request The member group and member to match
-     */
-    removeMember(request: MemberGroupRemoveRequest): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/MemberGroup/RemoveMember";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRemoveMember(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRemoveMember(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRemoveMember(response: HttpResponseBase): Observable<FileResponse | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse | null>(<any>null);
     }
 }
 
@@ -4606,7 +4246,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
     owner?: string | undefined;
     status!: DatasetStatus;
     confidentiality!: Confidentiality;
-    contact?: MemberGroup | undefined;
+    contact?: ContactInfo | undefined;
     frequency?: Duration | undefined;
     resolution?: Duration | undefined;
     sourceTransformation?: Transformation | undefined;
@@ -4632,7 +4272,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
             this.owner = _data["owner"];
             this.status = _data["status"];
             this.confidentiality = _data["confidentiality"];
-            this.contact = _data["contact"] ? MemberGroup.fromJS(_data["contact"]) : <any>undefined;
+            this.contact = _data["contact"] ? ContactInfo.fromJS(_data["contact"]) : <any>undefined;
             this.frequency = _data["frequency"] ? Duration.fromJS(_data["frequency"]) : <any>undefined;
             this.resolution = _data["resolution"] ? Duration.fromJS(_data["resolution"]) : <any>undefined;
             this.sourceTransformation = _data["sourceTransformation"] ? Transformation.fromJS(_data["sourceTransformation"]) : <any>undefined;
@@ -4718,7 +4358,7 @@ export interface IDataset extends IReplicantEntity {
     owner?: string | undefined;
     status: DatasetStatus;
     confidentiality: Confidentiality;
-    contact?: MemberGroup | undefined;
+    contact?: ContactInfo | undefined;
     frequency?: Duration | undefined;
     resolution?: Duration | undefined;
     sourceTransformation?: Transformation | undefined;
@@ -4737,75 +4377,12 @@ export enum Confidentiality {
     StrictlyConfidential = 3,
 }
 
-export class MemberGroup extends Entity implements IMemberGroup {
+export class ContactInfo implements IContactInfo {
     name?: string | undefined;
-    description?: string | undefined;
+    link?: string | undefined;
     email?: string | undefined;
-    members?: GuidId[] | undefined;
-    datasets?: GuidId[] | undefined;
 
-    constructor(data?: IMemberGroup) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.email = _data["email"];
-            if (Array.isArray(_data["members"])) {
-                this.members = [] as any;
-                for (let item of _data["members"])
-                    this.members!.push(GuidId.fromJS(item));
-            }
-            if (Array.isArray(_data["datasets"])) {
-                this.datasets = [] as any;
-                for (let item of _data["datasets"])
-                    this.datasets!.push(GuidId.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): MemberGroup {
-        data = typeof data === 'object' ? data : {};
-        let result = new MemberGroup();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["email"] = this.email;
-        if (Array.isArray(this.members)) {
-            data["members"] = [];
-            for (let item of this.members)
-                data["members"].push(item.toJSON());
-        }
-        if (Array.isArray(this.datasets)) {
-            data["datasets"] = [];
-            for (let item of this.datasets)
-                data["datasets"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IMemberGroup extends IEntity {
-    name?: string | undefined;
-    description?: string | undefined;
-    email?: string | undefined;
-    members?: GuidId[] | undefined;
-    datasets?: GuidId[] | undefined;
-}
-
-export class GuidId implements IGuidId {
-    id!: string;
-
-    constructor(data?: IGuidId) {
+    constructor(data?: IContactInfo) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4816,26 +4393,32 @@ export class GuidId implements IGuidId {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
+            this.name = _data["name"];
+            this.link = _data["link"];
+            this.email = _data["email"];
         }
     }
 
-    static fromJS(data: any): GuidId {
+    static fromJS(data: any): ContactInfo {
         data = typeof data === 'object' ? data : {};
-        let result = new GuidId();
+        let result = new ContactInfo();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
+        data["name"] = this.name;
+        data["link"] = this.link;
+        data["email"] = this.email;
         return data; 
     }
 }
 
-export interface IGuidId {
-    id: string;
+export interface IContactInfo {
+    name?: string | undefined;
+    link?: string | undefined;
+    email?: string | undefined;
 }
 
 export class Duration extends Entity implements IDuration {
@@ -5232,7 +4815,6 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
     owner?: string | undefined;
     status!: DatasetStatus;
     confidentiality!: Confidentiality;
-    contact?: GuidId | undefined;
     categories?: GuidId[] | undefined;
     dataSources?: GuidId[] | undefined;
     frequency?: DurationUpsertRequest | undefined;
@@ -5259,7 +4841,6 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
             this.owner = _data["owner"];
             this.status = _data["status"];
             this.confidentiality = _data["confidentiality"];
-            this.contact = _data["contact"] ? GuidId.fromJS(_data["contact"]) : <any>undefined;
             if (Array.isArray(_data["categories"])) {
                 this.categories = [] as any;
                 for (let item of _data["categories"])
@@ -5298,7 +4879,6 @@ export class DatasetCreateRequest implements IDatasetCreateRequest {
         data["owner"] = this.owner;
         data["status"] = this.status;
         data["confidentiality"] = this.confidentiality;
-        data["contact"] = this.contact ? this.contact.toJSON() : <any>undefined;
         if (Array.isArray(this.categories)) {
             data["categories"] = [];
             for (let item of this.categories)
@@ -5330,7 +4910,6 @@ export interface IDatasetCreateRequest {
     owner?: string | undefined;
     status: DatasetStatus;
     confidentiality: Confidentiality;
-    contact?: GuidId | undefined;
     categories?: GuidId[] | undefined;
     dataSources?: GuidId[] | undefined;
     frequency?: DurationUpsertRequest | undefined;
@@ -5338,6 +4917,42 @@ export interface IDatasetCreateRequest {
     sourceTransformation?: SourceTransformationUpsertRequest | undefined;
     dataFields?: DataFieldUpsertRequest[] | undefined;
     serviceLevelAgreement?: GuidId | undefined;
+}
+
+export class GuidId implements IGuidId {
+    id!: string;
+
+    constructor(data?: IGuidId) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): GuidId {
+        data = typeof data === 'object' ? data : {};
+        let result = new GuidId();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IGuidId {
+    id: string;
 }
 
 export class NullableGuidId implements INullableGuidId {
@@ -5988,6 +5603,46 @@ export interface IDatasetGroupUpdateRequest extends IGuidId {
     datasets?: GuidId[] | undefined;
 }
 
+export class DatasetMap implements IDatasetMap {
+    id!: string;
+    name?: string | undefined;
+
+    constructor(data?: IDatasetMap) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): DatasetMap {
+        data = typeof data === 'object' ? data : {};
+        let result = new DatasetMap();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IDatasetMap {
+    id: string;
+    name?: string | undefined;
+}
+
 export class DataSourceCreateRequest implements IDataSourceCreateRequest {
     name?: string | undefined;
     description?: string | undefined;
@@ -6180,142 +5835,6 @@ export class Enum implements IEnum {
 export interface IEnum {
     id: number;
     description?: string | undefined;
-}
-
-export class MemberGroupCreateRequest implements IMemberGroupCreateRequest {
-    name?: string | undefined;
-    description?: string | undefined;
-    email?: string | undefined;
-    members?: GuidId[] | undefined;
-
-    constructor(data?: IMemberGroupCreateRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.email = _data["email"];
-            if (Array.isArray(_data["members"])) {
-                this.members = [] as any;
-                for (let item of _data["members"])
-                    this.members!.push(GuidId.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): MemberGroupCreateRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new MemberGroupCreateRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["email"] = this.email;
-        if (Array.isArray(this.members)) {
-            data["members"] = [];
-            for (let item of this.members)
-                data["members"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IMemberGroupCreateRequest {
-    name?: string | undefined;
-    description?: string | undefined;
-    email?: string | undefined;
-    members?: GuidId[] | undefined;
-}
-
-export class MemberGroupAddRequest implements IMemberGroupAddRequest {
-    memberId!: string;
-    memberGroupId!: string;
-
-    constructor(data?: IMemberGroupAddRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.memberId = _data["memberId"];
-            this.memberGroupId = _data["memberGroupId"];
-        }
-    }
-
-    static fromJS(data: any): MemberGroupAddRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new MemberGroupAddRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["memberId"] = this.memberId;
-        data["memberGroupId"] = this.memberGroupId;
-        return data; 
-    }
-}
-
-export interface IMemberGroupAddRequest {
-    memberId: string;
-    memberGroupId: string;
-}
-
-export class MemberGroupRemoveRequest implements IMemberGroupRemoveRequest {
-    memberId!: string;
-    memberGroupId!: string;
-
-    constructor(data?: IMemberGroupRemoveRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.memberId = _data["memberId"];
-            this.memberGroupId = _data["memberGroupId"];
-        }
-    }
-
-    static fromJS(data: any): MemberGroupRemoveRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new MemberGroupRemoveRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["memberId"] = this.memberId;
-        data["memberGroupId"] = this.memberGroupId;
-        return data; 
-    }
-}
-
-export interface IMemberGroupRemoveRequest {
-    memberId: string;
-    memberGroupId: string;
 }
 
 export class TransformationCreateRequest implements ITransformationCreateRequest {
