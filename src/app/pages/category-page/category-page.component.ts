@@ -27,13 +27,11 @@ export class CategoryPageComponent implements OnInit {
       this.isCategory = !!params.get('cat');
       if (this.isCategory) {
         this.dataHandlerService.getCategorySets(this.term, this.pageSize, this.pageIndex).subscribe(response => {
-          this.dataCards = response;
-          this.pageIndex++;
+          this.updateDataCards(response);
         });
       } else {
         this.dataHandlerService.getDataSets(this.term, this.pageSize, this.pageIndex).subscribe(response => {
-          this.dataCards = response;
-          this.pageIndex++;
+          this.updateDataCards(response);
         });
       }
     });
@@ -42,15 +40,22 @@ export class CategoryPageComponent implements OnInit {
   onScroll() {
     if (this.isCategory) {
       this.dataHandlerService.getCategorySets(this.term, this.pageSize, this.pageIndex).subscribe(response => {
-        Array.prototype.push.apply(this.dataCards, response);
-        this.pageIndex++;
+        this.updateDataCards(response);
       });
      }
     else {
       this.dataHandlerService.getDataSets(this.term, this.pageSize, this.pageIndex).subscribe(response => {
-        Array.prototype.push.apply(this.dataCards, response);
-        this.pageIndex++;
+        this.updateDataCards(response);
       });
     }
+  }
+
+  updateDataCards(datasets: IDatasetSummary[]) {
+
+    // Merge new and old datasets and sort by name
+    this.dataCards = [...this.dataCards ?? [], ...datasets]
+      .sort((a, b) => a.name === undefined || b.name == undefined ? NaN : a.name.localeCompare(b.name));
+    
+    this.pageIndex++;
   }
 }
