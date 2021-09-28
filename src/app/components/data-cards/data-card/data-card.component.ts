@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { IDataset } from 'src/app/shared/api/api';
+import { GetDatasetStatusName } from 'src/app/shared/constants';
 import {UserHandlerService} from "../../../shared/user/user-handler.service";
 
 @Component({
@@ -14,4 +15,9 @@ export class DataCardComponent {
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
 
   constructor(private userHandlerService: UserHandlerService) { }
+
+  GetDatasetStatusName(): string {
+    return GetDatasetStatusName(this.card.status);
+  }
+  
 }
