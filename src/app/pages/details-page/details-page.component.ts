@@ -17,6 +17,7 @@ import {PreviewDataComponent} from '../../components/preview-data/preview-data.c
 import {HttpBackend, HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {EGRESS_BASE_URL} from '../../app.module';
 import {formatDate} from '@angular/common';
+import { GetDatasetStatusName } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-details-page',
@@ -174,7 +175,11 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  public subtractFrequencyFromDate(frequencyCode: string, date: Date): Date {
+  GetDatasetStatusName(): string {
+    return GetDatasetStatusName(this.dataSet.status);
+  }
+
+  private subtractFrequencyFromDate(frequencyCode: string, date: Date): Date {
     let minutesToSubtract = 0;
     let hoursToSubtract = 0;
     let daysToSubtract = 0;

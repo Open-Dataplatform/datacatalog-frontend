@@ -28,7 +28,6 @@
     "sourceData": "This data is source data",
     "side": {
       "about": "About",
-      "contact": "contact",
       "owner": "owner",
       "security": "security",
       "slaDescription": "sla",
@@ -37,7 +36,6 @@
       "frequency": "frequency",
       "version": "version",
       "id": "Id",
-      "contactLink": "ServiceNow",
       "status": {
         "title": "status",
         "draft": "draft",
@@ -73,6 +71,13 @@
             "missingConfig": "The dataset is not configured to be fetched through the Egress API. Contact a developer for more info"
           }
         }
+      },
+      "contact": {
+        "title": "Contact",
+        "header": "Do you have questions about the dataset?",
+        "link": "Ask the data stewards",
+        "linkText": "here",
+        "mail": "or send an email to"
       }
     }
   },
