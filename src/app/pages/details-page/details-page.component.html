@@ -50,7 +50,7 @@
 
     <div class="details__master-data">
       <h2>{{ 'details.side.about' | translate }}</h2>
-  
+
       <ul class="details__data-list">
         <li class="master-data" *ngIf="dataSet.contact">
           <div class="master-data-field__container">
@@ -193,7 +193,13 @@
           <mat-icon class="token__copy-icon">content_copy</mat-icon>
         </button>
       </div>
-      <button id="getOboTokenButton" class="token__get-token-button" (click)="getOboToken()">{{ 'details.side.access.token.getButton' | translate }}</button>
+      <p>
+        <button id="getOboTokenButton" class="token__get-token-button" (click)="getOboToken()">{{ 'details.side.access.token.getButton' | translate }}</button>
+      </p>
+      <p class="master-data-field__comment">{{ 'details.side.access.preview.text' | translate }}</p>
+      <p>
+        <button id="previewButton" class="preview-button" (click)="previewData()">{{ 'details.side.access.preview.previewButton' | translate }}</button>
+      </p>
     </div>
   </div>
 

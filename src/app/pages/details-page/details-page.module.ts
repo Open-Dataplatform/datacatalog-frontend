@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ConfirmationDialogModule } from 'src/app/components/confirmation-dialog/confirmation-dialog.module';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [
@@ -26,20 +27,21 @@ import { ConfirmationDialogModule } from 'src/app/components/confirmation-dialog
     SearchAdDialog
   ],
   entryComponents: [AccessListComponent, SearchAdDialog],
-  imports: [
-    CommonModule,
-    SharedModule,
-    DetailsPageRoutingModule,
-    DataCardsModule,
-    MatListModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
-    ConfirmationDialogModule
-  ],
+    imports: [
+        CommonModule,
+        SharedModule,
+        DetailsPageRoutingModule,
+        DataCardsModule,
+        MatListModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        ConfirmationDialogModule,
+        MatDatepickerModule
+    ],
   bootstrap: [AccessListComponent],
   exports: [
     DetailsPageComponent,

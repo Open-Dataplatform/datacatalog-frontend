@@ -6,6 +6,7 @@ import { WebStorageStateStore } from 'oidc-client';
 export const environment = Object.assign({
   production: false,
   base: 'https://localhost:5000',
+  egressBase: 'https://localhost:5000/osiris-egress/v1',
   oidcSettings: {
     client_id : 'interactive.public',
     authority: 'https://demo.identityserver.io/',
