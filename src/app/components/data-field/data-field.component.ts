@@ -29,8 +29,6 @@ export class DataFieldComponent implements OnInit {
   addField(): void {
     this.dataFields.push(new DataField({
       id: EMPTY_GUID,
-      createdDate: new Date(),
-      modifiedDate: new Date()
     }));
     this.dataChange();
   }
