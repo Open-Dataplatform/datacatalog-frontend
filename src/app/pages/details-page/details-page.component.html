@@ -55,14 +55,18 @@
         <li class="master-data" *ngIf="dataSet.contact">
           <div class="master-data-field__container">
             <i class="material-icons-outlined"> phone </i>
-            <div class="master-data-field__comment">{{ 'details.side.contact' | translate }}</div>
+            <div class="master-data-field__comment">{{ 'details.side.contact.title' | translate }}</div>
           </div>
           <ul class="details__data-list">
-            <li>{{dataSet.contact.name}}</li>
+            <li>{{'details.side.contact.header' | translate}}</li>
             <li>
-              <a [href]="dataSet.contact.link">{{ 'details.side.contactLink' | translate}}</a>
+              <span>{{ 'details.side.contact.link' | translate }} </span>
+              <a [href]="dataSet.contact.link">{{ 'details.side.contact.linkText' | translate}}</a>
             </li>
-            <li>{{dataSet.contact.email}}</li>
+            <li>
+              <span>{{ 'details.side.contact.mail' | translate }} </span>
+              <a href="mailto: {{dataSet.contact.email}}">{{ dataSet.contact.email }}</a>
+            </li>
           </ul>
         </li>
 
@@ -142,7 +146,7 @@
             <div class="master-data-field__comment">{{ 'details.side.id' | translate }}</div>
           </div>
           <div class="master-data__data">
-            {{ dataSet.id}}
+            {{ dataSet.id }}
           </div>
         </li>
 
@@ -151,16 +155,8 @@
             <i class="material-icons-outlined"> public </i>
             <div class="master-data-field__comment">{{ 'details.side.status.title' | translate }}</div>
           </div>
-          <div class="master-data__data" [ngSwitch]="dataSet.status">
-            <div *ngSwitchCase="0">
-              <span> {{'dataCard.draft' | translate}}</span>
-            </div>
-            <div *ngSwitchCase="1">
-              <span> {{'dataCard.published' | translate}} </span>
-            </div>
-            <div *ngSwitchCase="2">
-              <span> {{'dataCard.archived' | translate}} </span>
-            </div>
+          <div class="master-data__data">
+            <span> {{GetDatasetStatusName() | translate}} </span>
           </div>
         </li>
       </ul>

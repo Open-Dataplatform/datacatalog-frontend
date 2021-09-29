@@ -24,18 +24,8 @@
         <span> {{'dataCard.strictlyConfidential' | translate}} </span>
       </div>
 
-      <div class="data-card__status"
-           *ngIf="(userHasDataStewardRole$ | async)"
-           [ngSwitch]="card.status">
-        <div *ngSwitchCase="0">
-          <span> {{'dataCard.draft' | translate}} </span>
-        </div>
-        <div *ngSwitchCase="1">
-          <span> {{'dataCard.published' | translate}} </span>
-        </div>
-        <div *ngSwitchCase="2">
-          <span> {{'dataCard.archived' | translate}} </span>
-        </div>
+      <div class="data-card__status" *ngIf="(userHasDataStewardRole$ | async)">
+        <span> {{GetDatasetStatusName() | translate}} </span>
       </div>
 
     </div>

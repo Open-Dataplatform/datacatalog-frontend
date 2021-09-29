@@ -13,6 +13,7 @@ import {
   IEnum
 } from 'src/app/shared/api/api';
 import { CategoryService } from 'src/app/shared/services/category.service';
+import { GetDatasetStatusName } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-details-page',
@@ -52,7 +53,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
       && this.dataHandlerService.currentTransformation.description ?
         this.dataHandlerService.currentTransformation.description : '';
     });
-    
+
     this.categoryService.categories$.subscribe(categories => {
       this.categories = categories;
     });
@@ -116,6 +117,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
       navigator.clipboard.writeText(token).then(_ =>
         this.translator.get('details.side.access.token.success').subscribe(val => this.messageNotifier.sendMessage(val, false)));
     });
+  }
+
+  GetDatasetStatusName(): string {
+    return GetDatasetStatusName(this.dataSet.status);
   }
 
 }
