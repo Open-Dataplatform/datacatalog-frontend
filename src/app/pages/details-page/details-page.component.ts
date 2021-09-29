@@ -136,12 +136,12 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
           headers: new HttpHeaders().set('Authorization', token),
           params: new HttpParams()
             .set('limit', '10')
-            .set('to_date', toDateString)
             .set('from_date', fromDateString)
+            .set('to_date', toDateString)
         };
         // Call egress API
         this.http.get(`${this.egressBaseUrl}/${this.dataSet.id}/json`, options).subscribe((result: any) => {
-          if (result.length === 0) {
+          if (!result || result.length === 0) {
             this.translator.get('details.side.access.preview.noData').subscribe(val => this.messageNotifier.sendMessage(val, false));
             return;
           }
