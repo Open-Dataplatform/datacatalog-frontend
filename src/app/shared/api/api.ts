@@ -2423,6 +2423,69 @@ export class DataSourceClient {
 @Injectable({
     providedIn: 'root'
 })
+export class DummyEgressClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
+    }
+
+    test(guid: string): Observable<FileResponse | null> {
+        let url_ = this.baseUrl + "/osiris-egress/v1/{guid}/json";
+        if (guid === undefined || guid === null)
+            throw new Error("The parameter 'guid' must be defined.");
+        url_ = url_.replace("{guid}", encodeURIComponent("" + guid));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTest(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTest(response: HttpResponseBase): Observable<FileResponse | null> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class DurationClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -2725,6 +2788,112 @@ export class DurationClient {
             }));
         }
         return _observableOf<Duration>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class FrontendMetricsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
+    }
+
+    oboFlowInitiated(): Observable<FileResponse | null> {
+        let url_ = this.baseUrl + "/api/FrontendMetrics/oboflow-init";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOboFlowInitiated(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOboFlowInitiated(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processOboFlowInitiated(response: HttpResponseBase): Observable<FileResponse | null> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse | null>(<any>null);
+    }
+
+    oboFlowEnded(): Observable<FileResponse | null> {
+        let url_ = this.baseUrl + "/api/FrontendMetrics/oboflow-end";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOboFlowEnded(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOboFlowEnded(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processOboFlowEnded(response: HttpResponseBase): Observable<FileResponse | null> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse | null>(<any>null);
     }
 }
 
@@ -3167,6 +3336,75 @@ export class ServiceLevelAgreementClient {
             }));
         }
         return _observableOf<ServiceLevelAgreement[]>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ServicePrincipalOverviewClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
+    }
+
+    getOverview(): Observable<SPDatasetAccessListDto[]> {
+        let url_ = this.baseUrl + "/api/ServicePrincipalOverview";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOverview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOverview(<any>response_);
+                } catch (e) {
+                    return <Observable<SPDatasetAccessListDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SPDatasetAccessListDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetOverview(response: HttpResponseBase): Observable<SPDatasetAccessListDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SPDatasetAccessListDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SPDatasetAccessListDto[]>(<any>null);
     }
 }
 
@@ -4424,6 +4662,7 @@ export interface IContactInfo {
 export class Duration extends Entity implements IDuration {
     code?: string | undefined;
     description?: string | undefined;
+    durationInMinutes!: number;
 
     constructor(data?: IDuration) {
         super(data);
@@ -4434,6 +4673,7 @@ export class Duration extends Entity implements IDuration {
         if (_data) {
             this.code = _data["code"];
             this.description = _data["description"];
+            this.durationInMinutes = _data["durationInMinutes"];
         }
     }
 
@@ -4448,6 +4688,7 @@ export class Duration extends Entity implements IDuration {
         data = typeof data === 'object' ? data : {};
         data["code"] = this.code;
         data["description"] = this.description;
+        data["durationInMinutes"] = this.durationInMinutes;
         super.toJSON(data);
         return data; 
     }
@@ -4456,6 +4697,7 @@ export class Duration extends Entity implements IDuration {
 export interface IDuration extends IEntity {
     code?: string | undefined;
     description?: string | undefined;
+    durationInMinutes: number;
 }
 
 export class Transformation extends Entity implements ITransformation {
@@ -5835,6 +6077,66 @@ export class Enum implements IEnum {
 export interface IEnum {
     id: number;
     description?: string | undefined;
+}
+
+export class SPDatasetAccessListDto implements ISPDatasetAccessListDto {
+    datasetId!: string;
+    readAccessList?: DataAccessEntry[] | undefined;
+    writeAccessList?: DataAccessEntry[] | undefined;
+
+    constructor(data?: ISPDatasetAccessListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.datasetId = _data["datasetId"];
+            if (Array.isArray(_data["readAccessList"])) {
+                this.readAccessList = [] as any;
+                for (let item of _data["readAccessList"])
+                    this.readAccessList!.push(DataAccessEntry.fromJS(item));
+            }
+            if (Array.isArray(_data["writeAccessList"])) {
+                this.writeAccessList = [] as any;
+                for (let item of _data["writeAccessList"])
+                    this.writeAccessList!.push(DataAccessEntry.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SPDatasetAccessListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SPDatasetAccessListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["datasetId"] = this.datasetId;
+        if (Array.isArray(this.readAccessList)) {
+            data["readAccessList"] = [];
+            for (let item of this.readAccessList)
+                data["readAccessList"].push(item.toJSON());
+        }
+        if (Array.isArray(this.writeAccessList)) {
+            data["writeAccessList"] = [];
+            for (let item of this.writeAccessList)
+                data["writeAccessList"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ISPDatasetAccessListDto {
+    datasetId: string;
+    readAccessList?: DataAccessEntry[] | undefined;
+    writeAccessList?: DataAccessEntry[] | undefined;
 }
 
 export class TransformationCreateRequest implements ITransformationCreateRequest {

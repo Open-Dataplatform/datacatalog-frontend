@@ -8,6 +8,7 @@ import { UserHandlerService } from '../../shared/user/user-handler.service';
 import { MessageNotifierService } from '../../shared/message-notifier/message-notifier.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  Duration,
   ICategory,
   IDataset,
   IEnum
@@ -123,7 +124,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
 
         // If we know the frequency, we use the code to deduce the time-step we should take back in time
         if (this.dataSet.frequency) {
-          fromDate = this.subtractFrequencyFromDate(this.dataSet.frequency.code, toDate);
+          fromDate = this.subtractFrequencyFromDate(this.dataSet.frequency, toDate);
         }
         this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
@@ -149,53 +150,13 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     return GetDatasetStatusName(this.dataSet.status);
   }
 
-  private subtractFrequencyFromDate(frequencyCode: string, date: Date): Date {
-    let minutesToSubtract = 0;
-    let hoursToSubtract = 0;
-    let daysToSubtract = 0;
-    let monthsToSubtract = 0;
-    let yearsToSubtract = 0;
-
-    switch (frequencyCode) {
-      case 'PT1M':
-        minutesToSubtract = 1;
-        break;
-      case 'PT3M':
-        minutesToSubtract = 3;
-        break;
-      case 'PT5M':
-        minutesToSubtract = 5;
-        break;
-      case 'PT15M':
-        minutesToSubtract = 15;
-        break;
-      case 'PT1H':
-        hoursToSubtract = 1;
-        break;
-      case 'PT6H':
-        hoursToSubtract = 6;
-        break;
-      case 'PT12H':
-        hoursToSubtract = 12;
-        break;
-      case 'P1D':
-        daysToSubtract = 1;
-        break;
-      case 'P7D':
-        daysToSubtract = 7;
-        break;
-      case 'P1M':
-        monthsToSubtract = 1;
-        break;
-      case 'P1Y':
-        yearsToSubtract = 1;
-        break;
-    }
+  private subtractFrequencyFromDate(frequency: Duration, date: Date): Date {
+    const minutesToSubtract = frequency.durationInMinutes;
     return new Date(
-      date.getFullYear() - yearsToSubtract,
-      date.getMonth() - monthsToSubtract,
-      date.getDate() - daysToSubtract,
-      date.getHours() - hoursToSubtract,
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
       date.getMinutes() - minutesToSubtract,
       date.getSeconds(),
       date.getMilliseconds()
