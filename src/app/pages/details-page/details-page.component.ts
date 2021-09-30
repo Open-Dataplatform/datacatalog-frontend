@@ -13,11 +13,10 @@ import {
   IEnum
 } from 'src/app/shared/api/api';
 import { CategoryService } from 'src/app/shared/services/category.service';
-import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
-import {HttpBackend, HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
-import {EGRESS_BASE_URL} from '../../app.module';
-import {formatDate} from '@angular/common';
+import { formatDate } from '@angular/common';
 import { GetDatasetStatusName } from 'src/app/shared/constants';
+import { EgressService } from '../../shared/services/egress.service';
+import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
 
 @Component({
   selector: 'app-details-page',
@@ -32,7 +31,6 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   currentTransformationDescription = '';
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
   oboToken$ = this.userHandlerService.oboToken$;
-  http: HttpClient;
 
   constructor(private readonly activeRoute: ActivatedRoute,
               private readonly router: Router,
@@ -42,11 +40,9 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
               private readonly messageNotifier: MessageNotifierService,
               private readonly categoryService: CategoryService,
               private readonly translator: TranslateService,
-              private readonly httpBackend: HttpBackend,
-              @Inject(EGRESS_BASE_URL) private readonly egressBaseUrl: string,
-              @Inject(LOCALE_ID) public locale: string,
-              private dialog: MatDialog) {
-    this.http = new HttpClient(httpBackend);
+              private readonly egressService: EgressService,
+              private dialog: MatDialog,
+              @Inject(LOCALE_ID) public locale: string) {
               }
   ngOnDestroy(): void {
     this.userHandlerService.ClearOboToken();
@@ -133,37 +129,14 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         }
         const toDateString = formatDate(toDate, 'yyyy-MM-ddThh:mm', this.locale);
         const fromDateString = formatDate(fromDate, 'yyyy-MM-ddThh:mm', this.locale);
-        const options = {
-          headers: new HttpHeaders().set('Authorization', token),
-          params: new HttpParams()
-            .set('limit', '10')
-            .set('from_date', fromDateString)
-            .set('to_date', toDateString)
-        };
-        // Call egress API
-        this.http.get(`${this.egressBaseUrl}/${this.dataSet.id}/json`, options).subscribe((result: any) => {
-          if (!result || result.length === 0) {
-            this.translator.get('details.side.access.preview.noData').subscribe(val => this.messageNotifier.sendMessage(val, false));
-            return;
-          }
-          const displayedColumns = Object.keys(result[0]);
-          this.dialog.open(PreviewDataComponent, {
-            data: {
-              displayedColumns: displayedColumns,
-              rows: result
-            }
+        this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDateString, toDateString)
+          .subscribe(previewDataDialogData => {
+            this.dialog.open(PreviewDataComponent, {
+              data: previewDataDialogData
+            });
           });
-        }, (error: HttpErrorResponse) => {
-          if (error.status === 418) {
-            this.translator.get('details.side.access.preview.error.missingConfig')
-              .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.message}`, true));
-          } else {
-            this.translator.get('details.side.access.preview.error.generic')
-              .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.message}`, true));
-          }
-        });
       } else {
-        this.translator.get('details.side.access.preview.missingToken').subscribe(val => this.messageNotifier.sendMessage(val, true));
+        this.userHandlerService.GetOboToken();
       }
     });
   }

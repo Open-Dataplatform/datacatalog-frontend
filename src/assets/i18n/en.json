@@ -65,7 +65,7 @@
           "previewButton": "Preview Data",
           "missingToken": "You need to fetch a token before being able to preview data",
           "noData": "There is no data to preview",
-          "text": "To preview data from this dataset, ensure you have obtained a token first. Pressing the below button shows 10 entries from the last frequency period. You can only preview data if your user has access",
+          "text": "Pressing the Preview Data button shows 10 entries from the last frequency period. You can only preview data if your user has access",
           "error": {
             "generic": "An error occurred while fetching data from the Egress API",
             "missingConfig": "The dataset is not configured to be fetched through the Egress API. Contact a developer for more info"

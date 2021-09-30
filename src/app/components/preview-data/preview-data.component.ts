@@ -9,9 +9,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 })
 export class PreviewDataComponent implements OnInit {
 
-  public displayedColumns: [string];
-  public rows;
-  constructor(@Inject(MAT_DIALOG_DATA) public data,
+  public displayedColumns: string[];
+  public rows: [];
+  constructor(@Inject(MAT_DIALOG_DATA) public data: PreviewDataDialogData,
               public dialogRef: MatDialogRef<PreviewDataComponent>) {
     this.displayedColumns = data.displayedColumns;
     this.rows = data.rows;
@@ -21,4 +21,14 @@ export class PreviewDataComponent implements OnInit {
     this.dialogRef.updateSize('100%', '90%');
   }
 
+}
+
+export class PreviewDataDialogData {
+  public displayedColumns: string[];
+  public rows: [];
+
+  constructor(displayedColumns: string[], rows: []) {
+    this.displayedColumns = displayedColumns;
+    this.rows = rows;
+  }
 }
