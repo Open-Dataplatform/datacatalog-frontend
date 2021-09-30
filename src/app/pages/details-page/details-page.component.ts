@@ -1,4 +1,4 @@
-import {Component, Inject, LOCALE_ID, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,6 @@ import {
   IEnum
 } from 'src/app/shared/api/api';
 import { CategoryService } from 'src/app/shared/services/category.service';
-import { formatDate } from '@angular/common';
 import { GetDatasetStatusName } from 'src/app/shared/constants';
 import { EgressService } from '../../shared/services/egress.service';
 import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
@@ -41,8 +40,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
               private readonly categoryService: CategoryService,
               private readonly translator: TranslateService,
               private readonly egressService: EgressService,
-              private dialog: MatDialog,
-              @Inject(LOCALE_ID) public locale: string) {
+              private dialog: MatDialog) {
               }
   ngOnDestroy(): void {
     this.userHandlerService.ClearOboToken();
@@ -117,7 +115,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   }
 
   previewData(): void {
-    this.oboToken$.subscribe(token => {
+    const subscription = this.oboToken$.subscribe(token => {
       if (token) {
         const toDate = new Date();
         let fromDate: Date = new Date();
@@ -127,14 +125,13 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         if (this.dataSet.frequency) {
           fromDate = this.subtractFrequencyFromDate(this.dataSet.frequency.code, toDate);
         }
-        const toDateString = formatDate(toDate, 'yyyy-MM-ddThh:mm', this.locale);
-        const fromDateString = formatDate(fromDate, 'yyyy-MM-ddThh:mm', this.locale);
-        this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDateString, toDateString)
+        this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
             this.dialog.open(PreviewDataComponent, {
               data: previewDataDialogData
             });
           });
+        subscription.unsubscribe();
       } else {
         this.userHandlerService.GetOboToken();
       }

@@ -1,10 +1,11 @@
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, LOCALE_ID} from '@angular/core';
 import {HttpBackend, HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {PreviewDataDialogData} from '../../components/preview-data/preview-data.component';
 import {TranslateService} from '@ngx-translate/core';
 import {EGRESS_BASE_URL} from '../../app.module';
 import {MessageNotifierService} from '../message-notifier/message-notifier.service';
 import {Observable, ReplaySubject} from 'rxjs';
+import {formatDate} from '@angular/common';
 
 @Injectable({providedIn: 'root'})
 export class EgressService {
@@ -15,13 +16,17 @@ export class EgressService {
   constructor(private readonly messageNotifier: MessageNotifierService,
               private readonly translator: TranslateService,
               private readonly httpBackend: HttpBackend,
-              @Inject(EGRESS_BASE_URL) private readonly egressBaseUrl: string) {
+              @Inject(EGRESS_BASE_URL) private readonly egressBaseUrl: string,
+              @Inject(LOCALE_ID) private locale: string) {
     this.http = new HttpClient(httpBackend);
   }
 
   // tslint:disable-next-line:max-line-length
-  public fetchAndShowPreviewData(datasetId: string, token: string, fromDateString: string, toDateString: string): Observable<PreviewDataDialogData> {
+  public fetchAndShowPreviewData(datasetId: string, token: string, fromDate: Date, toDate: Date): Observable<PreviewDataDialogData> {
     const previewData = new ReplaySubject<PreviewDataDialogData>(1);
+
+    const toDateString = formatDate(toDate, 'yyyy-MM-ddThh:mm', this.locale);
+    const fromDateString = formatDate(fromDate, 'yyyy-MM-ddThh:mm', this.locale);
     const options = {
       headers: new HttpHeaders().set('Authorization', token),
       params: new HttpParams()
