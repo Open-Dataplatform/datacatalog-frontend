@@ -43,8 +43,6 @@ export class RelationMapperComponent implements OnInit {
       shortDescription: '',
       sinkDatasets: [],
       sourceDatasets: [],
-      createdDate: new Date(),
-      modifiedDate: new Date()
     }
   }
 

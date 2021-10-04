@@ -3857,10 +3857,10 @@ export class UserClient {
     }
 }
 
-export abstract class Created implements ICreated {
-    createdDate!: Date;
+export class GuidId implements IGuidId {
+    id!: string;
 
-    constructor(data?: ICreated) {
+    constructor(data?: IGuidId) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3871,103 +3871,29 @@ export abstract class Created implements ICreated {
 
     init(_data?: any) {
         if (_data) {
-            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): Created {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'Created' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ICreated {
-    createdDate: Date;
-}
-
-export abstract class Entity extends Created implements IEntity {
-    id!: string;
-    modifiedDate!: Date;
-
-    constructor(data?: IEntity) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
             this.id = _data["id"];
-            this.modifiedDate = _data["modifiedDate"] ? new Date(_data["modifiedDate"].toString()) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): Entity {
+    static fromJS(data: any): GuidId {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'Entity' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IEntity extends ICreated {
-    id: string;
-    modifiedDate: Date;
-}
-
-export class ReplicantEntity extends Entity implements IReplicantEntity {
-    version!: number;
-    originEnvironment?: string | undefined;
-    originDeleted!: boolean;
-
-    constructor(data?: IReplicantEntity) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.version = _data["version"];
-            this.originEnvironment = _data["originEnvironment"];
-            this.originDeleted = _data["originDeleted"];
-        }
-    }
-
-    static fromJS(data: any): ReplicantEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new ReplicantEntity();
+        let result = new GuidId();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["version"] = this.version;
-        data["originEnvironment"] = this.originEnvironment;
-        data["originDeleted"] = this.originDeleted;
-        super.toJSON(data);
+        data["id"] = this.id;
         return data; 
     }
 }
 
-export interface IReplicantEntity extends IEntity {
-    version: number;
-    originEnvironment?: string | undefined;
-    originDeleted: boolean;
+export interface IGuidId {
+    id: string;
 }
 
-export class Category extends ReplicantEntity implements ICategory {
+export class Category extends GuidId implements ICategory {
     name?: string | undefined;
     colour?: string | undefined;
     imageUri?: string | undefined;
@@ -4002,7 +3928,7 @@ export class Category extends ReplicantEntity implements ICategory {
     }
 }
 
-export interface ICategory extends IReplicantEntity {
+export interface ICategory extends IGuidId {
     name?: string | undefined;
     colour?: string | undefined;
     imageUri?: string | undefined;
@@ -4159,7 +4085,7 @@ export interface ICategoryUpdateRequest extends ICategoryCreateRequest {
     id: string;
 }
 
-export class DataContract extends ReplicantEntity implements IDataContract {
+export class DataContract extends GuidId implements IDataContract {
     datasetId!: string;
     dataSourceId!: string;
     datasetContainer?: string | undefined;
@@ -4200,7 +4126,7 @@ export class DataContract extends ReplicantEntity implements IDataContract {
     }
 }
 
-export interface IDataContract extends IReplicantEntity {
+export interface IDataContract extends IGuidId {
     datasetId: string;
     dataSourceId: string;
     datasetContainer?: string | undefined;
@@ -4475,13 +4401,51 @@ export interface IAdSearchResult {
     type?: string | undefined;
 }
 
-export class Dataset extends ReplicantEntity implements IDataset {
+export class EntityDto extends GuidId implements IEntityDto {
+    modifiedDate!: Date;
+    createdDate!: Date;
+
+    constructor(data?: IEntityDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.modifiedDate = _data["modifiedDate"] ? new Date(_data["modifiedDate"].toString()) : <any>undefined;
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EntityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EntityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IEntityDto extends IGuidId {
+    modifiedDate: Date;
+    createdDate: Date;
+}
+
+export class Dataset extends EntityDto implements IDataset {
     memberId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
     slaDescription?: string | undefined;
     slaLink?: string | undefined;
     owner?: string | undefined;
+    version!: number;
     status!: DatasetStatus;
     confidentiality!: Confidentiality;
     contact?: ContactInfo | undefined;
@@ -4508,6 +4472,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
             this.slaDescription = _data["slaDescription"];
             this.slaLink = _data["slaLink"];
             this.owner = _data["owner"];
+            this.version = _data["version"];
             this.status = _data["status"];
             this.confidentiality = _data["confidentiality"];
             this.contact = _data["contact"] ? ContactInfo.fromJS(_data["contact"]) : <any>undefined;
@@ -4554,6 +4519,7 @@ export class Dataset extends ReplicantEntity implements IDataset {
         data["slaDescription"] = this.slaDescription;
         data["slaLink"] = this.slaLink;
         data["owner"] = this.owner;
+        data["version"] = this.version;
         data["status"] = this.status;
         data["confidentiality"] = this.confidentiality;
         data["contact"] = this.contact ? this.contact.toJSON() : <any>undefined;
@@ -4587,13 +4553,14 @@ export class Dataset extends ReplicantEntity implements IDataset {
     }
 }
 
-export interface IDataset extends IReplicantEntity {
+export interface IDataset extends IEntityDto {
     memberId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
     slaDescription?: string | undefined;
     slaLink?: string | undefined;
     owner?: string | undefined;
+    version: number;
     status: DatasetStatus;
     confidentiality: Confidentiality;
     contact?: ContactInfo | undefined;
@@ -4659,7 +4626,7 @@ export interface IContactInfo {
     email?: string | undefined;
 }
 
-export class Duration extends Entity implements IDuration {
+export class Duration extends GuidId implements IDuration {
     code?: string | undefined;
     description?: string | undefined;
     durationInMinutes!: number;
@@ -4694,13 +4661,13 @@ export class Duration extends Entity implements IDuration {
     }
 }
 
-export interface IDuration extends IEntity {
+export interface IDuration extends IGuidId {
     code?: string | undefined;
     description?: string | undefined;
     durationInMinutes: number;
 }
 
-export class Transformation extends Entity implements ITransformation {
+export class Transformation extends GuidId implements ITransformation {
     shortDescription?: string | undefined;
     description?: string | undefined;
     sourceDatasets?: DatasetSummary[] | undefined;
@@ -4754,14 +4721,14 @@ export class Transformation extends Entity implements ITransformation {
     }
 }
 
-export interface ITransformation extends IEntity {
+export interface ITransformation extends IGuidId {
     shortDescription?: string | undefined;
     description?: string | undefined;
     sourceDatasets?: DatasetSummary[] | undefined;
     sinkDatasets?: DatasetSummary[] | undefined;
 }
 
-export class DatasetSummary extends Entity implements IDatasetSummary {
+export class DatasetSummary extends GuidId implements IDatasetSummary {
     name?: string | undefined;
     description?: string | undefined;
     status!: DatasetStatus;
@@ -4810,7 +4777,7 @@ export class DatasetSummary extends Entity implements IDatasetSummary {
     }
 }
 
-export interface IDatasetSummary extends IEntity {
+export interface IDatasetSummary extends IGuidId {
     name?: string | undefined;
     description?: string | undefined;
     status: DatasetStatus;
@@ -4818,7 +4785,7 @@ export interface IDatasetSummary extends IEntity {
     categories?: Category[] | undefined;
 }
 
-export class DataField extends Entity implements IDataField {
+export class DataField extends GuidId implements IDataField {
     name?: string | undefined;
     type?: string | undefined;
     description?: string | undefined;
@@ -4862,13 +4829,47 @@ export class DataField extends Entity implements IDataField {
     }
 }
 
-export interface IDataField extends IEntity {
+export interface IDataField extends IGuidId {
     name?: string | undefined;
     type?: string | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
     unit?: string | undefined;
+}
+
+export abstract class Created implements ICreated {
+    createdDate!: Date;
+
+    constructor(data?: ICreated) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Created {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'Created' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface ICreated {
+    createdDate: Date;
 }
 
 export class DatasetChangeLog extends Created implements IDatasetChangeLog {
@@ -4904,7 +4905,7 @@ export interface IDatasetChangeLog extends ICreated {
     member?: Member | undefined;
 }
 
-export class Member extends Entity implements IMember {
+export class Member extends EntityDto implements IMember {
     name?: string | undefined;
     email?: string | undefined;
     memberRole!: Role;
@@ -4939,7 +4940,7 @@ export class Member extends Entity implements IMember {
     }
 }
 
-export interface IMember extends IEntity {
+export interface IMember extends IEntityDto {
     name?: string | undefined;
     email?: string | undefined;
     memberRole: Role;
@@ -4951,7 +4952,7 @@ export enum Role {
     User = 2,
 }
 
-export class DataSource extends ReplicantEntity implements IDataSource {
+export class DataSource extends GuidId implements IDataSource {
     name?: string | undefined;
     description?: string | undefined;
     contactInfo?: string | undefined;
@@ -4989,7 +4990,7 @@ export class DataSource extends ReplicantEntity implements IDataSource {
     }
 }
 
-export interface IDataSource extends IReplicantEntity {
+export interface IDataSource extends IGuidId {
     name?: string | undefined;
     description?: string | undefined;
     contactInfo?: string | undefined;
@@ -5008,7 +5009,7 @@ export enum ProvisionDatasetStatusEnum {
     Failed = 2,
 }
 
-export class ServiceLevelAgreement extends Entity implements IServiceLevelAgreement {
+export class ServiceLevelAgreement extends GuidId implements IServiceLevelAgreement {
     name?: string | undefined;
     description?: string | undefined;
     link?: string | undefined;
@@ -5043,7 +5044,7 @@ export class ServiceLevelAgreement extends Entity implements IServiceLevelAgreem
     }
 }
 
-export interface IServiceLevelAgreement extends IEntity {
+export interface IServiceLevelAgreement extends IGuidId {
     name?: string | undefined;
     description?: string | undefined;
     link?: string | undefined;
@@ -5159,42 +5160,6 @@ export interface IDatasetCreateRequest {
     sourceTransformation?: SourceTransformationUpsertRequest | undefined;
     dataFields?: DataFieldUpsertRequest[] | undefined;
     serviceLevelAgreement?: GuidId | undefined;
-}
-
-export class GuidId implements IGuidId {
-    id!: string;
-
-    constructor(data?: IGuidId) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): GuidId {
-        data = typeof data === 'object' ? data : {};
-        let result = new GuidId();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        return data; 
-    }
-}
-
-export interface IGuidId {
-    id: string;
 }
 
 export class NullableGuidId implements INullableGuidId {
@@ -5638,7 +5603,7 @@ export interface ILineageDataset extends IDatasetSummary {
     sinkTransformations?: LineageTransformation[] | undefined;
 }
 
-export class LineageTransformation extends Entity implements ILineageTransformation {
+export class LineageTransformation extends GuidId implements ILineageTransformation {
     shortDescription?: string | undefined;
     description?: string | undefined;
     datasets?: LineageDataset[] | undefined;
@@ -5681,13 +5646,13 @@ export class LineageTransformation extends Entity implements ILineageTransformat
     }
 }
 
-export interface ILineageTransformation extends IEntity {
+export interface ILineageTransformation extends IGuidId {
     shortDescription?: string | undefined;
     description?: string | undefined;
     datasets?: LineageDataset[] | undefined;
 }
 
-export class DatasetGroup extends Entity implements IDatasetGroup {
+export class DatasetGroup extends GuidId implements IDatasetGroup {
     memberId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
@@ -5733,7 +5698,7 @@ export class DatasetGroup extends Entity implements IDatasetGroup {
     }
 }
 
-export interface IDatasetGroup extends IEntity {
+export interface IDatasetGroup extends IGuidId {
     memberId?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
