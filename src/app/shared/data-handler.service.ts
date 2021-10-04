@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse} from '@angular/common/http';
-import {EMPTY, Observable, throwError} from 'rxjs';
+import {BehaviorSubject, EMPTY, Observable, throwError} from 'rxjs';
 
 import { UserHandlerService } from '../shared/user/user-handler.service';
 import {
@@ -52,7 +52,9 @@ This will then handle errors and log them if the backend sends an error.
 })
 export class DataHandlerService {
 
-  currentTransformation?: ILineageTransformation;
+  private currentTransformation = new BehaviorSubject<ILineageTransformation>(null);
+  
+  currentTransformation$ = this.currentTransformation.asObservable();
   userLoggedIn$ = this.userHandlerService.userLoggedIn$;
 
   constructor(
@@ -185,7 +187,9 @@ export class DataHandlerService {
   }
 
   public setCurrentTransformation(transform: ILineageTransformation[]) {
-    this.currentTransformation = transform && transform.length ? transform[0] : undefined;
+    const currentTransformation = transform && transform.length ? transform[0] : undefined;
+
+    this.currentTransformation.next(currentTransformation);
   }
 
   public createCategory(createRequest: ICategoryCreateRequest): Observable<ICategory> {

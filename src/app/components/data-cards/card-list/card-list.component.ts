@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {animate, keyframes, query, stagger, style, transition, trigger} from "@angular/animations";
-import { ICategory, IDataset } from 'src/app/shared/api/api';
+import { ICategory, IDatasetSummary } from 'src/app/shared/api/api';
 
 @Component({
   selector: 'app-card-list',
@@ -24,7 +24,7 @@ import { ICategory, IDataset } from 'src/app/shared/api/api';
 export class CardListComponent implements OnInit {
 
   @Input()
-  dataCards: IDataset[];
+  dataCards: IDatasetSummary[];
   categories: ICategory[];
 
   constructor() { }
