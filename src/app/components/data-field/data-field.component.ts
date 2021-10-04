@@ -11,7 +11,7 @@ export class DataFieldComponent implements OnInit {
 
   @Input() dataFields: IDataField[];
   @Output() dataFieldsChange = new EventEmitter();
-  dataTypes = DataFieldTypes;
+  dataTypes: string[];
   dataUnits = DataFieldUnits;
 
   constructor() { }
@@ -19,6 +19,11 @@ export class DataFieldComponent implements OnInit {
   ngOnInit() {
     if (!this.dataFields) {
       this.dataFields = [];
+      this.dataTypes = DataFieldTypes;
+    } else {
+      // Merge DataFieldTypes with the types on existing dataFields. 
+      // We do this because we need to handle datasets created before we started to enforce which types could be chosen
+      this.dataTypes = [...new Set([...DataFieldTypes, ...this.dataFields.map(df => df.type)])]
     }
   }
 

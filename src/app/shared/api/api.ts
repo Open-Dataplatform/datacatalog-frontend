@@ -2423,69 +2423,6 @@ export class DataSourceClient {
 @Injectable({
     providedIn: 'root'
 })
-export class DummyEgressClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
-    }
-
-    test(guid: string): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/osiris-egress/v1/{guid}/json";
-        if (guid === undefined || guid === null)
-            throw new Error("The parameter 'guid' must be defined.");
-        url_ = url_.replace("{guid}", encodeURIComponent("" + guid));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processTest(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processTest(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processTest(response: HttpResponseBase): Observable<FileResponse | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse | null>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
 export class DurationClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -2788,112 +2725,6 @@ export class DurationClient {
             }));
         }
         return _observableOf<Duration>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class FrontendMetricsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
-    }
-
-    oboFlowInitiated(): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/FrontendMetrics/oboflow-init";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOboFlowInitiated(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processOboFlowInitiated(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processOboFlowInitiated(response: HttpResponseBase): Observable<FileResponse | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse | null>(<any>null);
-    }
-
-    oboFlowEnded(): Observable<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/FrontendMetrics/oboflow-end";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOboFlowEnded(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processOboFlowEnded(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processOboFlowEnded(response: HttpResponseBase): Observable<FileResponse | null> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse | null>(<any>null);
     }
 }
 
@@ -3263,6 +3094,58 @@ export class GeneralClient {
             }));
         }
         return _observableOf<Duration[]>(<any>null);
+    }
+
+    /**
+     * Dummy endpoint for exposing the DataFieldType to Swagger
+     * @deprecated
+     */
+    getDataFieldType(): Observable<DataFieldType> {
+        let url_ = this.baseUrl + "/api/General/dataFieldType";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDataFieldType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDataFieldType(<any>response_);
+                } catch (e) {
+                    return <Observable<DataFieldType>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DataFieldType>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDataFieldType(response: HttpResponseBase): Observable<DataFieldType> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DataFieldType>(<any>null);
     }
 }
 
@@ -5293,7 +5176,7 @@ export interface ISourceTransformationUpsertRequest {
 
 export class DataFieldUpsertRequest extends NullableGuidId implements IDataFieldUpsertRequest {
     name?: string | undefined;
-    type?: DataFieldType | undefined;
+    type?: string | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
@@ -5337,21 +5220,11 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
 
 export interface IDataFieldUpsertRequest extends INullableGuidId {
     name?: string | undefined;
-    type?: DataFieldType | undefined;
+    type?: string | undefined;
     description?: string | undefined;
     format?: string | undefined;
     validation?: string | undefined;
     unit?: DataFieldUnit | undefined;
-}
-
-export enum DataFieldType {
-    Boolean = 0,
-    Date = 1,
-    Datetime = 2,
-    Integer = 3,
-    Number = 4,
-    String = 5,
-    Time = 6,
 }
 
 export enum DataFieldUnit {
@@ -6042,6 +5915,17 @@ export class Enum implements IEnum {
 export interface IEnum {
     id: number;
     description?: string | undefined;
+}
+
+export enum DataFieldType {
+    Boolean = 0,
+    Date = 1,
+    Datetime = 2,
+    Integer = 3,
+    Number = 4,
+    String = 5,
+    Time = 6,
+    GUID = 7,
 }
 
 export class SPDatasetAccessListDto implements ISPDatasetAccessListDto {
