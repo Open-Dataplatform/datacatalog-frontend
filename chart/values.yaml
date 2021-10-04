@@ -22,6 +22,7 @@ deployment:
 
   dynamicEnvironment:
     base: https://localhost:5000
+    egressBase: https://localhost:5000
     production: false
     oidcSettings:
       client_id: interactive.public

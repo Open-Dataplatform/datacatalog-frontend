@@ -9,6 +9,7 @@ data:
     (function (window) {
       window.dynamicEnvironment = {
         base: '{{ .Values.deployment.dynamicEnvironment.base }}',
+        egressBase: '{{ .Values.deployment.dynamicEnvironment.egressBase }}',
         production: {{ .Values.deployment.dynamicEnvironment.production }},
         oidcSettings: {
           client_id : '{{ .Values.deployment.dynamicEnvironment.oidcSettings.client_id }}',
