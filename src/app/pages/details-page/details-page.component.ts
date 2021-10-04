@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,12 +8,15 @@ import { UserHandlerService } from '../../shared/user/user-handler.service';
 import { MessageNotifierService } from '../../shared/message-notifier/message-notifier.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  Duration,
   ICategory,
   IDataset,
   IEnum
 } from 'src/app/shared/api/api';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { GetDatasetStatusName } from 'src/app/shared/constants';
+import { EgressService } from '../../shared/services/egress.service';
+import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
 
 @Component({
   selector: 'app-details-page',
@@ -29,7 +32,6 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
   oboToken$ = this.userHandlerService.oboToken$;
 
-
   constructor(private readonly activeRoute: ActivatedRoute,
               private readonly router: Router,
               private readonly dataHandlerService: DataHandlerService,
@@ -38,6 +40,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
               private readonly messageNotifier: MessageNotifierService,
               private readonly categoryService: CategoryService,
               private readonly translator: TranslateService,
+              private readonly egressService: EgressService,
               private dialog: MatDialog) {
               }
   ngOnDestroy(): void {
@@ -112,6 +115,30 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     this.userHandlerService.GetOboToken();
   }
 
+  previewData(): void {
+    const subscription = this.oboToken$.subscribe(token => {
+      if (token) {
+        const toDate = new Date();
+        let fromDate: Date = new Date();
+        fromDate.setDate(fromDate.getDate() - 31);
+
+        // If we know the frequency, we use the code to deduce the time-step we should take back in time
+        if (this.dataSet.frequency) {
+          fromDate = this.subtractFrequencyFromDate(this.dataSet.frequency, toDate);
+        }
+        this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
+          .subscribe(previewDataDialogData => {
+            this.dialog.open(PreviewDataComponent, {
+              data: previewDataDialogData
+            });
+          });
+        subscription.unsubscribe();
+      } else {
+        this.userHandlerService.GetOboToken();
+      }
+    });
+  }
+
   copyToClipBoard(): void {
     this.oboToken$.subscribe(token => {
       navigator.clipboard.writeText(token).then(_ =>
@@ -121,6 +148,19 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
 
   GetDatasetStatusName(): string {
     return GetDatasetStatusName(this.dataSet.status);
+  }
+
+  private subtractFrequencyFromDate(frequency: Duration, date: Date): Date {
+    const minutesToSubtract = frequency.durationInMinutes;
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes() - minutesToSubtract,
+      date.getSeconds(),
+      date.getMilliseconds()
+    );
   }
 
 }
