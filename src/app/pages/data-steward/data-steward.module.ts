@@ -10,6 +10,7 @@ import { SharedModule } from "../../shared/shared.module";
 import { InputElementsModule } from "../../components/input-elements/input-elements.module";
 import { DataFieldComponent } from "../../components/data-field/data-field.component";
 import { TransformationSelectorComponent } from "../../components/transformation-selector/transformation-selector.component";
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { TransformationSelectorComponent } from "../../components/transformation
     SharedModule,
     DataStewardRoutingModule,
     InputElementsModule,
+    DragDropModule
   ]
 })
 export class DataStewardModule { }
