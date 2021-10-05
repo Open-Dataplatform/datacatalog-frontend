@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { IDataset } from 'src/app/shared/api/api';
+import { IDatasetSummary } from 'src/app/shared/api/api';
 import { GetDatasetStatusName } from 'src/app/shared/constants';
 import {UserHandlerService} from "../../../shared/user/user-handler.service";
 
@@ -11,7 +11,7 @@ import {UserHandlerService} from "../../../shared/user/user-handler.service";
 export class DataCardComponent {
 
   @Input('card')
-  card: IDataset;
+  card: IDatasetSummary;
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
 
   constructor(private userHandlerService: UserHandlerService) { }

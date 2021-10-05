@@ -5,7 +5,7 @@
              [hideSelected]="true"
              placeholder="{{'dataSteward.meta.category.addToCategory' | translate}}"
              [ngClass]="{'filled': data.categories}"
-             multiple="true"
+             [multiple]="true"
              bindLabel="name"
              (change)="onDataChange()"
              [(ngModel)]="data.categories">

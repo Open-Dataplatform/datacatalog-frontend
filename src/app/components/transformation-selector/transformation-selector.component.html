@@ -4,7 +4,7 @@
              [hideSelected]="true"
              placeholder="{{'dataSteward.meta.transformation.sourceDataSetsPlaceholder' | translate}}"
              [ngClass]="{'filled': dataSetTransformation.sourceDatasets}"
-             multiple="true"
+             [multiple]="true"
              bindLabel="name"
              (change)="onDataChange()"
              [(ngModel)]="dataSetTransformation.sourceDatasets">

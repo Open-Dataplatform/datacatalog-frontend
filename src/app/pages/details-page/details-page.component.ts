@@ -31,6 +31,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   currentTransformationDescription = '';
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
   oboToken$ = this.userHandlerService.oboToken$;
+  currentTransformation$ = this.dataHandlerService.currentTransformation$;
 
   constructor(private readonly activeRoute: ActivatedRoute,
               private readonly router: Router,
@@ -52,9 +53,6 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     this.activeRoute.paramMap.subscribe(params => {
       this.id = params.get('id');
       this.getDetailsFromId(this.id);
-      this.currentTransformationDescription = this.dataHandlerService.currentTransformation
-      && this.dataHandlerService.currentTransformation.description ?
-        this.dataHandlerService.currentTransformation.description : '';
     });
 
     this.categoryService.categories$.subscribe(categories => {
