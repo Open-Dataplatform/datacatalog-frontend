@@ -46,7 +46,6 @@ export class DataStewardHandlerService {
       dataFields: this.dataSet.dataFields
         ?.map(df => new DataFieldUpsertRequest({
           ...df,
-          type: DataFieldType[df.type],
           unit: DataFieldUnit[df.unit]
         }))
     });
