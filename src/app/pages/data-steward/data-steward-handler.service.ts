@@ -44,12 +44,13 @@ export class DataStewardHandlerService {
     const updateRequest = new DatasetUpdateRequest({
       ...this.dataSet,
       dataFields: this.dataSet.dataFields
-        ?.map(df => new DataFieldUpsertRequest({
+        ?.map((df, i) => new DataFieldUpsertRequest({
           ...df,
-          unit: DataFieldUnit[df.unit]
+          unit: DataFieldUnit[df.unit],
+          sortingKey: i // Make sure that the current ordering is saved in the database
         }))
     });
-    
+
     if (updateRequest.id && updateRequest.id !== EMPTY_GUID) {
       return this.dataHandlerService.updateDataSet(updateRequest);
     } else {

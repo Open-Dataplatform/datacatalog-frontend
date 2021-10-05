@@ -35,6 +35,7 @@ export class DataFieldComponent implements OnInit {
   addField(): void {
     this.dataFields.push(new DataField({
       id: EMPTY_GUID,
+      sortingKey: 0 // This value will be updated later before saving
     }));
     this.dataChange();
   }
