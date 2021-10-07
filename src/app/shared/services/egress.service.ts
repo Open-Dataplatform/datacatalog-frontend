@@ -43,7 +43,7 @@ export class EgressService {
       const displayedColumns = Object.keys(result[0]);
       return previewData.next(new PreviewDataDialogData(displayedColumns, result));
     }, (error: HttpErrorResponse) => {
-      if (error.status === 418) {
+      if (error.status === 403) {
         this.translator.get('details.side.access.preview.error.missingConfig')
           .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.message}`, true));
       } else {
