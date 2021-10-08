@@ -17,6 +17,7 @@ import { CategoryService } from 'src/app/shared/services/category.service';
 import { GetDatasetStatusName } from 'src/app/shared/constants';
 import { EgressService } from '../../shared/services/egress.service';
 import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-details-page',
@@ -28,10 +29,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   categories: ICategory[];
   dataSet: IDataset;
   confidentiality: IEnum;
-  currentTransformationDescription = '';
   userHasDataStewardRole$ = this.userHandlerService.userHasDataStewardRole$;
   oboToken$ = this.userHandlerService.oboToken$;
   currentTransformation$ = this.dataHandlerService.currentTransformation$;
+  previewDataSubscription: Subscription;
 
   constructor(private readonly activeRoute: ActivatedRoute,
               private readonly router: Router,
@@ -44,8 +45,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
               private readonly egressService: EgressService,
               private dialog: MatDialog) {
               }
+
   ngOnDestroy(): void {
     this.userHandlerService.ClearOboToken();
+    this.previewDataSubscription?.unsubscribe();
   }
 
   ngOnInit() {
@@ -114,7 +117,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   }
 
   previewData(): void {
-    const subscription = this.oboToken$.subscribe(token => {
+    this.previewDataSubscription = this.oboToken$.subscribe(token => {
       if (token) {
         const toDate = new Date();
         let fromDate: Date = new Date();
@@ -129,7 +132,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
             const dialogWindow = this.dialog.open(PreviewDataComponent, {
               data: previewDataDialogData
             }).afterClosed();
-            dialogWindow.subscribe(_ => subscription?.unsubscribe());
+            dialogWindow.subscribe(_ => this.previewDataSubscription?.unsubscribe());
           });
       } else {
         this.userHandlerService.GetOboToken();

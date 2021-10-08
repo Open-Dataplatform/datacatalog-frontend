@@ -45,7 +45,7 @@ export class EgressService {
     }, (error: HttpErrorResponse) => {
       if (error.status === 403) {
         this.translator.get('details.side.access.preview.error.missingConfig')
-          .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.message}`, true));
+          .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error.detail}`, true));
       } else {
         this.translator.get('details.side.access.preview.error.generic')
           .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.message}`, true));
