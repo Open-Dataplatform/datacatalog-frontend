@@ -47,8 +47,8 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
               }
 
   ngOnDestroy(): void {
-    this.userHandlerService.ClearOboToken();
     this.previewDataSubscription?.unsubscribe();
+    this.userHandlerService.ClearOboToken();
   }
 
   ngOnInit() {
