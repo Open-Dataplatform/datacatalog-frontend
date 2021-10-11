@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { DataField, IDataField } from 'src/app/shared/api/api';
 import { DataFieldTypes, DataFieldUnits, EMPTY_GUID } from 'src/app/shared/constants';
@@ -34,6 +35,7 @@ export class DataFieldComponent implements OnInit {
   addField(): void {
     this.dataFields.push(new DataField({
       id: EMPTY_GUID,
+      sortingKey: 0 // This value will be updated later before saving
     }));
     this.dataChange();
   }
@@ -41,6 +43,15 @@ export class DataFieldComponent implements OnInit {
   removeField(name: string): void {
     this.dataFields.splice(this.dataFields.findIndex(n => n.name === name), 1);
     this.dataChange();
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    this.moveItemInArray(this.dataFields, event.previousIndex, event.currentIndex);
+    this.dataChange();
+  }
+
+  moveItemInArray(array, previousIndex, newIndex) {
+    array.splice(newIndex, 0, array.splice(previousIndex, 1)[0]);
   }
 
 }

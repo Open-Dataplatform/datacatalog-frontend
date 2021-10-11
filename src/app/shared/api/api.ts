@@ -4675,6 +4675,7 @@ export class DataField extends GuidId implements IDataField {
     format?: string | undefined;
     validation?: string | undefined;
     unit?: string | undefined;
+    sortingKey!: number;
 
     constructor(data?: IDataField) {
         super(data);
@@ -4689,6 +4690,7 @@ export class DataField extends GuidId implements IDataField {
             this.format = _data["format"];
             this.validation = _data["validation"];
             this.unit = _data["unit"];
+            this.sortingKey = _data["sortingKey"];
         }
     }
 
@@ -4707,6 +4709,7 @@ export class DataField extends GuidId implements IDataField {
         data["format"] = this.format;
         data["validation"] = this.validation;
         data["unit"] = this.unit;
+        data["sortingKey"] = this.sortingKey;
         super.toJSON(data);
         return data; 
     }
@@ -4719,6 +4722,7 @@ export interface IDataField extends IGuidId {
     format?: string | undefined;
     validation?: string | undefined;
     unit?: string | undefined;
+    sortingKey: number;
 }
 
 export abstract class Created implements ICreated {
@@ -5181,6 +5185,7 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
     format?: string | undefined;
     validation?: string | undefined;
     unit?: DataFieldUnit | undefined;
+    sortingKey!: number;
 
     constructor(data?: IDataFieldUpsertRequest) {
         super(data);
@@ -5195,6 +5200,7 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
             this.format = _data["format"];
             this.validation = _data["validation"];
             this.unit = _data["unit"];
+            this.sortingKey = _data["sortingKey"];
         }
     }
 
@@ -5213,6 +5219,7 @@ export class DataFieldUpsertRequest extends NullableGuidId implements IDataField
         data["format"] = this.format;
         data["validation"] = this.validation;
         data["unit"] = this.unit;
+        data["sortingKey"] = this.sortingKey;
         super.toJSON(data);
         return data; 
     }
@@ -5225,6 +5232,7 @@ export interface IDataFieldUpsertRequest extends INullableGuidId {
     format?: string | undefined;
     validation?: string | undefined;
     unit?: DataFieldUnit | undefined;
+    sortingKey: number;
 }
 
 export enum DataFieldUnit {
