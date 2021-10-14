@@ -6,6 +6,7 @@ import {EGRESS_BASE_URL} from '../../app.module';
 import {MessageNotifierService} from '../message-notifier/message-notifier.service';
 import {Observable, ReplaySubject} from 'rxjs';
 import {formatDate} from '@angular/common';
+import {FrontendMetricsService} from './frontendMetrics.service';
 
 @Injectable({providedIn: 'root'})
 export class EgressService {
@@ -16,12 +17,12 @@ export class EgressService {
   constructor(private readonly messageNotifier: MessageNotifierService,
               private readonly translator: TranslateService,
               private readonly httpBackend: HttpBackend,
+              private readonly frontendMetricsService: FrontendMetricsService,
               @Inject(EGRESS_BASE_URL) private readonly egressBaseUrl: string,
               @Inject(LOCALE_ID) private locale: string) {
     this.http = new HttpClient(httpBackend);
   }
 
-  // tslint:disable-next-line:max-line-length
   public fetchAndShowPreviewData(datasetId: string, token: string, fromDate: Date, toDate: Date): Observable<PreviewDataDialogData> {
     const previewData = new ReplaySubject<PreviewDataDialogData>(1);
 
@@ -34,6 +35,9 @@ export class EgressService {
         .set('from_date', fromDateString)
         .set('to_date', toDateString)
     };
+    // Inform metrics endpoint
+    this.frontendMetricsService.previewDataInitiated();
+
     // Call egress API
     this.http.get(`${this.egressBaseUrl}/${datasetId}/json`, options).subscribe((result: any) => {
       if (!result || result.length === 0) {

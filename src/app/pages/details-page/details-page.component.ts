@@ -18,6 +18,7 @@ import { GetDatasetStatusName } from 'src/app/shared/constants';
 import { EgressService } from '../../shared/services/egress.service';
 import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
 import {Subscription} from 'rxjs';
+import {FrontendMetricsService} from '../../shared/services/frontendMetrics.service';
 
 @Component({
   selector: 'app-details-page',
@@ -43,6 +44,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
               private readonly categoryService: CategoryService,
               private readonly translator: TranslateService,
               private readonly egressService: EgressService,
+              private readonly frontendMetricsService: FrontendMetricsService,
               private dialog: MatDialog) {
               }
 
@@ -113,6 +115,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   }
 
   getOboToken(): void {
+    this.frontendMetricsService.oboFlowInitiated();
     this.userHandlerService.GetOboToken();
   }
 
