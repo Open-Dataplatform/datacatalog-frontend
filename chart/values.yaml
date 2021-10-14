@@ -5,6 +5,8 @@
 environment: test
 appName: datacatalog-frontend
 
+aksHttpAddon: true
+
 deployment:
   replicaCount: 1
 
