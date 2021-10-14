@@ -1,8 +1,6 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-import { WebStorageStateStore } from 'oidc-client';
-
 export const environment = Object.assign({
   production: false,
   base: 'https://localhost:5000',
@@ -17,7 +15,6 @@ export const environment = Object.assign({
     silent_redirect_uri: 'http://localhost:4200/login',
     automaticSilentRenew: true,
     scope: 'openid profile offline_access',
-    userStore: new WebStorageStateStore({ store: window.localStorage })
   },
   oboOidcSettings: {
     client_id : 'd9cd520e-2317-4db6-a5ae-77f0949085af',
@@ -27,7 +24,6 @@ export const environment = Object.assign({
     automaticSilentRenew: true,
     popup_redirect_uri: 'http://localhost:4200/obo-login',
     scope: 'https://storage.azure.com/user_impersonation',
-    userStore: new WebStorageStateStore({ store: window.localStorage })
   }
 },
   (window as any).dynamicEnvironment);

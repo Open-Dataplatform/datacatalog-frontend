@@ -8,7 +8,7 @@ import { PageNotFoundComponent } from "../pages/page-not-found/page-not-found.co
 import { RouterModule } from "@angular/router";
 import { LoadingComponent } from './loading/loading.component';
 import {InfiniteScrollComponent} from './infinity-scroll/infinity-scroll.component';
-import { UserManager } from 'oidc-client';
+import { UserManager, WebStorageStateStore } from 'oidc-client';
 import { environment } from "../../environments/environment";
 import { FormWrapper } from './form-wrapper/form-wrapper.component';
 
@@ -38,7 +38,7 @@ import { FormWrapper } from './form-wrapper/form-wrapper.component';
   providers: [
     {
       provide : UserManager,
-      useValue: new UserManager(environment.oidcSettings)
+      useValue: new UserManager({...environment.oidcSettings, userStore: new WebStorageStateStore({ store: window.localStorage }) })
     }
   ]
 })
