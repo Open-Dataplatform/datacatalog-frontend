@@ -9,8 +9,4 @@ export class FrontendMetricsService {
   public oboFlowInitiated() {
     this.frontendMetricsClient.oboFlowInitiated().subscribe();
   }
-
-  public previewDataInitiated() {
-    this.frontendMetricsClient.previewDataClicked().subscribe();
-  }
 }
