@@ -132,10 +132,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         }
         this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
-            const dialogWindow = this.dialog.open(PreviewDataComponent, {
+            this.previewDataSubscription?.unsubscribe();
+            this.dialog.open(PreviewDataComponent, {
               data: previewDataDialogData
-            }).afterClosed();
-            dialogWindow.subscribe(_ => this.previewDataSubscription?.unsubscribe());
+            });
           });
       } else {
         this.userHandlerService.GetOboToken();

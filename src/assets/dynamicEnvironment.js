@@ -5,7 +5,6 @@
     // thus we need this dynamic file which is loaded upon initializing the page.
     /*
     base: 'https://localhost:5000',
-    egressBase: 'https://localhost:5000'
     production: false,
     oidcSettings: {
       client_id : 'interactive.public',

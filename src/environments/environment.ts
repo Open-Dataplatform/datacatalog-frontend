@@ -4,7 +4,6 @@
 export const environment = Object.assign({
   production: false,
   base: 'https://localhost:5000',
-  egressBase: 'https://dp-test.westeurope.cloudapp.azure.com/osiris-egress/v1',
   oidcSettings: {
     client_id : 'interactive.public',
     authority: 'https://demo.identityserver.io/',

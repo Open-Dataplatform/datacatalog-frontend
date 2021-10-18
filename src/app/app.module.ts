@@ -20,8 +20,6 @@ import { UserManager } from 'oidc-client';
 import { PreviewDataComponent } from './components/preview-data/preview-data.component';
 import { MatTableModule } from '@angular/material/table';
 
-export const EGRESS_BASE_URL = new InjectionToken<string>('EGRESS_BASE_URL');
-
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
@@ -71,10 +69,6 @@ export function getTranslateConfig() {
     {
       provide  : API_BASE_URL,
       useValue : environment.base
-    },
-    {
-      provide  : EGRESS_BASE_URL,
-      useValue : environment.egressBase
     },
     UserHandlerService,
     {
