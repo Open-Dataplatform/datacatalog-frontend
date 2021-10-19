@@ -122,6 +122,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   previewData(): void {
     this.previewDataSubscription = this.oboToken$.subscribe(token => {
       if (token) {
+        this.previewDataSubscription?.unsubscribe();
         const toDate = new Date();
         let fromDate: Date = new Date();
         fromDate.setDate(fromDate.getDate() - 31);
@@ -132,7 +133,6 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         }
         this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
-            this.previewDataSubscription?.unsubscribe();
             this.dialog.open(PreviewDataComponent, {
               data: previewDataDialogData
             });
