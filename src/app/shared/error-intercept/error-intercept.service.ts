@@ -28,9 +28,12 @@ export class ErrorInterceptService implements HttpInterceptor {
           this.messageNotifierService.sendMessage(`Error: ${error.error.message}`, true);
         } else if (error.error instanceof Blob) {
           // server-side error
-          this.blobToText(error.error).subscribe(res => {
-            this.messageNotifierService.sendMessage(res, true);
+          this.blobToText(error.error).subscribe((res: ExceptionDto) => {
+              this.messageNotifierService.sendMessage(`${res.message}. CorrelationId: ${res.correlationId}`, true);
           });
+        } else if (error.error.message) {
+          // server-side error
+          this.messageNotifierService.sendMessage(`${error.error.message}. CorrelationId: ${error.error.correlationId}`, true);
         } else {
           // Unknown error
           this.messageNotifierService.sendMessage(error.error, true);
@@ -41,20 +44,24 @@ export class ErrorInterceptService implements HttpInterceptor {
     );
   }
 
-  blobToText(blob: Blob): Observable<string> {
-    return new Observable<string>((observer: any) => {
-
+  blobToText(blob: Blob): Observable<ExceptionDto> {
+    return new Observable<ExceptionDto>((observer: any) => {
         if (!blob) {
-            observer.next("");
+            observer.next('');
             observer.complete();
         } else {
             const reader = new FileReader();
             reader.onload = event => {
-                observer.next((<any>event.target).result);
+                observer.next(JSON.parse((<any>event.target).result));
                 observer.complete();
             };
             reader.readAsText(blob);
         }
     });
+  }
 }
+
+class ExceptionDto {
+  public message: string;
+  public correlationId: string;
 }

@@ -40,13 +40,13 @@ export class EgressService {
       }, (error: HttpErrorResponse) => {
         if (error.status === 404) {
           this.translator.get('details.side.access.preview.error.missingConfig')
-            .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error}`, true));
+            .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error.message}\n CorrelationId: ${error.error.correlationId}`, true));
         } else if (error.status === 403) {
           this.translator.get('details.side.access.preview.error.auth')
-            .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error}`, true));
+            .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error.message}\n CorrelationId: ${error.error.correlationId}`, true));
         } else {
           this.translator.get('details.side.access.preview.error.generic')
-            .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error}`, true));
+            .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error.message}\n CorrelationId: ${error.error.correlationId}`, true));
         }
       });
 

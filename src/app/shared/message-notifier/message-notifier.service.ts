@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Observable, Subject} from "rxjs";
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +14,11 @@ export class MessageNotifierService {
     return this.messageStream$;
   }
 
-  sendMessage(message: string, error: boolean) {
+  sendMessage(message: string, error: boolean, persistMessage?: boolean) {
     const payload: IMessageObject = {
       message: message,
-      error: error
+      error: error,
+      persistMessage: persistMessage
     };
     this.messageStream$.next(payload);
   }
@@ -26,4 +27,5 @@ export class MessageNotifierService {
 export interface IMessageObject  {
   message: string;
   error: boolean;
+  persistMessage: boolean;
 }
