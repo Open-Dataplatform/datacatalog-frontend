@@ -6,6 +6,8 @@ import {MessageNotifierService} from '../message-notifier/message-notifier.servi
 import {Observable, ReplaySubject} from 'rxjs';
 import {formatDate} from '@angular/common';
 import {API_BASE_URL} from '../api/api';
+import {MatDialogRef} from '@angular/material/dialog';
+import {ProgressDialogComponent} from '../../components/progress-dialog/progress-dialog.component';
 
 @Injectable({providedIn: 'root'})
 export class EgressService {
@@ -16,11 +18,16 @@ export class EgressService {
               @Inject(API_BASE_URL) private baseUrl: string,
               @Inject(LOCALE_ID) private locale: string) {}
 
-  public fetchAndShowPreviewData(datasetId: string, token: string, fromDate: Date, toDate: Date): Observable<PreviewDataDialogData> {
+  public fetchAndShowPreviewData(
+    datasetId: string,
+    token: string,
+    fromDate: Date,
+    toDate: Date,
+    dialogRef: MatDialogRef<ProgressDialogComponent>): Observable<PreviewDataDialogData> {
     const previewData = new ReplaySubject<PreviewDataDialogData>(1);
 
-    const toDateString = formatDate(toDate, 'yyyy-MM-ddThh:mm', this.locale);
-    const fromDateString = formatDate(fromDate, 'yyyy-MM-ddThh:mm', this.locale);
+    const toDateString = formatDate(toDate, 'yyyy-MM-ddTHH:mm', this.locale);
+    const fromDateString = formatDate(fromDate, 'yyyy-MM-ddTHH:mm', this.locale);
     const options = {
       headers: new HttpHeaders().set('X-Authorization', token),
       params: new HttpParams()
@@ -38,6 +45,7 @@ export class EgressService {
         const displayedColumns = Object.keys(result[0]);
         return previewData.next(new PreviewDataDialogData(displayedColumns, result));
       }, (error: HttpErrorResponse) => {
+        dialogRef.close();
         if (error.status === 404) {
           this.translator.get('details.side.access.preview.error.missingConfig')
             .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error.message}\n CorrelationId: ${error.error.correlationId}`, true));

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataHandlerService } from '../../shared/data-handler.service';
@@ -19,6 +19,7 @@ import { EgressService } from '../../shared/services/egress.service';
 import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
 import {Subscription} from 'rxjs';
 import {FrontendMetricsService} from '../../shared/services/frontendMetrics.service';
+import {ProgressDialogComponent} from '../../components/progress-dialog/progress-dialog.component';
 
 @Component({
   selector: 'app-details-page',
@@ -123,6 +124,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     this.previewDataSubscription = this.oboToken$.subscribe(token => {
       if (token) {
         this.previewDataSubscription?.unsubscribe();
+        const dialogRef: MatDialogRef<ProgressDialogComponent> = this.dialog.open(ProgressDialogComponent, {
+          panelClass: 'transparent',
+          disableClose: true
+        });
         const toDate = new Date();
         let fromDate: Date = new Date();
         fromDate.setDate(fromDate.getDate() - 31);
@@ -131,8 +136,9 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         if (this.dataSet.frequency) {
           fromDate = this.subtractFrequencyFromDate(this.dataSet.frequency, toDate);
         }
-        this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
+        this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate, dialogRef)
           .subscribe(previewDataDialogData => {
+            dialogRef.close();
             this.dialog.open(PreviewDataComponent, {
               data: previewDataDialogData
             });
