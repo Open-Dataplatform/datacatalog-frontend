@@ -19,7 +19,6 @@ import { EgressService } from '../../shared/services/egress.service';
 import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
 import {Subscription} from 'rxjs';
 import {FrontendMetricsService} from '../../shared/services/frontendMetrics.service';
-import {ProgressDialogComponent} from '../../components/progress-dialog/progress-dialog.component';
 
 @Component({
   selector: 'app-details-page',
@@ -35,6 +34,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   oboToken$ = this.userHandlerService.oboToken$;
   currentTransformation$ = this.dataHandlerService.currentTransformation$;
   previewDataSubscription: Subscription;
+  previewButtonLoading = false;
 
   constructor(private readonly activeRoute: ActivatedRoute,
               private readonly router: Router,
@@ -121,13 +121,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   }
 
   previewData(): void {
+    this.previewButtonLoading = true;
     this.previewDataSubscription = this.oboToken$.subscribe(token => {
       if (token) {
         this.previewDataSubscription?.unsubscribe();
-        const dialogRef: MatDialogRef<ProgressDialogComponent> = this.dialog.open(ProgressDialogComponent, {
-          panelClass: 'transparent',
-          disableClose: true
-        });
         const toDate = new Date();
         let fromDate: Date = new Date();
         fromDate.setDate(fromDate.getDate() - 31);
@@ -136,13 +133,14 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         if (this.dataSet.frequency) {
           fromDate = this.subtractFrequencyFromDate(this.dataSet.frequency, toDate);
         }
-        this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate, dialogRef)
+        this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
-            dialogRef.close();
+            this.previewButtonLoading = false;
             this.dialog.open(PreviewDataComponent, {
               data: previewDataDialogData
             });
-          });
+          },
+            _ => this.previewButtonLoading = false);
       } else {
         this.userHandlerService.GetOboToken();
       }

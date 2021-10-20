@@ -21,8 +21,6 @@ import { UserManager } from 'oidc-client';
 import { PreviewDataComponent } from './components/preview-data/preview-data.component';
 import { MatTableModule } from '@angular/material/table';
 import { registerLocaleData } from '@angular/common';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {ProgressDialogComponent} from './components/progress-dialog/progress-dialog.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
@@ -44,8 +42,7 @@ export function getTranslateConfig() {
 @NgModule({
   declarations: [
     AppComponent,
-    PreviewDataComponent,
-    ProgressDialogComponent
+    PreviewDataComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -56,8 +53,7 @@ export function getTranslateConfig() {
     HomeModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatTableModule,
-    MatProgressSpinnerModule
+    MatTableModule
   ],
   providers: [
     {
