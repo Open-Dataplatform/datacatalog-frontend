@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataHandlerService } from '../../shared/data-handler.service';
@@ -34,6 +34,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   oboToken$ = this.userHandlerService.oboToken$;
   currentTransformation$ = this.dataHandlerService.currentTransformation$;
   previewDataSubscription: Subscription;
+  previewButtonLoading = false;
 
   constructor(private readonly activeRoute: ActivatedRoute,
               private readonly router: Router,
@@ -120,6 +121,7 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   }
 
   previewData(): void {
+    this.previewButtonLoading = true;
     this.previewDataSubscription = this.oboToken$.subscribe(token => {
       if (token) {
         this.previewDataSubscription?.unsubscribe();
@@ -133,10 +135,12 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         }
         this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
+            this.previewButtonLoading = false;
             this.dialog.open(PreviewDataComponent, {
               data: previewDataDialogData
             });
-          });
+          },
+            _ => this.previewButtonLoading = false);
       } else {
         this.userHandlerService.GetOboToken();
       }

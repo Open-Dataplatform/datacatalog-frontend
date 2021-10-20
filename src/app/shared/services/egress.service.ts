@@ -19,8 +19,8 @@ export class EgressService {
   public fetchAndShowPreviewData(datasetId: string, token: string, fromDate: Date, toDate: Date): Observable<PreviewDataDialogData> {
     const previewData = new ReplaySubject<PreviewDataDialogData>(1);
 
-    const toDateString = formatDate(toDate, 'yyyy-MM-ddThh:mm', this.locale);
-    const fromDateString = formatDate(fromDate, 'yyyy-MM-ddThh:mm', this.locale);
+    const toDateString = formatDate(toDate, 'yyyy-MM-ddTHH:mm', this.locale, 'UTC');
+    const fromDateString = formatDate(fromDate, 'yyyy-MM-ddTHH:mm', this.locale, 'UTC');
     const options = {
       headers: new HttpHeaders().set('X-Authorization', token),
       params: new HttpParams()
@@ -48,6 +48,7 @@ export class EgressService {
           this.translator.get('details.side.access.preview.error.generic')
             .subscribe(val => this.messageNotifier.sendMessage(`${val}. Error message:\n${error.error.message}\n CorrelationId: ${error.error.correlationId}`, true));
         }
+        return previewData.error('');
       });
 
     return previewData.asObservable();
