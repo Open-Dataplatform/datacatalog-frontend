@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
-import localeDa from '@angular/common/locales/da';
+import { ErrorHandler, NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -20,13 +19,10 @@ import { API_BASE_URL } from './shared/api/api';
 import { UserManager } from 'oidc-client';
 import { PreviewDataComponent } from './components/preview-data/preview-data.component';
 import { MatTableModule } from '@angular/material/table';
-import { registerLocaleData } from '@angular/common';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
-
-registerLocaleData(localeDa);
 
 export function getTranslateConfig() {
   return {
@@ -37,7 +33,6 @@ export function getTranslateConfig() {
     }
   };
 }
-
 
 @NgModule({
   declarations: [
@@ -56,10 +51,6 @@ export function getTranslateConfig() {
     MatTableModule
   ],
   providers: [
-    {
-      provide: LOCALE_ID,
-      useValue: 'da-DK'
-    },
     {
       provide:  HTTP_INTERCEPTORS,
       useClass: ErrorInterceptService,
