@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IDatasetSummary } from 'src/app/shared/api/api';
 import { GetDatasetStatusName } from 'src/app/shared/constants';
-import {UserHandlerService} from "../../../shared/user/user-handler.service";
+import { UserHandlerService } from '../../../shared/user/user-handler.service';
 
 @Component({
   selector: 'app-data-card',
@@ -19,5 +19,8 @@ export class DataCardComponent {
   GetDatasetStatusName(): string {
     return GetDatasetStatusName(this.card.status);
   }
-  
+
+  statusIsDeveloping(): boolean {
+    return this.card.status === 3;
+  }
 }

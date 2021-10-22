@@ -158,6 +158,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     return GetDatasetStatusName(this.dataSet.status);
   }
 
+  statusIsDeveloping(): boolean {
+    return this.dataSet.status === 3;
+  }
+
   private subtractFrequencyFromDate(frequency: Duration, date: Date): Date {
     const minutesToSubtract = frequency.durationInMinutes;
     return new Date(

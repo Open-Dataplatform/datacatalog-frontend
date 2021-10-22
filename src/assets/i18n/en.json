@@ -89,7 +89,8 @@
     "strictlyConfidential": "Strictly confidential",
     "draft": "Draft",
     "published": "Published",
-    "archived": "Archived"
+    "archived": "Archived",
+    "developingTooltip": "The dataset is not reviewed and tested, but data exists. Do not use as a stable data source"
   },
   "categories": {
     "displaying": "Displaying",

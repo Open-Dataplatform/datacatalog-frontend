@@ -156,7 +156,7 @@
             <div class="master-data-field__comment">{{ 'details.side.status.title' | translate }}</div>
           </div>
           <div class="master-data__data">
-            <span> {{GetDatasetStatusName() | translate}} </span>
+            <span> {{GetDatasetStatusName() | translate}} </span> <i *ngIf="statusIsDeveloping()" matTooltip="{{'dataCard.developingTooltip' | translate}}" class="fas fa-info-circle"></i>
           </div>
         </li>
       </ul>

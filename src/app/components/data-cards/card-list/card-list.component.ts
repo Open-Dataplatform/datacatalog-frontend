@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {animate, keyframes, query, stagger, style, transition, trigger} from "@angular/animations";
+import { Component, Input, OnInit } from '@angular/core';
+import { animate, keyframes, query, stagger, style, transition, trigger } from '@angular/animations';
 import { ICategory, IDatasetSummary } from 'src/app/shared/api/api';
 
 @Component({
