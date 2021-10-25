@@ -90,7 +90,7 @@
     "draft": "Draft",
     "published": "Published",
     "archived": "Archived",
-    "developingTooltip": "The dataset is not reviewed and tested, but data exists. Do not use as a stable data source"
+    "developingTooltip": "The dataset description is in progress. Once published it will have a full description and metadata coverage and can be used as a stable data source. Data exists, but meta-data might be incorrect or missing."
   },
   "categories": {
     "displaying": "Displaying",

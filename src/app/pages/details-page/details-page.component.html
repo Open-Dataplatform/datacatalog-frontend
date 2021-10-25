@@ -26,7 +26,7 @@
       </div>
     </section>
 
-    <section class="details__section">
+    <section class="details__section" *ngIf="!statusIsDeveloping()">
       <h2> {{"details.dataFields.heading" | translate}} </h2>
       <app-data-field-display [dataFields]="dataSet.dataFields"></app-data-field-display>
     </section>
