@@ -1,21 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DataHandlerService } from '../../shared/data-handler.service';
-import { DataStewardHandlerService } from '../data-steward/data-steward-handler.service';
-import { UserHandlerService } from '../../shared/user/user-handler.service';
-import { MessageNotifierService } from '../../shared/message-notifier/message-notifier.service';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  Duration,
-  ICategory,
-  IDataset,
-  IEnum
-} from 'src/app/shared/api/api';
-import { CategoryService } from 'src/app/shared/services/category.service';
-import { GetDatasetStatusName } from 'src/app/shared/constants';
-import { EgressService } from '../../shared/services/egress.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmationDialogComponent} from '../../components/confirmation-dialog/confirmation-dialog.component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DataHandlerService} from '../../shared/data-handler.service';
+import {DataStewardHandlerService} from '../data-steward/data-steward-handler.service';
+import {UserHandlerService} from '../../shared/user/user-handler.service';
+import {MessageNotifierService} from '../../shared/message-notifier/message-notifier.service';
+import {TranslateService} from '@ngx-translate/core';
+import {DatasetStatus, Duration, ICategory, IDataset, IEnum} from 'src/app/shared/api/api';
+import {CategoryService} from 'src/app/shared/services/category.service';
+import {GetDatasetStatusName} from 'src/app/shared/constants';
+import {EgressService} from '../../shared/services/egress.service';
 import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
 import {Subscription} from 'rxjs';
 import {FrontendMetricsService} from '../../shared/services/frontendMetrics.service';
@@ -156,6 +151,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
 
   GetDatasetStatusName(): string {
     return GetDatasetStatusName(this.dataSet.status);
+  }
+
+  statusIsDeveloping(): boolean {
+    return this.dataSet.status === DatasetStatus.Developing;
   }
 
   private subtractFrequencyFromDate(frequency: Duration, date: Date): Date {

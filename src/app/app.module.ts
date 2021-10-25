@@ -19,6 +19,7 @@ import { API_BASE_URL } from './shared/api/api';
 import { UserManager } from 'oidc-client';
 import { PreviewDataComponent } from './components/preview-data/preview-data.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule} from '@angular/material/tooltip';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
@@ -48,7 +49,8 @@ export function getTranslateConfig() {
     HomeModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatTableModule
+    MatTableModule,
+    MatTooltipModule
   ],
   providers: [
     {

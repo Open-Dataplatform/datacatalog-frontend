@@ -89,7 +89,8 @@
     "strictlyConfidential": "Strictly confidential",
     "draft": "Draft",
     "published": "Published",
-    "archived": "Archived"
+    "archived": "Archived",
+    "developingTooltip": "The dataset description is in progress. Once published it will have a full description and metadata coverage and can be used as a stable data source. Data exists, but meta-data might be incorrect or missing."
   },
   "categories": {
     "displaying": "Displaying",

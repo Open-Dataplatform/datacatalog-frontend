@@ -25,7 +25,7 @@
       </div>
 
       <div class="data-card__status" *ngIf="(userHasDataStewardRole$ | async)">
-        <span> {{GetDatasetStatusName() | translate}} </span>
+        <span> {{GetDatasetStatusName() | translate}} <i *ngIf="statusIsDeveloping()" matTooltip="{{'dataCard.developingTooltip' | translate}}" class="fas fa-info-circle"></i> </span>
       </div>
 
     </div>
