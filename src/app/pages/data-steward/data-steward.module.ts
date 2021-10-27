@@ -11,7 +11,8 @@ import { InputElementsModule } from "../../components/input-elements/input-eleme
 import { DataFieldComponent } from "../../components/data-field/data-field.component";
 import { TransformationSelectorComponent } from "../../components/transformation-selector/transformation-selector.component";
 import { DragDropModule } from '@angular/cdk/drag-drop';
-
+import { DatasetChangelogComponent } from 'src/app/components/dataset-changelog/dataset-changelog.component';
+import { DatasetChangelogItemComponent } from 'src/app/components/dataset-changelog/dataset-changelog-item/dataset-changelog-item.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     DataAboutComponent,
     DataFieldComponent,
     TransformationSelectorComponent,
+    DatasetChangelogComponent,
+    DatasetChangelogItemComponent
   ],
   exports: [
     DataFieldComponent

@@ -1,0 +1,39 @@
+@import './../../../shared/variables';
+
+.changelog-item-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.profile {
+    color: @primaryColor;
+}
+
+.change-info {
+    margin-top: 2.4rem;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-content: center;
+    background-color: @primaryColor;
+    border-radius: 50rem;
+    padding: 0.4rem;
+    color: @white;
+    margin-right: 1rem;
+    z-index: 1;
+
+    .material-icons-outlined {
+      font-size: 2rem;
+    }
+}
+
+.grey-italic {
+    color: @grey;
+    font-style: italic;
+
+    &.small-font {
+      font-size: 1.4rem;
+    }
+  }

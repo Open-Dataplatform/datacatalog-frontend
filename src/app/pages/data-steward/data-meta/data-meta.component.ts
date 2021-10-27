@@ -67,5 +67,4 @@ export class DataMetaComponent implements OnInit {
   onDataChange() {
     this.dataStewardHandlerService.setDataSet(this.data);
   }
-
 }

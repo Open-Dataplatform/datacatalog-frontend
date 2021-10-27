@@ -42,22 +42,7 @@
   </p>
 </div>
 <div class="data-container">
-  <h3>{{'dataSteward.meta.changeLog.heading' | translate }}</h3>
-  <div *ngFor="let change of data.datasetChangeLogs"
-       class="meta-data__change-log">
-    <span class="meta-data__icon-wrapper">
-      <i class="material-icons-outlined"> person </i>
-    </span>
-
-    <span class="meta-data__change-info">
-      <span class="profile">{{change.member.name}}</span> - <span>{{'dataSteward.meta.changeLog.change' | translate}}</span>
-      <div class="grey-italic small-font">{{formatTime(change.createdDate)}}</div>
-    </span>
-
-  </div>
-  <div *ngIf="!data.datasetChangeLogs || !data.datasetChangeLogs.length">
-    {{'dataSteward.meta.changeLog.noChangesYet' | translate }}
-  </div>
+ <app-dataset-changelog [changelogs]="data.datasetChangeLogs"></app-dataset-changelog>
 </div>
 
 <div class="form-actions">

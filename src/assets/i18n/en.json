@@ -203,7 +203,9 @@
       "changeLog": {
         "heading": "Changelog",
         "noChangesYet": "No changes have been made yet",
-        "change": "Updated information in the dataset"
+        "insert": "Created the dataset",
+        "update": "Updated information in the dataset",
+        "delete": "Deleted the dataset"
       }
     },
     "about": {
