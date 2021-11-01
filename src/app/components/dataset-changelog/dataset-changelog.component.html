@@ -1,0 +1,9 @@
+<div>
+  <h3>{{ "dataSteward.meta.changeLog.heading" | translate }}</h3>
+  <div *ngFor="let change of changelogs" class="changelog">
+      <app-dataset-changelog-item [change]="change"></app-dataset-changelog-item>
+  </div>
+  <div *ngIf="!changelogs || !changelogs.length">
+    {{ "dataSteward.meta.changeLog.noChangesYet" | translate }}
+  </div>
+</div>

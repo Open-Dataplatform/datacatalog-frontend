@@ -203,7 +203,20 @@
       "changeLog": {
         "heading": "Changelog",
         "noChangesYet": "No changes have been made yet",
-        "change": "Updated information in the dataset"
+        "insert": "Created the dataset",
+        "update": "Updated information in the dataset",
+        "delete": "Deleted the dataset",
+        "permissionChange": "{{changeType}} {{accessType}} access {{toOf}} {{memberType}}: '{{displayName}}'",
+        "granted": "Granted",
+        "revoked": "Revoked",
+        "read": "read",
+        "write": "write",
+        "user": "user",
+        "group": "group",
+        "servicePrincipal": "service principal",
+        "other": "other",
+        "to": "to",
+        "of": "of"
       }
     },
     "about": {
