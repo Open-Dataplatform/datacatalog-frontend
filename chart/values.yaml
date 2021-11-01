@@ -81,18 +81,5 @@ ingress:
   #       hosts:
   #         - dataplatform.energinet.dk
 
-externalSecret:
+lethe:
   enabled: false
-
-  role: dataplatform
-
-  secrets:
-    - name: tls.crt
-      # The full path of the secret to read, as in `vault read secret/data/hello-service/credentials`
-      key: dataplatform/data/certificates
-      property: tls.crt
-
-    # Vault values are matched individually. If you have several keys in your Vault secret, you will need to add them all separately
-    - name: tls.key
-      key: dataplatform/data/certificates
-      property: tls.key
