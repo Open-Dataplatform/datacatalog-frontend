@@ -81,5 +81,8 @@ ingress:
   #       hosts:
   #         - dataplatform.energinet.dk
 
+janus:
+  enabled: false
+
 lethe:
   enabled: false
