@@ -131,9 +131,13 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
             this.previewButtonLoading = false;
-            this.dialog.open(PreviewDataComponent, {
-              data: previewDataDialogData
-            });
+            
+            if (previewDataDialogData !== null)
+            {
+              this.dialog.open(PreviewDataComponent, {
+                data: previewDataDialogData
+              });
+            }
           },
             _ => this.previewButtonLoading = false);
       } else {
