@@ -23,4 +23,10 @@ export class DataCardComponent {
   statusIsDeveloping(): boolean {
     return this.card.status === DatasetStatus.Developing;
   }
+
+  addWatermarkIfStatusIsDeveloping() {
+    if (this.statusIsDeveloping()) {
+      return 'url("watermark.png")';
+    }
+  }
 }
