@@ -26,7 +26,7 @@ export class DataCardComponent {
 
   addWatermarkIfStatusIsDeveloping() {
     if (this.statusIsDeveloping()) {
-      return 'url("watermark.png")';
+      return 'url("./assets/watermark.png")';
     }
   }
 }
