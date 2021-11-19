@@ -72,8 +72,13 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
 
   // Navigate to edit and send dataset data to
   editDataSet() {
-    this.dataStewardHandlerService.setDataSet(this.dataSet);
-    this.router.navigate(['/datasteward']);
+    // Fetch the updated dataset before editing since we might have changed access controls or similar.
+    // Avoids the worst race conditions if someone was on the screen a long time before pressing edit.
+    this.dataHandlerService.getDetailsFromId(this.id).subscribe((response) => {
+      this.dataSet = response;
+      this.dataStewardHandlerService.setDataSet(this.dataSet);
+      this.router.navigate(['/datasteward']);
+    });
   }
 
   deleteDataset() {
@@ -131,9 +136,8 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
             this.previewButtonLoading = false;
-            
-            if (previewDataDialogData !== null)
-            {
+
+            if (previewDataDialogData !== null) {
               this.dialog.open(PreviewDataComponent, {
                 data: previewDataDialogData
               });
