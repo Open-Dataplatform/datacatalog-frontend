@@ -71,6 +71,10 @@
             "missingConfig": "The dataset is not configured to be fetched through the Egress API. Contact a developer for more info",
             "auth": "You are not authorized to access the dataset"
           }
+        },
+        "excel": {
+          "powerQueryLink": "Power Query",
+          "text": "Access through Excel's Power Query tool:"
         }
       },
       "contact": {
