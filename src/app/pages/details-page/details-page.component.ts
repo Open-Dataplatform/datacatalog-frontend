@@ -14,6 +14,9 @@ import {EgressService} from '../../shared/services/egress.service';
 import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
 import {Subscription} from 'rxjs';
 import {FrontendMetricsService} from '../../shared/services/frontendMetrics.service';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 @Component({
   selector: 'app-details-page',
@@ -59,6 +62,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     this.categoryService.categories$.subscribe(categories => {
       this.categories = categories;
     });
+  }
+
+  getRelativeTime(date: Date): string {
+    return dayjs(date).fromNow();
   }
 
   // formats an iso date to a readable string.

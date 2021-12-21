@@ -36,6 +36,7 @@
       "frequency": "frequency",
       "version": "version",
       "id": "Id",
+      "data-info": "Data Info",
       "status": {
         "title": "status",
         "draft": "draft",
@@ -83,6 +84,11 @@
         "link": "Ask the data stewards",
         "linkText": "here",
         "mail": "or send an email to"
+      },
+      "dataInfo": {
+        "title": "Data Info",
+        "latestData": "Latest Available Data",
+        "firstData": "Earliest Available Data"
       }
     }
   },

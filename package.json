@@ -34,6 +34,7 @@
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.5.0",
     "core-js": "^3.3.3",
+    "dayjs": "^1.10.7",
     "dtsgenerator": "^2.6.0",
     "jquery": "3.5.0",
     "microsoft-adal-angular6": "^1.3.0",

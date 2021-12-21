@@ -338,6 +338,71 @@ export class CategoryClient {
 @Injectable({
     providedIn: 'root'
 })
+export class DataAvailabilityClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "http://localhost:5001";
+    }
+
+    /**
+     * Upsert availability info for a dataset
+     */
+    post(request: DataAvailabilityInfoUpsertRequest): Observable<void> {
+        let url_ = this.baseUrl + "/api/DataAvailability";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPost(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPost(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class DataContractClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -4095,6 +4160,50 @@ export interface ICategoryUpdateRequest extends ICategoryCreateRequest {
     id: string;
 }
 
+export class DataAvailabilityInfoUpsertRequest implements IDataAvailabilityInfoUpsertRequest {
+    datasetId!: string;
+    firstAvailableData!: Date;
+    latestAvailableData!: Date;
+
+    constructor(data?: IDataAvailabilityInfoUpsertRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.datasetId = _data["datasetId"];
+            this.firstAvailableData = _data["firstAvailableData"] ? new Date(_data["firstAvailableData"].toString()) : <any>undefined;
+            this.latestAvailableData = _data["latestAvailableData"] ? new Date(_data["latestAvailableData"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): DataAvailabilityInfoUpsertRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new DataAvailabilityInfoUpsertRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["datasetId"] = this.datasetId;
+        data["firstAvailableData"] = this.firstAvailableData ? this.firstAvailableData.toISOString() : <any>undefined;
+        data["latestAvailableData"] = this.latestAvailableData ? this.latestAvailableData.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IDataAvailabilityInfoUpsertRequest {
+    datasetId: string;
+    firstAvailableData: Date;
+    latestAvailableData: Date;
+}
+
 export class DataContract extends GuidId implements IDataContract {
     datasetId!: string;
     dataSourceId!: string;
@@ -4469,6 +4578,7 @@ export class Dataset extends EntityDto implements IDataset {
     dataSources?: DataSource[] | undefined;
     provisionStatus!: ProvisionDatasetStatusEnum;
     serviceLevelAgreement?: ServiceLevelAgreement | undefined;
+    dataAvailabilityInfo?: DataAvailabilityInfo | undefined;
 
     constructor(data?: IDataset) {
         super(data);
@@ -4512,6 +4622,7 @@ export class Dataset extends EntityDto implements IDataset {
             }
             this.provisionStatus = _data["provisionStatus"];
             this.serviceLevelAgreement = _data["serviceLevelAgreement"] ? ServiceLevelAgreement.fromJS(_data["serviceLevelAgreement"]) : <any>undefined;
+            this.dataAvailabilityInfo = _data["dataAvailabilityInfo"] ? DataAvailabilityInfo.fromJS(_data["dataAvailabilityInfo"]) : <any>undefined;
         }
     }
 
@@ -4559,6 +4670,7 @@ export class Dataset extends EntityDto implements IDataset {
         }
         data["provisionStatus"] = this.provisionStatus;
         data["serviceLevelAgreement"] = this.serviceLevelAgreement ? this.serviceLevelAgreement.toJSON() : <any>undefined;
+        data["dataAvailabilityInfo"] = this.dataAvailabilityInfo ? this.dataAvailabilityInfo.toJSON() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
@@ -4584,6 +4696,7 @@ export interface IDataset extends IEntityDto {
     dataSources?: DataSource[] | undefined;
     provisionStatus: ProvisionDatasetStatusEnum;
     serviceLevelAgreement?: ServiceLevelAgreement | undefined;
+    dataAvailabilityInfo?: DataAvailabilityInfo | undefined;
 }
 
 export enum Confidentiality {
@@ -4973,6 +5086,7 @@ export enum Role {
     Admin = 0,
     DataSteward = 1,
     User = 2,
+    MetadataProvider = 3,
 }
 
 export enum DatasetChangeType {
@@ -5147,6 +5261,39 @@ export interface IServiceLevelAgreement extends IGuidId {
     name?: string | undefined;
     description?: string | undefined;
     link?: string | undefined;
+}
+
+export class DataAvailabilityInfo extends DataAvailabilityInfoUpsertRequest implements IDataAvailabilityInfo {
+    modifiedDate!: Date;
+
+    constructor(data?: IDataAvailabilityInfo) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.modifiedDate = _data["modifiedDate"] ? new Date(_data["modifiedDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): DataAvailabilityInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new DataAvailabilityInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IDataAvailabilityInfo extends IDataAvailabilityInfoUpsertRequest {
+    modifiedDate: Date;
 }
 
 export class DatasetCreateRequest implements IDatasetCreateRequest {

@@ -12,7 +12,7 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {TranslateModule} from "@ngx-translate/core";
 import { Components } from '../../../types/dataplatform-api'
 import IDataset = Components.Schemas.IDataset;
-import {DataStewardHandlerService} from "../data-steward/data-steward-handler.service";
+import { DataStewardHandlerService } from "../data-steward/data-steward-handler.service";
 
 const mockDataset: IDataset = {
   name: "mock dataset name",
