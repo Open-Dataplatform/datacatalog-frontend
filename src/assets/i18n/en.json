@@ -86,7 +86,7 @@
         "mail": "or send an email to"
       },
       "dataInfo": {
-        "title": "Data Info",
+        "title": "Temporal Coverage",
         "latestData": "Latest Available Data",
         "firstData": "Earliest Available Data"
       }
