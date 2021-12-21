@@ -1,0 +1,16 @@
+@import './../../shared/variables';
+
+.changelog {
+    position: relative;
+
+    &:not(:last-child):before {
+        position: absolute;
+        content: "";
+        text-align: center;
+        left: 1.2rem;
+        bottom: -3rem;
+        height: 6rem;
+        border: 1px solid @grey;
+        z-index: 0;
+    }
+}

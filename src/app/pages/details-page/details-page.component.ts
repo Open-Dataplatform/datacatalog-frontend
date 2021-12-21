@@ -14,6 +14,9 @@ import {EgressService} from '../../shared/services/egress.service';
 import {PreviewDataComponent} from '../../components/preview-data/preview-data.component';
 import {Subscription} from 'rxjs';
 import {FrontendMetricsService} from '../../shared/services/frontendMetrics.service';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 @Component({
   selector: 'app-details-page',
@@ -61,6 +64,10 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  getRelativeTime(date: Date): string {
+    return dayjs(date).fromNow();
+  }
+
   // formats an iso date to a readable string.
   formatDateFromIsoString(date?: Date): string {
     return date?.toISOString()
@@ -72,8 +79,13 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
 
   // Navigate to edit and send dataset data to
   editDataSet() {
-    this.dataStewardHandlerService.setDataSet(this.dataSet);
-    this.router.navigate(['/datasteward']);
+    // Fetch the updated dataset before editing since we might have changed access controls or similar.
+    // Avoids the worst race conditions if someone was on the screen a long time before pressing edit.
+    this.dataHandlerService.getDetailsFromId(this.id).subscribe((response) => {
+      this.dataSet = response;
+      this.dataStewardHandlerService.setDataSet(this.dataSet);
+      this.router.navigate(['/datasteward']);
+    });
   }
 
   deleteDataset() {
@@ -131,9 +143,12 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
         this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
             this.previewButtonLoading = false;
-            this.dialog.open(PreviewDataComponent, {
-              data: previewDataDialogData
-            });
+
+            if (previewDataDialogData !== null) {
+              this.dialog.open(PreviewDataComponent, {
+                data: previewDataDialogData
+              });
+            }
           },
             _ => this.previewButtonLoading = false);
       } else {

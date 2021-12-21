@@ -161,6 +161,35 @@
         </li>
       </ul>
     </div>
+
+    <!-- data -->
+    <div class="details__master-data" *ngIf="dataSet.dataAvailabilityInfo">
+      <h2>{{ 'details.side.dataInfo.title' | translate }}</h2>
+
+      <ul class="details__data-list">
+
+        <li class="master-data">
+          <div class="">
+            <div class="details__data-info-header">{{ 'details.side.dataInfo.firstData' | translate }}</div>
+            <span>{{dataSet.dataAvailabilityInfo.firstAvailableData | date: "dd/MM/YYYY - HH:mm" }}<sup>*</sup></span>
+          </div>
+        </li>
+
+        <li class="master-data">
+          <div class="">
+            <div class="details__data-info-header">{{ 'details.side.dataInfo.latestData' | translate }}</div>
+            <span>{{dataSet.dataAvailabilityInfo.latestAvailableData | date: "dd/MM/YYYY - HH:mm" }}<sup>*</sup></span>
+          </div>
+        </li>
+
+      </ul>
+
+      <div class="details__data-info-last-updated">
+        <span><sup>*</sup>Last Updated: {{ getRelativeTime(dataSet.dataAvailabilityInfo.modifiedDate) }}</span>
+      </div>
+    </div>
+
+    <!-- data access -->
     <div class="details__master-data">
       <h2>{{ 'details.side.access.title' | translate }}</h2>
       <p class="master-data-field__comment">
@@ -177,6 +206,13 @@
         <a href='https://dev.azure.com/energinet/ENDK/_wiki/wikis/ENDK.WIKI/10060/Service-Principal-Creation'>{{ 'details.side.access.python.servicePrincipalLink' | translate }}</a>
       </li>
       <br/>
+
+      <p class="master-data-field__comment">{{ 'details.side.access.excel.text' | translate }} </p>
+      <li>
+        <a href='https://dev.azure.com/energinet/ENDK/_wiki/wikis/ENDK.WIKI/10476/Using-Power-Query-to-access-data'>{{ 'details.side.access.excel.powerQueryLink' | translate }}</a>
+      </li>
+      <br/>
+      
       <p class="master-data-field__comment">{{ 'details.side.access.token.description' | translate }}</p>
       <div class="details__token-container" *ngIf="(oboToken$ | async) as token">
         <textarea matInput

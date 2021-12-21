@@ -1,5 +1,6 @@
 <a>
   <div class="data-card"
+       [ngStyle]="{'background-image': addWatermarkIfStatusIsDeveloping()}"
        *ngIf="card"
        [routerLink]="['/detail', card.id]"
        [routerLinkActive]="['link-active']">

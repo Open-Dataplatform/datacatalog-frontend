@@ -1,0 +1,13 @@
+<div class="changelog-item-wrapper">
+  <span class="icon-wrapper">
+    <i class="material-icons-outlined"> person </i>
+  </span>
+
+  <span class="change-info">
+    <span class="profile">{{ change.member.name }}</span> -
+    <span>{{ datasetChangeDescription() }}</span>
+    <div class="grey-italic small-font">
+      {{ change.createdDate | date: "dd/MM//YYYY - HH:mm:ss" }}
+    </div>
+  </span>
+</div>
