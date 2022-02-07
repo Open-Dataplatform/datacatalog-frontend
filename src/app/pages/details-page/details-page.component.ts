@@ -7,7 +7,7 @@ import {DataStewardHandlerService} from '../data-steward/data-steward-handler.se
 import {UserHandlerService} from '../../shared/user/user-handler.service';
 import {MessageNotifierService} from '../../shared/message-notifier/message-notifier.service';
 import {TranslateService} from '@ngx-translate/core';
-import {DatasetStatus, Duration, ICategory, IDataset, IEnum} from 'src/app/shared/api/api';
+import {DataAvailabilityInfo, DatasetStatus, Duration, ICategory, IDataset, IEnum} from 'src/app/shared/api/api';
 import {CategoryService} from 'src/app/shared/services/category.service';
 import {GetDatasetStatusName} from 'src/app/shared/constants';
 import {EgressService} from '../../shared/services/egress.service';
@@ -132,14 +132,12 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     this.previewDataSubscription = this.oboToken$.subscribe(token => {
       if (token) {
         this.previewDataSubscription?.unsubscribe();
-        const toDate = new Date();
-        let fromDate: Date = new Date();
-        fromDate.setDate(fromDate.getDate() - 31);
 
-        // If we know the frequency, we use the code to deduce the time-step we should take back in time
-        if (this.dataSet.frequency) {
-          fromDate = this.subtractFrequencyFromDate(this.dataSet.frequency, toDate);
+        if (!this.dataSet.dataAvailabilityInfo) {
+          return; // We cant preview if we don't have dataAvailabilityInfo
         }
+
+        const [fromDate, toDate] = this.getFromAndToDate(this.dataSet.dataAvailabilityInfo);
         this.egressService.fetchAndShowPreviewData(this.dataSet.id, token, fromDate, toDate)
           .subscribe(previewDataDialogData => {
             this.previewButtonLoading = false;
@@ -172,17 +170,12 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
     return this.dataSet.status === DatasetStatus.Developing;
   }
 
-  private subtractFrequencyFromDate(frequency: Duration, date: Date): Date {
-    const minutesToSubtract = frequency.durationInMinutes;
-    return new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      date.getHours(),
-      date.getMinutes() - minutesToSubtract,
-      date.getSeconds(),
-      date.getMilliseconds()
-    );
+  getFromAndToDate(dataAvailabilityInfo: DataAvailabilityInfo): [Date, Date] {
+    debugger;
+    let toDate = dataAvailabilityInfo.latestAvailableData;
+    let fromDate = dayjs(toDate).subtract(1, 'day').toDate();
+
+    return [fromDate, toDate];
   }
 
 }

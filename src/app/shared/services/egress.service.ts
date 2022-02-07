@@ -19,8 +19,8 @@ export class EgressService {
   public fetchAndShowPreviewData(datasetId: string, token: string, fromDate: Date, toDate: Date): Observable<PreviewDataDialogData> {
     const previewData = new ReplaySubject<PreviewDataDialogData>(1);
 
-    const toDateString = formatDate(toDate, 'yyyy-MM-dd', this.locale, 'UTC');
-    const fromDateString = formatDate(fromDate, 'yyyy-MM-dd', this.locale, 'UTC');
+    const toDateString = formatDate(toDate, 'yyyy-MM-dd', this.locale);
+    const fromDateString = formatDate(fromDate, 'yyyy-MM-dd', this.locale);
     const options = {
       headers: new HttpHeaders().set('X-Authorization', token),
       params: new HttpParams()

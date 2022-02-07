@@ -228,10 +228,12 @@
       <p>
         <button id="getOboTokenButton" class="token__get-token-button" (click)="getOboToken()">{{ 'details.side.access.token.getButton' | translate }}</button>
       </p>
-      <p class="master-data-field__comment">{{ 'details.side.access.preview.text' | translate }}</p>
-      <p>
-        <button id="previewButton" class="preview-button" [disabled]="previewButtonLoading" (click)="previewData()"><i class="fa fa-spinner fa-spin" *ngIf="previewButtonLoading"></i>&nbsp;&nbsp;{{ 'details.side.access.preview.previewButton' | translate }}</button>
-      </p>
+      <div *ngIf="dataSet.dataAvailabilityInfo">
+        <p class="master-data-field__comment">{{ 'details.side.access.preview.text' | translate }}</p>
+        <p>
+          <button id="previewButton" class="preview-button" [disabled]="previewButtonLoading" (click)="previewData()"><i class="fa fa-spinner fa-spin" *ngIf="previewButtonLoading"></i>&nbsp;&nbsp;{{ 'details.side.access.preview.previewButton' | translate }}</button>
+        </p>
+      </div>
     </div>
   </div>
 
