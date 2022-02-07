@@ -171,7 +171,6 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   }
 
   getFromAndToDate(dataAvailabilityInfo: DataAvailabilityInfo): [Date, Date] {
-    debugger;
     let toDate = dataAvailabilityInfo.latestAvailableData;
     let fromDate = dayjs(toDate).subtract(1, 'day').toDate();
 
