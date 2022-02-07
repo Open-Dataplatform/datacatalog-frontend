@@ -171,8 +171,8 @@ export class DetailsPageComponent implements OnInit, OnDestroy {
   }
 
   getFromAndToDate(dataAvailabilityInfo: DataAvailabilityInfo): [Date, Date] {
-    let toDate = dataAvailabilityInfo.latestAvailableData;
-    let fromDate = dayjs(toDate).subtract(1, 'day').toDate();
+    const toDate = dayjs(dataAvailabilityInfo.latestAvailableData).add(1, 'day').toDate();
+    const fromDate = dataAvailabilityInfo.latestAvailableData;
 
     return [fromDate, toDate];
   }
